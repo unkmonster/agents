@@ -1,0 +1,1 @@
+ALTER TABLE users DROP CONSTRAINT fk_users_parent_id;

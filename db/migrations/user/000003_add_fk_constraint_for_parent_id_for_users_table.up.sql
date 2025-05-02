@@ -1,0 +1,1 @@
+ALTER TABLE users ADD CONSTRAINT fk_users_parent_id FOREIGN KEY (parent_id) REFERENCES users(id);

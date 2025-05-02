@@ -107,11 +107,11 @@ func (x *CreateUserRequest) GetLevel() int32 {
 
 type CreateUserReply struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	Username      string                 `protobuf:"bytes,2,opt,name=username,proto3" json:"username,omitempty"`
-	Nickname      string                 `protobuf:"bytes,3,opt,name=nickname,proto3" json:"nickname,omitempty"`
-	ParentId      string                 `protobuf:"bytes,4,opt,name=parent_id,json=parentId,proto3" json:"parent_id,omitempty"`
-	Level         int32                  `protobuf:"varint,5,opt,name=level,proto3" json:"level,omitempty"`
+	Id            *string                `protobuf:"bytes,1,opt,name=id,proto3,oneof" json:"id,omitempty"`
+	Username      *string                `protobuf:"bytes,2,opt,name=username,proto3,oneof" json:"username,omitempty"`
+	Nickname      *string                `protobuf:"bytes,3,opt,name=nickname,proto3,oneof" json:"nickname,omitempty"`
+	ParentId      *string                `protobuf:"bytes,4,opt,name=parent_id,json=parentId,proto3,oneof" json:"parent_id,omitempty"`
+	Level         *int32                 `protobuf:"varint,5,opt,name=level,proto3,oneof" json:"level,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -147,36 +147,36 @@ func (*CreateUserReply) Descriptor() ([]byte, []int) {
 }
 
 func (x *CreateUserReply) GetId() string {
-	if x != nil {
-		return x.Id
+	if x != nil && x.Id != nil {
+		return *x.Id
 	}
 	return ""
 }
 
 func (x *CreateUserReply) GetUsername() string {
-	if x != nil {
-		return x.Username
+	if x != nil && x.Username != nil {
+		return *x.Username
 	}
 	return ""
 }
 
 func (x *CreateUserReply) GetNickname() string {
-	if x != nil {
-		return x.Nickname
+	if x != nil && x.Nickname != nil {
+		return *x.Nickname
 	}
 	return ""
 }
 
 func (x *CreateUserReply) GetParentId() string {
-	if x != nil {
-		return x.ParentId
+	if x != nil && x.ParentId != nil {
+		return *x.ParentId
 	}
 	return ""
 }
 
 func (x *CreateUserReply) GetLevel() int32 {
-	if x != nil {
-		return x.Level
+	if x != nil && x.Level != nil {
+		return *x.Level
 	}
 	return 0
 }
@@ -243,11 +243,11 @@ func (x *UpdateUserRequest) GetNickname() string {
 
 type UpdateUserReply struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	Username      string                 `protobuf:"bytes,2,opt,name=username,proto3" json:"username,omitempty"`
-	Nickname      string                 `protobuf:"bytes,3,opt,name=nickname,proto3" json:"nickname,omitempty"`
-	ParentId      string                 `protobuf:"bytes,4,opt,name=parent_id,json=parentId,proto3" json:"parent_id,omitempty"`
-	Level         int32                  `protobuf:"varint,5,opt,name=level,proto3" json:"level,omitempty"`
+	Id            *string                `protobuf:"bytes,1,opt,name=id,proto3,oneof" json:"id,omitempty"`
+	Username      *string                `protobuf:"bytes,2,opt,name=username,proto3,oneof" json:"username,omitempty"`
+	Nickname      *string                `protobuf:"bytes,3,opt,name=nickname,proto3,oneof" json:"nickname,omitempty"`
+	ParentId      *string                `protobuf:"bytes,4,opt,name=parent_id,json=parentId,proto3,oneof" json:"parent_id,omitempty"`
+	Level         *int32                 `protobuf:"varint,5,opt,name=level,proto3,oneof" json:"level,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -283,36 +283,36 @@ func (*UpdateUserReply) Descriptor() ([]byte, []int) {
 }
 
 func (x *UpdateUserReply) GetId() string {
-	if x != nil {
-		return x.Id
+	if x != nil && x.Id != nil {
+		return *x.Id
 	}
 	return ""
 }
 
 func (x *UpdateUserReply) GetUsername() string {
-	if x != nil {
-		return x.Username
+	if x != nil && x.Username != nil {
+		return *x.Username
 	}
 	return ""
 }
 
 func (x *UpdateUserReply) GetNickname() string {
-	if x != nil {
-		return x.Nickname
+	if x != nil && x.Nickname != nil {
+		return *x.Nickname
 	}
 	return ""
 }
 
 func (x *UpdateUserReply) GetParentId() string {
-	if x != nil {
-		return x.ParentId
+	if x != nil && x.ParentId != nil {
+		return *x.ParentId
 	}
 	return ""
 }
 
 func (x *UpdateUserReply) GetLevel() int32 {
-	if x != nil {
-		return x.Level
+	if x != nil && x.Level != nil {
+		return *x.Level
 	}
 	return 0
 }
@@ -443,11 +443,11 @@ func (x *GetUserRequest) GetId() string {
 
 type GetUserReply struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	Username      string                 `protobuf:"bytes,2,opt,name=username,proto3" json:"username,omitempty"`
-	Nickname      string                 `protobuf:"bytes,3,opt,name=nickname,proto3" json:"nickname,omitempty"`
-	ParentId      string                 `protobuf:"bytes,4,opt,name=parent_id,json=parentId,proto3" json:"parent_id,omitempty"`
-	Level         int32                  `protobuf:"varint,5,opt,name=level,proto3" json:"level,omitempty"`
+	Id            *string                `protobuf:"bytes,1,opt,name=id,proto3,oneof" json:"id,omitempty"`
+	Username      *string                `protobuf:"bytes,2,opt,name=username,proto3,oneof" json:"username,omitempty"`
+	Nickname      *string                `protobuf:"bytes,3,opt,name=nickname,proto3,oneof" json:"nickname,omitempty"`
+	ParentId      *string                `protobuf:"bytes,4,opt,name=parent_id,json=parentId,proto3,oneof" json:"parent_id,omitempty"`
+	Level         *int32                 `protobuf:"varint,5,opt,name=level,proto3,oneof" json:"level,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -483,36 +483,36 @@ func (*GetUserReply) Descriptor() ([]byte, []int) {
 }
 
 func (x *GetUserReply) GetId() string {
-	if x != nil {
-		return x.Id
+	if x != nil && x.Id != nil {
+		return *x.Id
 	}
 	return ""
 }
 
 func (x *GetUserReply) GetUsername() string {
-	if x != nil {
-		return x.Username
+	if x != nil && x.Username != nil {
+		return *x.Username
 	}
 	return ""
 }
 
 func (x *GetUserReply) GetNickname() string {
-	if x != nil {
-		return x.Nickname
+	if x != nil && x.Nickname != nil {
+		return *x.Nickname
 	}
 	return ""
 }
 
 func (x *GetUserReply) GetParentId() string {
-	if x != nil {
-		return x.ParentId
+	if x != nil && x.ParentId != nil {
+		return *x.ParentId
 	}
 	return ""
 }
 
 func (x *GetUserReply) GetLevel() int32 {
-	if x != nil {
-		return x.Level
+	if x != nil && x.Level != nil {
+		return *x.Level
 	}
 	return 0
 }
@@ -599,11 +599,11 @@ func (x *ListUserReply) GetUsers() []*ListUserReply_User {
 
 type ListUserReply_User struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	Username      string                 `protobuf:"bytes,2,opt,name=username,proto3" json:"username,omitempty"`
-	Nickname      string                 `protobuf:"bytes,3,opt,name=nickname,proto3" json:"nickname,omitempty"`
-	ParentId      string                 `protobuf:"bytes,4,opt,name=parent_id,json=parentId,proto3" json:"parent_id,omitempty"`
-	Level         int32                  `protobuf:"varint,5,opt,name=level,proto3" json:"level,omitempty"`
+	Id            *string                `protobuf:"bytes,1,opt,name=id,proto3,oneof" json:"id,omitempty"`
+	Username      *string                `protobuf:"bytes,2,opt,name=username,proto3,oneof" json:"username,omitempty"`
+	Nickname      *string                `protobuf:"bytes,3,opt,name=nickname,proto3,oneof" json:"nickname,omitempty"`
+	ParentId      *string                `protobuf:"bytes,4,opt,name=parent_id,json=parentId,proto3,oneof" json:"parent_id,omitempty"`
+	Level         *int32                 `protobuf:"varint,5,opt,name=level,proto3,oneof" json:"level,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -639,36 +639,36 @@ func (*ListUserReply_User) Descriptor() ([]byte, []int) {
 }
 
 func (x *ListUserReply_User) GetId() string {
-	if x != nil {
-		return x.Id
+	if x != nil && x.Id != nil {
+		return *x.Id
 	}
 	return ""
 }
 
 func (x *ListUserReply_User) GetUsername() string {
-	if x != nil {
-		return x.Username
+	if x != nil && x.Username != nil {
+		return *x.Username
 	}
 	return ""
 }
 
 func (x *ListUserReply_User) GetNickname() string {
-	if x != nil {
-		return x.Nickname
+	if x != nil && x.Nickname != nil {
+		return *x.Nickname
 	}
 	return ""
 }
 
 func (x *ListUserReply_User) GetParentId() string {
-	if x != nil {
-		return x.ParentId
+	if x != nil && x.ParentId != nil {
+		return *x.ParentId
 	}
 	return ""
 }
 
 func (x *ListUserReply_User) GetLevel() int32 {
-	if x != nil {
-		return x.Level
+	if x != nil && x.Level != nil {
+		return *x.Level
 	}
 	return 0
 }
@@ -691,46 +691,70 @@ const file_api_user_service_v1_user_proto_rawDesc = "" +
 	"\t_nicknameB\f\n" +
 	"\n" +
 	"_parent_idB\b\n" +
-	"\x06_level\"\x8c\x01\n" +
-	"\x0fCreateUserReply\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\x12\x1a\n" +
-	"\busername\x18\x02 \x01(\tR\busername\x12\x1a\n" +
-	"\bnickname\x18\x03 \x01(\tR\bnickname\x12\x1b\n" +
-	"\tparent_id\x18\x04 \x01(\tR\bparentId\x12\x14\n" +
-	"\x05level\x18\x05 \x01(\x05R\x05level\"\x8b\x01\n" +
+	"\x06_level\"\xde\x01\n" +
+	"\x0fCreateUserReply\x12\x13\n" +
+	"\x02id\x18\x01 \x01(\tH\x00R\x02id\x88\x01\x01\x12\x1f\n" +
+	"\busername\x18\x02 \x01(\tH\x01R\busername\x88\x01\x01\x12\x1f\n" +
+	"\bnickname\x18\x03 \x01(\tH\x02R\bnickname\x88\x01\x01\x12 \n" +
+	"\tparent_id\x18\x04 \x01(\tH\x03R\bparentId\x88\x01\x01\x12\x19\n" +
+	"\x05level\x18\x05 \x01(\x05H\x04R\x05level\x88\x01\x01B\x05\n" +
+	"\x03_idB\v\n" +
+	"\t_usernameB\v\n" +
+	"\t_nicknameB\f\n" +
+	"\n" +
+	"_parent_idB\b\n" +
+	"\x06_level\"\x8b\x01\n" +
 	"\x11UpdateUserRequest\x12\x13\n" +
 	"\x02id\x18\x01 \x01(\tH\x00R\x02id\x88\x01\x01\x12\x1f\n" +
 	"\bpassword\x18\x03 \x01(\tH\x01R\bpassword\x88\x01\x01\x12\x1f\n" +
 	"\bnickname\x18\x04 \x01(\tH\x02R\bnickname\x88\x01\x01B\x05\n" +
 	"\x03_idB\v\n" +
 	"\t_passwordB\v\n" +
-	"\t_nickname\"\x8c\x01\n" +
-	"\x0fUpdateUserReply\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\x12\x1a\n" +
-	"\busername\x18\x02 \x01(\tR\busername\x12\x1a\n" +
-	"\bnickname\x18\x03 \x01(\tR\bnickname\x12\x1b\n" +
-	"\tparent_id\x18\x04 \x01(\tR\bparentId\x12\x14\n" +
-	"\x05level\x18\x05 \x01(\x05R\x05level\"#\n" +
+	"\t_nickname\"\xde\x01\n" +
+	"\x0fUpdateUserReply\x12\x13\n" +
+	"\x02id\x18\x01 \x01(\tH\x00R\x02id\x88\x01\x01\x12\x1f\n" +
+	"\busername\x18\x02 \x01(\tH\x01R\busername\x88\x01\x01\x12\x1f\n" +
+	"\bnickname\x18\x03 \x01(\tH\x02R\bnickname\x88\x01\x01\x12 \n" +
+	"\tparent_id\x18\x04 \x01(\tH\x03R\bparentId\x88\x01\x01\x12\x19\n" +
+	"\x05level\x18\x05 \x01(\x05H\x04R\x05level\x88\x01\x01B\x05\n" +
+	"\x03_idB\v\n" +
+	"\t_usernameB\v\n" +
+	"\t_nicknameB\f\n" +
+	"\n" +
+	"_parent_idB\b\n" +
+	"\x06_level\"#\n" +
 	"\x11DeleteUserRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\"\x11\n" +
 	"\x0fDeleteUserReply\" \n" +
 	"\x0eGetUserRequest\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\"\x89\x01\n" +
-	"\fGetUserReply\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\x12\x1a\n" +
-	"\busername\x18\x02 \x01(\tR\busername\x12\x1a\n" +
-	"\bnickname\x18\x03 \x01(\tR\bnickname\x12\x1b\n" +
-	"\tparent_id\x18\x04 \x01(\tR\bparentId\x12\x14\n" +
-	"\x05level\x18\x05 \x01(\x05R\x05level\"\x11\n" +
-	"\x0fListUserRequest\"\xd2\x01\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\"\xdb\x01\n" +
+	"\fGetUserReply\x12\x13\n" +
+	"\x02id\x18\x01 \x01(\tH\x00R\x02id\x88\x01\x01\x12\x1f\n" +
+	"\busername\x18\x02 \x01(\tH\x01R\busername\x88\x01\x01\x12\x1f\n" +
+	"\bnickname\x18\x03 \x01(\tH\x02R\bnickname\x88\x01\x01\x12 \n" +
+	"\tparent_id\x18\x04 \x01(\tH\x03R\bparentId\x88\x01\x01\x12\x19\n" +
+	"\x05level\x18\x05 \x01(\x05H\x04R\x05level\x88\x01\x01B\x05\n" +
+	"\x03_idB\v\n" +
+	"\t_usernameB\v\n" +
+	"\t_nicknameB\f\n" +
+	"\n" +
+	"_parent_idB\b\n" +
+	"\x06_level\"\x11\n" +
+	"\x0fListUserRequest\"\xa4\x02\n" +
 	"\rListUserReply\x12=\n" +
-	"\x05users\x18\x01 \x03(\v2'.api.user.service.v1.ListUserReply.UserR\x05users\x1a\x81\x01\n" +
-	"\x04User\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\x12\x1a\n" +
-	"\busername\x18\x02 \x01(\tR\busername\x12\x1a\n" +
-	"\bnickname\x18\x03 \x01(\tR\bnickname\x12\x1b\n" +
-	"\tparent_id\x18\x04 \x01(\tR\bparentId\x12\x14\n" +
-	"\x05level\x18\x05 \x01(\x05R\x05level2\xc3\x03\n" +
+	"\x05users\x18\x01 \x03(\v2'.api.user.service.v1.ListUserReply.UserR\x05users\x1a\xd3\x01\n" +
+	"\x04User\x12\x13\n" +
+	"\x02id\x18\x01 \x01(\tH\x00R\x02id\x88\x01\x01\x12\x1f\n" +
+	"\busername\x18\x02 \x01(\tH\x01R\busername\x88\x01\x01\x12\x1f\n" +
+	"\bnickname\x18\x03 \x01(\tH\x02R\bnickname\x88\x01\x01\x12 \n" +
+	"\tparent_id\x18\x04 \x01(\tH\x03R\bparentId\x88\x01\x01\x12\x19\n" +
+	"\x05level\x18\x05 \x01(\x05H\x04R\x05level\x88\x01\x01B\x05\n" +
+	"\x03_idB\v\n" +
+	"\t_usernameB\v\n" +
+	"\t_nicknameB\f\n" +
+	"\n" +
+	"_parent_idB\b\n" +
+	"\x06_level2\xc3\x03\n" +
 	"\x04User\x12Z\n" +
 	"\n" +
 	"CreateUser\x12&.api.user.service.v1.CreateUserRequest\x1a$.api.user.service.v1.CreateUserReply\x12Z\n" +
@@ -793,7 +817,11 @@ func file_api_user_service_v1_user_proto_init() {
 		return
 	}
 	file_api_user_service_v1_user_proto_msgTypes[0].OneofWrappers = []any{}
+	file_api_user_service_v1_user_proto_msgTypes[1].OneofWrappers = []any{}
 	file_api_user_service_v1_user_proto_msgTypes[2].OneofWrappers = []any{}
+	file_api_user_service_v1_user_proto_msgTypes[3].OneofWrappers = []any{}
+	file_api_user_service_v1_user_proto_msgTypes[7].OneofWrappers = []any{}
+	file_api_user_service_v1_user_proto_msgTypes[10].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

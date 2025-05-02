@@ -23,11 +23,11 @@ message CreateUserRequest {
 	optional int32 level = 6;
 }
 message CreateUserReply {
-	string id = 1;
-	string username = 2;
-	string nickname = 3;
-	string parent_id = 4;
-	int32 level = 5;
+	optional string id = 1;
+	optional string username = 2;
+	optional string nickname = 3;
+	optional string parent_id = 4;
+	optional int32 level = 5;
 }
 
 message UpdateUserRequest {
@@ -36,11 +36,11 @@ message UpdateUserRequest {
 	optional string nickname = 4;
 }
 message UpdateUserReply {
-	string id = 1;
-	string username = 2;
-	string nickname = 3;
-	string parent_id = 4;
-	int32 level = 5;
+	optional string id = 1;
+	optional string username = 2;
+	optional string nickname = 3;
+	optional string parent_id = 4;
+	optional int32 level = 5;
 }
 
 message DeleteUserRequest {
@@ -52,21 +52,21 @@ message GetUserRequest {
 	string id = 1;
 }
 message GetUserReply {
-	string id = 1;
-	string username = 2;
-	string nickname = 3;
-	string parent_id = 4;
-	int32 level = 5;
+	optional string id = 1;
+	optional string username = 2;
+	optional string nickname = 3;
+	optional string parent_id = 4;
+	optional int32 level = 5;
 }
 
 message ListUserRequest {}
 message ListUserReply {
 	message User {
-		string id = 1;
-		string username = 2;
-		string nickname = 3;
-		string parent_id = 4;
-		int32 level = 5;
+		optional string id = 1;
+		optional string username = 2;
+		optional string nickname = 3;
+		optional string parent_id = 4;
+		optional int32 level = 5;
 	}
 	repeated User users = 1;
 }
