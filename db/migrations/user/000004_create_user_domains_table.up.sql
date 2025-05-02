@@ -1,0 +1,6 @@
+CREATE TABLE IF NOT EXISTS user_domains (
+    id CHAR(36) UNIQUE PRIMARY KEY NOT NULL,
+    user_id CHAR(36) NOT NULL,
+    domain VARCHAR(256) NOT NULL UNIQUE,
+    FOREIGN KEY(user_id) REFERENCES users(id)
+);
