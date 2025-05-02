@@ -1,0 +1,72 @@
+syntax = "proto3";
+
+package api.user.service.v1;
+
+option go_package = "agents/api/user/service/v1;v1";
+option java_multiple_files = true;
+option java_package = "api.user.service.v1";
+
+service User {
+	rpc CreateUser (CreateUserRequest) returns (CreateUserReply);
+	rpc UpdateUser (UpdateUserRequest) returns (UpdateUserReply);
+	rpc DeleteUser (DeleteUserRequest) returns (DeleteUserReply);
+	rpc GetUser (GetUserRequest) returns (GetUserReply);
+	rpc ListUser (ListUserRequest) returns (ListUserReply);
+}
+
+message CreateUserRequest {
+	optional string id = 1;
+	optional string username = 2;
+	optional string password = 3;
+	optional string nickname = 4;
+	optional string parent_id = 5;
+	optional int32 level = 6;
+}
+message CreateUserReply {
+	string id = 1;
+	string username = 2;
+	string nickname = 3;
+	string parent_id = 4;
+	int32 level = 5;
+}
+
+message UpdateUserRequest {
+	optional string id = 1;
+	optional string password = 3;
+	optional string nickname = 4;
+}
+message UpdateUserReply {
+	string id = 1;
+	string username = 2;
+	string nickname = 3;
+	string parent_id = 4;
+	int32 level = 5;
+}
+
+message DeleteUserRequest {
+	string id = 1;
+}
+message DeleteUserReply {}
+
+message GetUserRequest {
+	string id = 1;
+}
+message GetUserReply {
+	string id = 1;
+	string username = 2;
+	string nickname = 3;
+	string parent_id = 4;
+	int32 level = 5;
+}
+
+message ListUserRequest {}
+message ListUserReply {
+	message User {
+		string id = 1;
+		string username = 2;
+		string nickname = 3;
+		string parent_id = 4;
+		int32 level = 5;
+	}
+	repeated User users = 1;
+}

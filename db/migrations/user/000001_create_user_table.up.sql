@@ -1,0 +1,6 @@
+CREATE TABLE IF NOT EXISTS users (
+    id CHAR(36) UNIQUE PRIMARY KEY NOT NULL,
+    username VARCHAR(20) UNIQUE NOT NULL,
+    hashed_password VARCHAR(128) NOT NULL,
+    nickname VARCHAR(32) NULL
+);

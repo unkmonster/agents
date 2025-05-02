@@ -1,0 +1,4 @@
+BEGIN;
+ALTER TABLE users DROP COLUMN level;
+ALTER TABLE users DROP COLUMN parent_id;
+COMMIT;
