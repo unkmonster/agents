@@ -2,6 +2,7 @@ package biz
 
 import (
 	"context"
+	"time"
 
 	pb "agents/api/user/service/v1"
 
@@ -11,14 +12,16 @@ import (
 )
 
 type User struct {
-	Id             string
-	Username       string
-	HashedPassword string
-	Nickname       *string
-	ParentId       *string
-	Level          int32
+	Id        string    `db:"id"`
+	Username  string    `db:"username"`
+	password  string    `db:"password"`
+	Nickname  *string   `db:"nickname"`
+	ParentId  *string   `db:"parent_id"`
+	Level     int32     `db:"level"`
+	CreatedAt time.Time `db:"created_at"`
 }
 
+// TODO: update, listByParentId
 type UserRepo interface {
 	CreateUser(ctx context.Context, user *User) error
 	GetUser(ctx context.Context, id string) (*User, error)
@@ -55,12 +58,12 @@ func (uc *UserUseCase) CreateUser(ctx context.Context, req *pb.CreateUserRequest
 	// TODO: parent_id 仅允许为调用者 ID, level 必须大于调用者 level 并且小于等于 max_level
 
 	user := User{
-		Id:             uuid.New().String(),
-		Username:       *req.Username,
-		HashedPassword: *req.Password,
-		Nickname:       req.Nickname,
-		ParentId:       req.ParentId,
-		Level:          *req.Level,
+		Id:       uuid.New().String(),
+		Username: *req.Username,
+		password: *req.Password,
+		Nickname: req.Nickname,
+		ParentId: req.ParentId,
+		Level:    *req.Level,
 	}
 
 	if err := uc.repo.CreateUser(ctx, &user); err != nil {

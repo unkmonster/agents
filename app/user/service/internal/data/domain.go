@@ -12,7 +12,7 @@ type userDomainRepo struct {
 	log  *log.Helper
 }
 
-func NewUserDomainRepo(data *Data, logger log.Logger) *userDomainRepo {
+func NewUserDomainRepo(data *Data, logger log.Logger) biz.UserDomainRepo {
 	return &userDomainRepo{
 		data: data,
 		log:  log.NewHelper(logger),
