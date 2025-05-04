@@ -30,6 +30,13 @@ type UserDomainUseCase struct {
 	log  *log.Helper
 }
 
+func NewUserDomainUseCase(repo UserDomainRepo, logger log.Logger) *UserDomainUseCase {
+	return &UserDomainUseCase{
+		repo: repo,
+		log:  log.NewHelper(logger),
+	}
+}
+
 func (uc *UserDomainUseCase) CreateUserDomain(ctx context.Context, req *pb.CreateUserDomainRequest) (*UserDomain, error) {
 	if req.UserId == nil {
 		return nil, errors.New(400, "MISSING_USER_ID", "缺少用户 ID")
@@ -50,4 +57,20 @@ func (uc *UserDomainUseCase) CreateUserDomain(ctx context.Context, req *pb.Creat
 	}
 
 	return userDomain, nil
+}
+
+func (uc *UserDomainUseCase) Get(ctx context.Context, id string) (*UserDomain, error) {
+	return uc.repo.Get(ctx, id)
+}
+
+func (uc *UserDomainUseCase) ListAll(ctx context.Context) ([]*UserDomain, error) {
+	return uc.repo.List(ctx)
+}
+
+func (uc *UserDomainUseCase) ListByUserId(ctx context.Context, userId string) ([]*UserDomain, error) {
+	return uc.repo.ListByUserId(ctx, userId)
+}
+
+func (uc *UserDomainUseCase) Delete(ctx context.Context, id string) error {
+	return uc.repo.Delete(ctx, id)
 }
