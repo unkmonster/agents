@@ -26,14 +26,14 @@ func (r *userRepo) CreateUser(ctx context.Context, user *biz.User) error {
 		INSERT INTO users (
 			id,
 			username,
-			password,
+			hashed_password,
 			nickname,
 			parent_id,
 			level
 		) VALUES (
 			:id,
 			:username,
-			:password,
+			:hashed_password,
 			:nickname,
 			:parent_id,
 			:level
