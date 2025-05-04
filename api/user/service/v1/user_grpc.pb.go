@@ -19,11 +19,12 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	User_CreateUser_FullMethodName = "/api.user.service.v1.User/CreateUser"
-	User_UpdateUser_FullMethodName = "/api.user.service.v1.User/UpdateUser"
-	User_DeleteUser_FullMethodName = "/api.user.service.v1.User/DeleteUser"
-	User_GetUser_FullMethodName    = "/api.user.service.v1.User/GetUser"
-	User_ListUser_FullMethodName   = "/api.user.service.v1.User/ListUser"
+	User_CreateUser_FullMethodName       = "/api.user.service.v1.User/CreateUser"
+	User_UpdateUser_FullMethodName       = "/api.user.service.v1.User/UpdateUser"
+	User_DeleteUser_FullMethodName       = "/api.user.service.v1.User/DeleteUser"
+	User_GetUser_FullMethodName          = "/api.user.service.v1.User/GetUser"
+	User_ListUser_FullMethodName         = "/api.user.service.v1.User/ListUser"
+	User_CreateUserDomain_FullMethodName = "/api.user.service.v1.User/CreateUserDomain"
 )
 
 // UserClient is the client API for User service.
@@ -35,6 +36,7 @@ type UserClient interface {
 	DeleteUser(ctx context.Context, in *DeleteUserRequest, opts ...grpc.CallOption) (*DeleteUserReply, error)
 	GetUser(ctx context.Context, in *GetUserRequest, opts ...grpc.CallOption) (*GetUserReply, error)
 	ListUser(ctx context.Context, in *ListUserRequest, opts ...grpc.CallOption) (*ListUserReply, error)
+	CreateUserDomain(ctx context.Context, in *CreateUserDomainRequest, opts ...grpc.CallOption) (*CreateUserDomainReply, error)
 }
 
 type userClient struct {
@@ -95,6 +97,16 @@ func (c *userClient) ListUser(ctx context.Context, in *ListUserRequest, opts ...
 	return out, nil
 }
 
+func (c *userClient) CreateUserDomain(ctx context.Context, in *CreateUserDomainRequest, opts ...grpc.CallOption) (*CreateUserDomainReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CreateUserDomainReply)
+	err := c.cc.Invoke(ctx, User_CreateUserDomain_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UserServer is the server API for User service.
 // All implementations must embed UnimplementedUserServer
 // for forward compatibility.
@@ -104,6 +116,7 @@ type UserServer interface {
 	DeleteUser(context.Context, *DeleteUserRequest) (*DeleteUserReply, error)
 	GetUser(context.Context, *GetUserRequest) (*GetUserReply, error)
 	ListUser(context.Context, *ListUserRequest) (*ListUserReply, error)
+	CreateUserDomain(context.Context, *CreateUserDomainRequest) (*CreateUserDomainReply, error)
 	mustEmbedUnimplementedUserServer()
 }
 
@@ -128,6 +141,9 @@ func (UnimplementedUserServer) GetUser(context.Context, *GetUserRequest) (*GetUs
 }
 func (UnimplementedUserServer) ListUser(context.Context, *ListUserRequest) (*ListUserReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListUser not implemented")
+}
+func (UnimplementedUserServer) CreateUserDomain(context.Context, *CreateUserDomainRequest) (*CreateUserDomainReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateUserDomain not implemented")
 }
 func (UnimplementedUserServer) mustEmbedUnimplementedUserServer() {}
 func (UnimplementedUserServer) testEmbeddedByValue()              {}
@@ -240,6 +256,24 @@ func _User_ListUser_Handler(srv interface{}, ctx context.Context, dec func(inter
 	return interceptor(ctx, in, info, handler)
 }
 
+func _User_CreateUserDomain_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateUserDomainRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).CreateUserDomain(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_CreateUserDomain_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).CreateUserDomain(ctx, req.(*CreateUserDomainRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // User_ServiceDesc is the grpc.ServiceDesc for User service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -266,6 +300,10 @@ var User_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListUser",
 			Handler:    _User_ListUser_Handler,
+		},
+		{
+			MethodName: "CreateUserDomain",
+			Handler:    _User_CreateUserDomain_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

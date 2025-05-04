@@ -12,10 +12,21 @@ service User {
 	rpc DeleteUser (DeleteUserRequest) returns (DeleteUserReply);
 	rpc GetUser (GetUserRequest) returns (GetUserReply);
 	rpc ListUser (ListUserRequest) returns (ListUserReply);
+
+	rpc CreateUserDomain(CreateUserDomainRequest) returns (CreateUserDomainReply);
+}
+
+message CreateUserDomainRequest{
+	optional string user_id = 2;
+	optional string domain = 3;
+}
+message CreateUserDomainReply{
+	optional string id = 1;
+	optional string user_id = 2;
+	optional string domain = 3;
 }
 
 message CreateUserRequest {
-	optional string id = 1;
 	optional string username = 2;
 	optional string password = 3;
 	optional string nickname = 4;

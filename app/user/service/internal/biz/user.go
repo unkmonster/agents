@@ -5,7 +5,7 @@ import (
 
 	pb "agents/api/user/service/v1"
 
-	errors "github.com/go-kratos/kratos/v2/errors"
+	"github.com/go-kratos/kratos/v2/errors"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/google/uuid"
 )
