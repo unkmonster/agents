@@ -19,12 +19,16 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	User_CreateUser_FullMethodName       = "/api.user.service.v1.User/CreateUser"
-	User_UpdateUser_FullMethodName       = "/api.user.service.v1.User/UpdateUser"
-	User_DeleteUser_FullMethodName       = "/api.user.service.v1.User/DeleteUser"
-	User_GetUser_FullMethodName          = "/api.user.service.v1.User/GetUser"
-	User_ListUser_FullMethodName         = "/api.user.service.v1.User/ListUser"
-	User_CreateUserDomain_FullMethodName = "/api.user.service.v1.User/CreateUserDomain"
+	User_CreateUser_FullMethodName              = "/api.user.service.v1.User/CreateUser"
+	User_UpdateUser_FullMethodName              = "/api.user.service.v1.User/UpdateUser"
+	User_DeleteUser_FullMethodName              = "/api.user.service.v1.User/DeleteUser"
+	User_GetUser_FullMethodName                 = "/api.user.service.v1.User/GetUser"
+	User_ListUser_FullMethodName                = "/api.user.service.v1.User/ListUser"
+	User_CreateUserDomain_FullMethodName        = "/api.user.service.v1.User/CreateUserDomain"
+	User_GetUserDomain_FullMethodName           = "/api.user.service.v1.User/GetUserDomain"
+	User_ListUserDomains_FullMethodName         = "/api.user.service.v1.User/ListUserDomains"
+	User_ListUserDomainsByUserId_FullMethodName = "/api.user.service.v1.User/ListUserDomainsByUserId"
+	User_DeleteDomain_FullMethodName            = "/api.user.service.v1.User/DeleteDomain"
 )
 
 // UserClient is the client API for User service.
@@ -37,6 +41,10 @@ type UserClient interface {
 	GetUser(ctx context.Context, in *GetUserRequest, opts ...grpc.CallOption) (*GetUserReply, error)
 	ListUser(ctx context.Context, in *ListUserRequest, opts ...grpc.CallOption) (*ListUserReply, error)
 	CreateUserDomain(ctx context.Context, in *CreateUserDomainRequest, opts ...grpc.CallOption) (*CreateUserDomainReply, error)
+	GetUserDomain(ctx context.Context, in *GetUserDomainRequest, opts ...grpc.CallOption) (*GetUserDomainReply, error)
+	ListUserDomains(ctx context.Context, in *ListUserDomainsRequest, opts ...grpc.CallOption) (*ListUserDomainsReply, error)
+	ListUserDomainsByUserId(ctx context.Context, in *ListUserDomainsByUserIdRequest, opts ...grpc.CallOption) (*ListUserDomainsByUserIdReply, error)
+	DeleteDomain(ctx context.Context, in *DeleteDomainRequest, opts ...grpc.CallOption) (*DeleteDomainReply, error)
 }
 
 type userClient struct {
@@ -107,6 +115,46 @@ func (c *userClient) CreateUserDomain(ctx context.Context, in *CreateUserDomainR
 	return out, nil
 }
 
+func (c *userClient) GetUserDomain(ctx context.Context, in *GetUserDomainRequest, opts ...grpc.CallOption) (*GetUserDomainReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetUserDomainReply)
+	err := c.cc.Invoke(ctx, User_GetUserDomain_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userClient) ListUserDomains(ctx context.Context, in *ListUserDomainsRequest, opts ...grpc.CallOption) (*ListUserDomainsReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListUserDomainsReply)
+	err := c.cc.Invoke(ctx, User_ListUserDomains_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userClient) ListUserDomainsByUserId(ctx context.Context, in *ListUserDomainsByUserIdRequest, opts ...grpc.CallOption) (*ListUserDomainsByUserIdReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListUserDomainsByUserIdReply)
+	err := c.cc.Invoke(ctx, User_ListUserDomainsByUserId_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userClient) DeleteDomain(ctx context.Context, in *DeleteDomainRequest, opts ...grpc.CallOption) (*DeleteDomainReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(DeleteDomainReply)
+	err := c.cc.Invoke(ctx, User_DeleteDomain_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UserServer is the server API for User service.
 // All implementations must embed UnimplementedUserServer
 // for forward compatibility.
@@ -117,6 +165,10 @@ type UserServer interface {
 	GetUser(context.Context, *GetUserRequest) (*GetUserReply, error)
 	ListUser(context.Context, *ListUserRequest) (*ListUserReply, error)
 	CreateUserDomain(context.Context, *CreateUserDomainRequest) (*CreateUserDomainReply, error)
+	GetUserDomain(context.Context, *GetUserDomainRequest) (*GetUserDomainReply, error)
+	ListUserDomains(context.Context, *ListUserDomainsRequest) (*ListUserDomainsReply, error)
+	ListUserDomainsByUserId(context.Context, *ListUserDomainsByUserIdRequest) (*ListUserDomainsByUserIdReply, error)
+	DeleteDomain(context.Context, *DeleteDomainRequest) (*DeleteDomainReply, error)
 	mustEmbedUnimplementedUserServer()
 }
 
@@ -144,6 +196,18 @@ func (UnimplementedUserServer) ListUser(context.Context, *ListUserRequest) (*Lis
 }
 func (UnimplementedUserServer) CreateUserDomain(context.Context, *CreateUserDomainRequest) (*CreateUserDomainReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateUserDomain not implemented")
+}
+func (UnimplementedUserServer) GetUserDomain(context.Context, *GetUserDomainRequest) (*GetUserDomainReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetUserDomain not implemented")
+}
+func (UnimplementedUserServer) ListUserDomains(context.Context, *ListUserDomainsRequest) (*ListUserDomainsReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListUserDomains not implemented")
+}
+func (UnimplementedUserServer) ListUserDomainsByUserId(context.Context, *ListUserDomainsByUserIdRequest) (*ListUserDomainsByUserIdReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListUserDomainsByUserId not implemented")
+}
+func (UnimplementedUserServer) DeleteDomain(context.Context, *DeleteDomainRequest) (*DeleteDomainReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteDomain not implemented")
 }
 func (UnimplementedUserServer) mustEmbedUnimplementedUserServer() {}
 func (UnimplementedUserServer) testEmbeddedByValue()              {}
@@ -274,6 +338,78 @@ func _User_CreateUserDomain_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
+func _User_GetUserDomain_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetUserDomainRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).GetUserDomain(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_GetUserDomain_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).GetUserDomain(ctx, req.(*GetUserDomainRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _User_ListUserDomains_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListUserDomainsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).ListUserDomains(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_ListUserDomains_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).ListUserDomains(ctx, req.(*ListUserDomainsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _User_ListUserDomainsByUserId_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListUserDomainsByUserIdRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).ListUserDomainsByUserId(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_ListUserDomainsByUserId_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).ListUserDomainsByUserId(ctx, req.(*ListUserDomainsByUserIdRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _User_DeleteDomain_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteDomainRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).DeleteDomain(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_DeleteDomain_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).DeleteDomain(ctx, req.(*DeleteDomainRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // User_ServiceDesc is the grpc.ServiceDesc for User service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -304,6 +440,22 @@ var User_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "CreateUserDomain",
 			Handler:    _User_CreateUserDomain_Handler,
+		},
+		{
+			MethodName: "GetUserDomain",
+			Handler:    _User_GetUserDomain_Handler,
+		},
+		{
+			MethodName: "ListUserDomains",
+			Handler:    _User_ListUserDomains_Handler,
+		},
+		{
+			MethodName: "ListUserDomainsByUserId",
+			Handler:    _User_ListUserDomainsByUserId_Handler,
+		},
+		{
+			MethodName: "DeleteDomain",
+			Handler:    _User_DeleteDomain_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

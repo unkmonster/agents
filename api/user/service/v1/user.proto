@@ -14,6 +14,49 @@ service User {
 	rpc ListUser (ListUserRequest) returns (ListUserReply);
 
 	rpc CreateUserDomain(CreateUserDomainRequest) returns (CreateUserDomainReply);
+	rpc GetUserDomain(GetUserDomainRequest) returns (GetUserDomainReply);
+	rpc ListUserDomains(ListUserDomainsRequest) returns (ListUserDomainsReply);
+	rpc ListUserDomainsByUserId(ListUserDomainsByUserIdRequest) returns (ListUserDomainsByUserIdReply);
+	rpc DeleteDomain(DeleteDomainRequest) returns (DeleteDomainReply);
+}
+
+message DeleteDomainRequest {
+	optional string id = 1;
+}
+message DeleteDomainReply {}
+
+message ListUserDomainsByUserIdRequest {
+	optional string user_id =1;
+}
+message ListUserDomainsByUserIdReply {
+	message Domain {
+		optional string id = 1;
+		optional string user_id = 2;
+		optional string domain = 3;
+	}
+	repeated Domain domains = 1;
+}
+
+message ListUserDomainsRequest {
+
+}
+
+message ListUserDomainsReply {
+	message Domain {
+		optional string id = 1;
+		optional string user_id = 2;
+		optional string domain = 3;
+	}
+	repeated Domain domains = 1;
+}
+
+message GetUserDomainRequest {
+	optional string id = 1;
+}
+message GetUserDomainReply {
+	optional string id = 1;
+	optional string user_id = 2;
+	optional string domain = 3;
 }
 
 message CreateUserDomainRequest{
@@ -55,12 +98,12 @@ message UpdateUserReply {
 }
 
 message DeleteUserRequest {
-	string id = 1;
+	optional string id = 1;
 }
 message DeleteUserReply {}
 
 message GetUserRequest {
-	string id = 1;
+	optional string id = 1;
 }
 message GetUserReply {
 	optional string id = 1;
