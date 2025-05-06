@@ -1,0 +1,47 @@
+syntax = "proto3";
+
+package api.authn.service.v1;
+
+option go_package = "agents/api/authn/service/v1;v1";
+option java_multiple_files = true;
+option java_package = "api.authn.service.v1";
+
+service Authn {
+	rpc Login(LoginRequest) returns (AuthReply);
+	rpc Register(RegisterRequest) returns (AuthReply);
+	rpc Verify(VerifyRequest) returns (VerifyReply);
+}
+
+message UserInfo {
+	optional string id = 1;
+	optional string username = 2;
+	optional string nickname = 3;
+	optional string parent_id = 4;
+	optional int32 level = 5;
+}
+
+message AuthReply {
+	optional string token = 1;
+	UserInfo user = 2;
+}
+
+message LoginRequest {
+	optional string username = 1;
+	optional string password = 2;
+}
+
+message VerifyRequest {
+	optional string token = 1;
+}
+
+message VerifyReply {
+	UserInfo user = 1;
+}
+
+message RegisterRequest {
+	optional string username = 1;
+	optional string password = 2;
+	optional string nickname = 3;
+	optional string parent_id = 4;
+	optional int32 level = 5;
+}
