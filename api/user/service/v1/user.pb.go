@@ -488,7 +488,6 @@ func (x *CreateUserDomainReply) GetDomain() string {
 type CreateUserRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Username      *string                `protobuf:"bytes,2,opt,name=username,proto3,oneof" json:"username,omitempty"`
-	Password      *string                `protobuf:"bytes,3,opt,name=password,proto3,oneof" json:"password,omitempty"`
 	Nickname      *string                `protobuf:"bytes,4,opt,name=nickname,proto3,oneof" json:"nickname,omitempty"`
 	ParentId      *string                `protobuf:"bytes,5,opt,name=parent_id,json=parentId,proto3,oneof" json:"parent_id,omitempty"`
 	Level         *int32                 `protobuf:"varint,6,opt,name=level,proto3,oneof" json:"level,omitempty"`
@@ -529,13 +528,6 @@ func (*CreateUserRequest) Descriptor() ([]byte, []int) {
 func (x *CreateUserRequest) GetUsername() string {
 	if x != nil && x.Username != nil {
 		return *x.Username
-	}
-	return ""
-}
-
-func (x *CreateUserRequest) GetPassword() string {
-	if x != nil && x.Password != nil {
-		return *x.Password
 	}
 	return ""
 }
@@ -1307,15 +1299,13 @@ const file_api_user_service_v1_user_proto_rawDesc = "" +
 	"\x03_idB\n" +
 	"\n" +
 	"\b_user_idB\t\n" +
-	"\a_domain\"\xf2\x01\n" +
+	"\a_domain\"\xc4\x01\n" +
 	"\x11CreateUserRequest\x12\x1f\n" +
 	"\busername\x18\x02 \x01(\tH\x00R\busername\x88\x01\x01\x12\x1f\n" +
-	"\bpassword\x18\x03 \x01(\tH\x01R\bpassword\x88\x01\x01\x12\x1f\n" +
-	"\bnickname\x18\x04 \x01(\tH\x02R\bnickname\x88\x01\x01\x12 \n" +
-	"\tparent_id\x18\x05 \x01(\tH\x03R\bparentId\x88\x01\x01\x12\x19\n" +
-	"\x05level\x18\x06 \x01(\x05H\x04R\x05level\x88\x01\x01B\v\n" +
+	"\bnickname\x18\x04 \x01(\tH\x01R\bnickname\x88\x01\x01\x12 \n" +
+	"\tparent_id\x18\x05 \x01(\tH\x02R\bparentId\x88\x01\x01\x12\x19\n" +
+	"\x05level\x18\x06 \x01(\x05H\x03R\x05level\x88\x01\x01B\v\n" +
 	"\t_usernameB\v\n" +
-	"\t_passwordB\v\n" +
 	"\t_nicknameB\f\n" +
 	"\n" +
 	"_parent_idB\b\n" +

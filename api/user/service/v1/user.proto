@@ -71,7 +71,6 @@ message CreateUserDomainReply{
 
 message CreateUserRequest {
 	optional string username = 2;
-	optional string password = 3;
 	optional string nickname = 4;
 	optional string parent_id = 5;
 	optional int32 level = 6;

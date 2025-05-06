@@ -27,10 +27,6 @@ func (s *UserService) CreateUser(ctx context.Context, req *pb.CreateUserRequest)
 		return nil, errors.New(400, "MISSING_USERNAME", "缺少用户名")
 	}
 
-	if req.Password == nil {
-		return nil, errors.New(400, "MISSING_PASSWORD", "缺少密码")
-	}
-
 	if req.Level == nil {
 		return nil, errors.New(400, "MISSING_AGENT_LEVEL", "缺少代理等级")
 	}

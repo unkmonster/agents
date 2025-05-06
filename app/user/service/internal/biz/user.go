@@ -2,7 +2,6 @@ package biz
 
 import (
 	"context"
-	"encoding/hex"
 	"time"
 
 	pb "agents/api/user/service/v1"
@@ -10,17 +9,15 @@ import (
 	"github.com/go-kratos/kratos/v2/errors"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/google/uuid"
-	"golang.org/x/crypto/bcrypt"
 )
 
 type User struct {
-	Id             string    `db:"id"`
-	Username       string    `db:"username"`
-	hashedPassword string    `db:"hashed_password"`
-	Nickname       *string   `db:"nickname"`
-	ParentId       *string   `db:"parent_id"`
-	Level          int32     `db:"level"`
-	CreatedAt      time.Time `db:"created_at"`
+	Id        string    `db:"id"`
+	Username  string    `db:"username"`
+	Nickname  *string   `db:"nickname"`
+	ParentId  *string   `db:"parent_id"`
+	Level     int32     `db:"level"`
+	CreatedAt time.Time `db:"created_at"`
 }
 
 // TODO: update, listByParentId
@@ -47,18 +44,12 @@ func (uc *UserUseCase) CreateUser(ctx context.Context, req *pb.CreateUserRequest
 
 	// TODO: parent_id 仅允许为调用者 ID, level 必须大于调用者 level 并且小于等于 max_level
 
-	h, err := bcrypt.GenerateFromPassword([]byte(*req.Password), bcrypt.DefaultCost)
-	if err != nil {
-		return nil, err
-	}
-
 	user := User{
-		Id:             uuid.New().String(),
-		Username:       *req.Username,
-		hashedPassword: hex.EncodeToString(h),
-		Nickname:       req.Nickname,
-		ParentId:       req.ParentId,
-		Level:          *req.Level,
+		Id:       uuid.New().String(),
+		Username: *req.Username,
+		Nickname: req.Nickname,
+		ParentId: req.ParentId,
+		Level:    *req.Level,
 	}
 
 	if err := uc.repo.CreateUser(ctx, &user); err != nil {
