@@ -2,14 +2,32 @@ syntax = "proto3";
 
 package api.authn.service.v1;
 
+import "google/api/annotations.proto";
+import "validate/validate.proto";
+
 option go_package = "agents/api/authn/service/v1;v1";
 option java_multiple_files = true;
 option java_package = "api.authn.service.v1";
 
 service Authn {
-	rpc Login(LoginRequest) returns (AuthReply);
-	rpc Register(RegisterRequest) returns (AuthReply);
-	rpc Verify(VerifyRequest) returns (VerifyReply);
+	rpc Login(LoginRequest) returns (AuthReply) {
+		option (google.api.http) = {
+			post: "/v1/auth/login",
+			body: "*"
+		};
+	};
+	rpc Register(RegisterRequest) returns (AuthReply) {
+		option (google.api.http) = {
+			post: "/v1/auth/register",
+			body: "*"
+		};
+	};
+	rpc Verify(VerifyRequest) returns (VerifyReply) {
+		option (google.api.http) = {
+			post: "/v1/auth/verify",
+			body: "*"
+		};
+	};
 }
 
 message UserInfo {
@@ -26,8 +44,8 @@ message AuthReply {
 }
 
 message LoginRequest {
-	optional string username = 1;
-	optional string password = 2;
+	optional string username = 1 [(validate.rules).string = {min_len: 3, max_len: 20}];
+	optional string password = 2 [(validate.rules).string = {min_len: 8, max_len: 20}];
 }
 
 message VerifyRequest {
@@ -39,9 +57,9 @@ message VerifyReply {
 }
 
 message RegisterRequest {
-	optional string username = 1;
-	optional string password = 2;
-	optional string nickname = 3;
+	optional string username = 1 [(validate.rules).string = {min_len: 3, max_len: 20}];
+	optional string password = 2 [(validate.rules).string = {min_len: 8, max_len: 20}];
+	optional string nickname = 3 [(validate.rules).string = {max_len: 20}];
 	optional string parent_id = 4;
-	optional int32 level = 5;
+	optional int32 level = 5 [(validate.rules).int32 = {lte: 2}];
 }

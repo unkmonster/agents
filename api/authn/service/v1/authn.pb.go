@@ -7,6 +7,8 @@
 package v1
 
 import (
+	_ "github.com/envoyproxy/protoc-gen-validate/validate"
+	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -369,7 +371,7 @@ var File_api_authn_service_v1_authn_proto protoreflect.FileDescriptor
 
 const file_api_authn_service_v1_authn_proto_rawDesc = "" +
 	"\n" +
-	" api/authn/service/v1/authn.proto\x12\x14api.authn.service.v1\"\xd7\x01\n" +
+	" api/authn/service/v1/authn.proto\x12\x14api.authn.service.v1\x1a\x1cgoogle/api/annotations.proto\x1a\x17validate/validate.proto\"\xd7\x01\n" +
 	"\bUserInfo\x12\x13\n" +
 	"\x02id\x18\x01 \x01(\tH\x00R\x02id\x88\x01\x01\x12\x1f\n" +
 	"\busername\x18\x02 \x01(\tH\x01R\busername\x88\x01\x01\x12\x1f\n" +
@@ -385,33 +387,33 @@ const file_api_authn_service_v1_authn_proto_rawDesc = "" +
 	"\tAuthReply\x12\x19\n" +
 	"\x05token\x18\x01 \x01(\tH\x00R\x05token\x88\x01\x01\x122\n" +
 	"\x04user\x18\x02 \x01(\v2\x1e.api.authn.service.v1.UserInfoR\x04userB\b\n" +
-	"\x06_token\"j\n" +
-	"\fLoginRequest\x12\x1f\n" +
-	"\busername\x18\x01 \x01(\tH\x00R\busername\x88\x01\x01\x12\x1f\n" +
-	"\bpassword\x18\x02 \x01(\tH\x01R\bpassword\x88\x01\x01B\v\n" +
+	"\x06_token\"\x80\x01\n" +
+	"\fLoginRequest\x12*\n" +
+	"\busername\x18\x01 \x01(\tB\t\xfaB\x06r\x04\x10\x03\x18\x14H\x00R\busername\x88\x01\x01\x12*\n" +
+	"\bpassword\x18\x02 \x01(\tB\t\xfaB\x06r\x04\x10\b\x18\x14H\x01R\bpassword\x88\x01\x01B\v\n" +
 	"\t_usernameB\v\n" +
 	"\t_password\"4\n" +
 	"\rVerifyRequest\x12\x19\n" +
 	"\x05token\x18\x01 \x01(\tH\x00R\x05token\x88\x01\x01B\b\n" +
 	"\x06_token\"A\n" +
 	"\vVerifyReply\x122\n" +
-	"\x04user\x18\x01 \x01(\v2\x1e.api.authn.service.v1.UserInfoR\x04user\"\xf0\x01\n" +
-	"\x0fRegisterRequest\x12\x1f\n" +
-	"\busername\x18\x01 \x01(\tH\x00R\busername\x88\x01\x01\x12\x1f\n" +
-	"\bpassword\x18\x02 \x01(\tH\x01R\bpassword\x88\x01\x01\x12\x1f\n" +
-	"\bnickname\x18\x03 \x01(\tH\x02R\bnickname\x88\x01\x01\x12 \n" +
-	"\tparent_id\x18\x04 \x01(\tH\x03R\bparentId\x88\x01\x01\x12\x19\n" +
-	"\x05level\x18\x05 \x01(\x05H\x04R\x05level\x88\x01\x01B\v\n" +
+	"\x04user\x18\x01 \x01(\v2\x1e.api.authn.service.v1.UserInfoR\x04user\"\x98\x02\n" +
+	"\x0fRegisterRequest\x12*\n" +
+	"\busername\x18\x01 \x01(\tB\t\xfaB\x06r\x04\x10\x03\x18\x14H\x00R\busername\x88\x01\x01\x12*\n" +
+	"\bpassword\x18\x02 \x01(\tB\t\xfaB\x06r\x04\x10\b\x18\x14H\x01R\bpassword\x88\x01\x01\x12(\n" +
+	"\bnickname\x18\x03 \x01(\tB\a\xfaB\x04r\x02\x18\x14H\x02R\bnickname\x88\x01\x01\x12 \n" +
+	"\tparent_id\x18\x04 \x01(\tH\x03R\bparentId\x88\x01\x01\x12\"\n" +
+	"\x05level\x18\x05 \x01(\x05B\a\xfaB\x04\x1a\x02\x18\x02H\x04R\x05level\x88\x01\x01B\v\n" +
 	"\t_usernameB\v\n" +
 	"\t_passwordB\v\n" +
 	"\t_nicknameB\f\n" +
 	"\n" +
 	"_parent_idB\b\n" +
-	"\x06_level2\xfb\x01\n" +
-	"\x05Authn\x12L\n" +
-	"\x05Login\x12\".api.authn.service.v1.LoginRequest\x1a\x1f.api.authn.service.v1.AuthReply\x12R\n" +
-	"\bRegister\x12%.api.authn.service.v1.RegisterRequest\x1a\x1f.api.authn.service.v1.AuthReply\x12P\n" +
-	"\x06Verify\x12#.api.authn.service.v1.VerifyRequest\x1a!.api.authn.service.v1.VerifyReplyB8\n" +
+	"\x06_level2\xd0\x02\n" +
+	"\x05Authn\x12g\n" +
+	"\x05Login\x12\".api.authn.service.v1.LoginRequest\x1a\x1f.api.authn.service.v1.AuthReply\"\x19\x82\xd3\xe4\x93\x02\x13:\x01*\"\x0e/v1/auth/login\x12p\n" +
+	"\bRegister\x12%.api.authn.service.v1.RegisterRequest\x1a\x1f.api.authn.service.v1.AuthReply\"\x1c\x82\xd3\xe4\x93\x02\x16:\x01*\"\x11/v1/auth/register\x12l\n" +
+	"\x06Verify\x12#.api.authn.service.v1.VerifyRequest\x1a!.api.authn.service.v1.VerifyReply\"\x1a\x82\xd3\xe4\x93\x02\x14:\x01*\"\x0f/v1/auth/verifyB8\n" +
 	"\x14api.authn.service.v1P\x01Z\x1eagents/api/authn/service/v1;v1b\x06proto3"
 
 var (
