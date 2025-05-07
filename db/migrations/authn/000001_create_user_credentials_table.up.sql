@@ -1,0 +1,7 @@
+CREATE TABLE IF NOT EXISTS user_credentials (
+    id CHAR(36) UNIQUE PRIMARY KEY NOT NULL,
+    user_id CHAR(36) UNIQUE NOT NULL,
+    username VARCHAR(20) UNIQUE NOT NULL,
+    hashed_password VARCHAR(128) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
