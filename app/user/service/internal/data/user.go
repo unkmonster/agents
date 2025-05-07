@@ -60,3 +60,16 @@ func (r *userRepo) DeleteUser(ctx context.Context, id string) error {
 	_, err := r.data.db.ExecContext(ctx, query, id)
 	return err
 }
+
+// GetUserByUsername implements biz.UserRepo.
+func (r *userRepo) GetUserByUsername(ctx context.Context, username string) (*biz.User, error) {
+	query := `
+		SELECT *
+		FROM users
+		WHERE username = ?;
+	`
+	dst := biz.User{}
+
+	err := r.data.db.GetContext(ctx, &dst, query, username)
+	return &dst, err
+}

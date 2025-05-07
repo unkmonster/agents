@@ -152,3 +152,22 @@ func (s *UserService) DeleteDomain(ctx context.Context, req *pb.DeleteDomainRequ
 
 	return &pb.DeleteDomainReply{}, s.domain.Delete(ctx, *req.Id)
 }
+
+func (s *UserService) GetUserByUsername(ctx context.Context, req *pb.GetUserByUsernameRequest) (*pb.GetUserReply, error) {
+	if req.Username == nil {
+		return nil, errors.New(400, "MISSING_USER_NAME", "缺少用户名")
+	}
+
+	user, err := s.user.GetUserByUsername(ctx, *req.Username)
+	if err != nil {
+		return nil, err
+	}
+
+	return &pb.GetUserReply{
+		Id:       &user.Id,
+		Username: &user.Username,
+		Nickname: user.Nickname,
+		ParentId: user.ParentId,
+		Level:    &user.Level,
+	}, nil
+}
