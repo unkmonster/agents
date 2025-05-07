@@ -2,23 +2,69 @@ syntax = "proto3";
 
 package api.user.service.v1;
 
+import "google/api/annotations.proto";
+import "validate/validate.proto";
+
 option go_package = "agents/api/user/service/v1;v1";
 option java_multiple_files = true;
 option java_package = "api.user.service.v1";
 
 service User {
-	rpc CreateUser (CreateUserRequest) returns (CreateUserReply);
-	rpc UpdateUser (UpdateUserRequest) returns (UpdateUserReply);
-	rpc DeleteUser (DeleteUserRequest) returns (DeleteUserReply);
-	rpc GetUser (GetUserRequest) returns (GetUserReply);
-	rpc ListUser (ListUserRequest) returns (ListUserReply);
-	rpc GetUserByUsername (GetUserByUsernameRequest) returns (GetUserReply);
+	rpc CreateUser (CreateUserRequest) returns (CreateUserReply) {
+		option (google.api.http) = {
+			post: "/v1/users",
+			body: "*"
+		};
+	};
+	rpc UpdateUser (UpdateUserRequest) returns (UpdateUserReply) {
+		option (google.api.http) = {
+			patch: "/v1/users/{id}",
+			body: "*"
+		};
+	};
+	rpc DeleteUser (DeleteUserRequest) returns (DeleteUserReply) {
+		option (google.api.http) = {
+			delete: "/v1/users/{id}",
+		};
+	};
+	rpc GetUser (GetUserRequest) returns (GetUserReply) {
+		option (google.api.http) = {
+			get: "/v1/users/{id}",
+		};
+	};
+	rpc ListUser (ListUserRequest) returns (ListUserReply) {
+		option (google.api.http) = {
+			get: "/v1/users",
+		};
+	};
+	rpc GetUserByUsername (GetUserByUsernameRequest) returns (GetUserReply) ;
 
-	rpc CreateUserDomain(CreateUserDomainRequest) returns (CreateUserDomainReply);
-	rpc GetUserDomain(GetUserDomainRequest) returns (GetUserDomainReply);
-	rpc ListUserDomains(ListUserDomainsRequest) returns (ListUserDomainsReply);
-	rpc ListUserDomainsByUserId(ListUserDomainsByUserIdRequest) returns (ListUserDomainsByUserIdReply);
-	rpc DeleteDomain(DeleteDomainRequest) returns (DeleteDomainReply);
+	rpc CreateUserDomain(CreateUserDomainRequest) returns (CreateUserDomainReply) {
+		option (google.api.http) = {
+			post: "/v1/users/{user_id}/domains",
+			body: "*"
+		};
+	};
+	rpc GetUserDomain(GetUserDomainRequest) returns (GetUserDomainReply) {
+		option (google.api.http) = {
+			get: "/v1/domains/{id}",
+		};
+	};
+	rpc ListUserDomains(ListUserDomainsRequest) returns (ListUserDomainsReply) {
+		option (google.api.http) = {
+			get: "/v1/domains",
+		};
+	};
+	rpc ListUserDomainsByUserId(ListUserDomainsByUserIdRequest) returns (ListUserDomainsByUserIdReply) {
+		option (google.api.http) = {
+			get: "/v1/users/{user_id}/domains",
+		};
+	};
+	rpc DeleteDomain(DeleteDomainRequest) returns (DeleteDomainReply) {
+		option (google.api.http) = {
+			delete: "/v1/domains/{id}",
+		};
+	};
 }
 
 message GetUserByUsernameRequest {
@@ -90,8 +136,8 @@ message CreateUserReply {
 
 message UpdateUserRequest {
 	optional string id = 1;
-	optional string password = 3;
-	optional string nickname = 4;
+	optional string password = 3 [(validate.rules).string = {min_len: 8, max_len: 20}];
+	optional string nickname = 4 [(validate.rules).string = {max_len: 20}];
 }
 message UpdateUserReply {
 	optional string id = 1;

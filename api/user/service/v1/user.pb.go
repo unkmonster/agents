@@ -7,6 +7,8 @@
 package v1
 
 import (
+	_ "github.com/envoyproxy/protoc-gen-validate/validate"
+	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -1289,7 +1291,7 @@ var File_api_user_service_v1_user_proto protoreflect.FileDescriptor
 
 const file_api_user_service_v1_user_proto_rawDesc = "" +
 	"\n" +
-	"\x1eapi/user/service/v1/user.proto\x12\x13api.user.service.v1\"H\n" +
+	"\x1eapi/user/service/v1/user.proto\x12\x13api.user.service.v1\x1a\x1cgoogle/api/annotations.proto\x1a\x17validate/validate.proto\"H\n" +
 	"\x18GetUserByUsernameRequest\x12\x1f\n" +
 	"\busername\x18\x01 \x01(\tH\x00R\busername\x88\x01\x01B\v\n" +
 	"\t_username\"1\n" +
@@ -1368,11 +1370,11 @@ const file_api_user_service_v1_user_proto_rawDesc = "" +
 	"\t_nicknameB\f\n" +
 	"\n" +
 	"_parent_idB\b\n" +
-	"\x06_level\"\x8b\x01\n" +
+	"\x06_level\"\x9f\x01\n" +
 	"\x11UpdateUserRequest\x12\x13\n" +
-	"\x02id\x18\x01 \x01(\tH\x00R\x02id\x88\x01\x01\x12\x1f\n" +
-	"\bpassword\x18\x03 \x01(\tH\x01R\bpassword\x88\x01\x01\x12\x1f\n" +
-	"\bnickname\x18\x04 \x01(\tH\x02R\bnickname\x88\x01\x01B\x05\n" +
+	"\x02id\x18\x01 \x01(\tH\x00R\x02id\x88\x01\x01\x12*\n" +
+	"\bpassword\x18\x03 \x01(\tB\t\xfaB\x06r\x04\x10\b\x18\x14H\x01R\bpassword\x88\x01\x01\x12(\n" +
+	"\bnickname\x18\x04 \x01(\tB\a\xfaB\x04r\x02\x18\x14H\x02R\bnickname\x88\x01\x01B\x05\n" +
 	"\x03_idB\v\n" +
 	"\t_passwordB\v\n" +
 	"\t_nickname\"\xde\x01\n" +
@@ -1421,22 +1423,23 @@ const file_api_user_service_v1_user_proto_rawDesc = "" +
 	"\t_nicknameB\f\n" +
 	"\n" +
 	"_parent_idB\b\n" +
-	"\x06_level2\xce\b\n" +
-	"\x04User\x12Z\n" +
+	"\x06_level2\xd9\n" +
 	"\n" +
-	"CreateUser\x12&.api.user.service.v1.CreateUserRequest\x1a$.api.user.service.v1.CreateUserReply\x12Z\n" +
+	"\x04User\x12p\n" +
 	"\n" +
-	"UpdateUser\x12&.api.user.service.v1.UpdateUserRequest\x1a$.api.user.service.v1.UpdateUserReply\x12Z\n" +
+	"CreateUser\x12&.api.user.service.v1.CreateUserRequest\x1a$.api.user.service.v1.CreateUserReply\"\x14\x82\xd3\xe4\x93\x02\x0e:\x01*\"\t/v1/users\x12u\n" +
 	"\n" +
-	"DeleteUser\x12&.api.user.service.v1.DeleteUserRequest\x1a$.api.user.service.v1.DeleteUserReply\x12Q\n" +
-	"\aGetUser\x12#.api.user.service.v1.GetUserRequest\x1a!.api.user.service.v1.GetUserReply\x12T\n" +
-	"\bListUser\x12$.api.user.service.v1.ListUserRequest\x1a\".api.user.service.v1.ListUserReply\x12e\n" +
-	"\x11GetUserByUsername\x12-.api.user.service.v1.GetUserByUsernameRequest\x1a!.api.user.service.v1.GetUserReply\x12l\n" +
-	"\x10CreateUserDomain\x12,.api.user.service.v1.CreateUserDomainRequest\x1a*.api.user.service.v1.CreateUserDomainReply\x12c\n" +
-	"\rGetUserDomain\x12).api.user.service.v1.GetUserDomainRequest\x1a'.api.user.service.v1.GetUserDomainReply\x12i\n" +
-	"\x0fListUserDomains\x12+.api.user.service.v1.ListUserDomainsRequest\x1a).api.user.service.v1.ListUserDomainsReply\x12\x81\x01\n" +
-	"\x17ListUserDomainsByUserId\x123.api.user.service.v1.ListUserDomainsByUserIdRequest\x1a1.api.user.service.v1.ListUserDomainsByUserIdReply\x12`\n" +
-	"\fDeleteDomain\x12(.api.user.service.v1.DeleteDomainRequest\x1a&.api.user.service.v1.DeleteDomainReplyB6\n" +
+	"UpdateUser\x12&.api.user.service.v1.UpdateUserRequest\x1a$.api.user.service.v1.UpdateUserReply\"\x19\x82\xd3\xe4\x93\x02\x13:\x01*2\x0e/v1/users/{id}\x12r\n" +
+	"\n" +
+	"DeleteUser\x12&.api.user.service.v1.DeleteUserRequest\x1a$.api.user.service.v1.DeleteUserReply\"\x16\x82\xd3\xe4\x93\x02\x10*\x0e/v1/users/{id}\x12i\n" +
+	"\aGetUser\x12#.api.user.service.v1.GetUserRequest\x1a!.api.user.service.v1.GetUserReply\"\x16\x82\xd3\xe4\x93\x02\x10\x12\x0e/v1/users/{id}\x12g\n" +
+	"\bListUser\x12$.api.user.service.v1.ListUserRequest\x1a\".api.user.service.v1.ListUserReply\"\x11\x82\xd3\xe4\x93\x02\v\x12\t/v1/users\x12e\n" +
+	"\x11GetUserByUsername\x12-.api.user.service.v1.GetUserByUsernameRequest\x1a!.api.user.service.v1.GetUserReply\x12\x94\x01\n" +
+	"\x10CreateUserDomain\x12,.api.user.service.v1.CreateUserDomainRequest\x1a*.api.user.service.v1.CreateUserDomainReply\"&\x82\xd3\xe4\x93\x02 :\x01*\"\x1b/v1/users/{user_id}/domains\x12}\n" +
+	"\rGetUserDomain\x12).api.user.service.v1.GetUserDomainRequest\x1a'.api.user.service.v1.GetUserDomainReply\"\x18\x82\xd3\xe4\x93\x02\x12\x12\x10/v1/domains/{id}\x12~\n" +
+	"\x0fListUserDomains\x12+.api.user.service.v1.ListUserDomainsRequest\x1a).api.user.service.v1.ListUserDomainsReply\"\x13\x82\xd3\xe4\x93\x02\r\x12\v/v1/domains\x12\xa6\x01\n" +
+	"\x17ListUserDomainsByUserId\x123.api.user.service.v1.ListUserDomainsByUserIdRequest\x1a1.api.user.service.v1.ListUserDomainsByUserIdReply\"#\x82\xd3\xe4\x93\x02\x1d\x12\x1b/v1/users/{user_id}/domains\x12z\n" +
+	"\fDeleteDomain\x12(.api.user.service.v1.DeleteDomainRequest\x1a&.api.user.service.v1.DeleteDomainReply\"\x18\x82\xd3\xe4\x93\x02\x12*\x10/v1/domains/{id}B6\n" +
 	"\x13api.user.service.v1P\x01Z\x1dagents/api/user/service/v1;v1b\x06proto3"
 
 var (

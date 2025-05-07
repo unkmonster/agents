@@ -3,67 +3,101 @@
 
 openapi: 3.0.3
 info:
-    title: Authn API
+    title: User API
     version: 0.0.1
 paths:
-    /v1/auth/login:
-        post:
+    /v1/domains:
+        get:
             tags:
-                - Authn
-            operationId: Authn_Login
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/LoginRequest'
-                required: true
+                - User
+            operationId: User_ListUserDomains
             responses:
                 "200":
                     description: OK
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/AuthReply'
+                                $ref: '#/components/schemas/ListUserDomainsReply'
                 default:
                     description: Default error response
                     content:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/Status'
-    /v1/auth/register:
-        post:
+    /v1/domains/{id}:
+        get:
             tags:
-                - Authn
-            operationId: Authn_Register
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/RegisterRequest'
-                required: true
+                - User
+            operationId: User_GetUserDomain
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: string
             responses:
                 "200":
                     description: OK
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/AuthReply'
+                                $ref: '#/components/schemas/GetUserDomainReply'
                 default:
                     description: Default error response
                     content:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/Status'
-    /v1/auth/verify:
+        delete:
+            tags:
+                - User
+            operationId: User_DeleteDomain
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/DeleteDomainReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1/users:
+        get:
+            tags:
+                - User
+            operationId: User_ListUser
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ListUserReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
         post:
             tags:
-                - Authn
-            operationId: Authn_Verify
+                - User
+            operationId: User_CreateUser
             requestBody:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/VerifyRequest'
+                            $ref: '#/components/schemas/CreateUserRequest'
                 required: true
             responses:
                 "200":
@@ -71,7 +105,136 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/VerifyReply'
+                                $ref: '#/components/schemas/CreateUserReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1/users/{id}:
+        get:
+            tags:
+                - User
+            operationId: User_GetUser
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GetUserReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        delete:
+            tags:
+                - User
+            operationId: User_DeleteUser
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/DeleteUserReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        patch:
+            tags:
+                - User
+            operationId: User_UpdateUser
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/UpdateUserRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/UpdateUserReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1/users/{userId}/domains:
+        get:
+            tags:
+                - User
+            operationId: User_ListUserDomainsByUserId
+            parameters:
+                - name: userId
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ListUserDomainsByUserIdReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        post:
+            tags:
+                - User
+            operationId: User_CreateUserDomain
+            parameters:
+                - name: userId
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/CreateUserDomainRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/CreateUserDomainReply'
                 default:
                     description: Default error response
                     content:
@@ -80,13 +243,77 @@ paths:
                                 $ref: '#/components/schemas/Status'
 components:
     schemas:
-        AuthReply:
+        CreateUserDomainReply:
             type: object
             properties:
-                token:
+                id:
                     type: string
-                user:
-                    $ref: '#/components/schemas/UserInfo'
+                userId:
+                    type: string
+                domain:
+                    type: string
+        CreateUserDomainRequest:
+            type: object
+            properties:
+                userId:
+                    type: string
+                domain:
+                    type: string
+        CreateUserReply:
+            type: object
+            properties:
+                id:
+                    type: string
+                username:
+                    type: string
+                nickname:
+                    type: string
+                parentId:
+                    type: string
+                level:
+                    type: integer
+                    format: int32
+        CreateUserRequest:
+            type: object
+            properties:
+                username:
+                    type: string
+                nickname:
+                    type: string
+                parentId:
+                    type: string
+                level:
+                    type: integer
+                    format: int32
+        DeleteDomainReply:
+            type: object
+            properties: {}
+        DeleteUserReply:
+            type: object
+            properties: {}
+        GetUserDomainReply:
+            type: object
+            properties:
+                id:
+                    type: string
+                userId:
+                    type: string
+                domain:
+                    type: string
+        GetUserReply:
+            type: object
+            properties:
+                id:
+                    type: string
+                username:
+                    type: string
+                nickname:
+                    type: string
+                parentId:
+                    type: string
+                level:
+                    type: integer
+                    format: int32
         GoogleProtobufAny:
             type: object
             properties:
@@ -95,19 +322,51 @@ components:
                     description: The type of the serialized message.
             additionalProperties: true
             description: Contains an arbitrary serialized message along with a @type that describes the type of the serialized message.
-        LoginRequest:
+        ListUserDomainsByUserIdReply:
             type: object
             properties:
-                username:
-                    type: string
-                password:
-                    type: string
-        RegisterRequest:
+                domains:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/ListUserDomainsByUserIdReply_Domain'
+        ListUserDomainsByUserIdReply_Domain:
             type: object
             properties:
-                username:
+                id:
                     type: string
-                password:
+                userId:
+                    type: string
+                domain:
+                    type: string
+        ListUserDomainsReply:
+            type: object
+            properties:
+                domains:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/ListUserDomainsReply_Domain'
+        ListUserDomainsReply_Domain:
+            type: object
+            properties:
+                id:
+                    type: string
+                userId:
+                    type: string
+                domain:
+                    type: string
+        ListUserReply:
+            type: object
+            properties:
+                users:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/ListUserReply_User'
+        ListUserReply_User:
+            type: object
+            properties:
+                id:
+                    type: string
+                username:
                     type: string
                 nickname:
                     type: string
@@ -132,7 +391,7 @@ components:
                         $ref: '#/components/schemas/GoogleProtobufAny'
                     description: A list of messages that carry the error details.  There is a common set of message types for APIs to use.
             description: 'The `Status` type defines a logical error model that is suitable for different programming environments, including REST APIs and RPC APIs. It is used by [gRPC](https://github.com/grpc). Each `Status` message contains three pieces of data: error code, error message, and error details. You can find out more about this error model and how to work with it in the [API Design Guide](https://cloud.google.com/apis/design/errors).'
-        UserInfo:
+        UpdateUserReply:
             type: object
             properties:
                 id:
@@ -146,15 +405,14 @@ components:
                 level:
                     type: integer
                     format: int32
-        VerifyReply:
+        UpdateUserRequest:
             type: object
             properties:
-                user:
-                    $ref: '#/components/schemas/UserInfo'
-        VerifyRequest:
-            type: object
-            properties:
-                token:
+                id:
+                    type: string
+                password:
+                    type: string
+                nickname:
                     type: string
 tags:
-    - name: Authn
+    - name: User

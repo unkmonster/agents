@@ -1540,11 +1540,33 @@ func (m *UpdateUserRequest) validate(all bool) error {
 	}
 
 	if m.Password != nil {
-		// no validation rules for Password
+
+		if l := utf8.RuneCountInString(m.GetPassword()); l < 8 || l > 20 {
+			err := UpdateUserRequestValidationError{
+				field:  "Password",
+				reason: "value length must be between 8 and 20 runes, inclusive",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
 	}
 
 	if m.Nickname != nil {
-		// no validation rules for Nickname
+
+		if utf8.RuneCountInString(m.GetNickname()) > 20 {
+			err := UpdateUserRequestValidationError{
+				field:  "Nickname",
+				reason: "value length must be at most 20 runes",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
 	}
 
 	if len(errors) > 0 {
