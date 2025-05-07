@@ -12,12 +12,17 @@ service User {
 	rpc DeleteUser (DeleteUserRequest) returns (DeleteUserReply);
 	rpc GetUser (GetUserRequest) returns (GetUserReply);
 	rpc ListUser (ListUserRequest) returns (ListUserReply);
+	rpc GetUserByUsername (GetUserByUsernameRequest) returns (GetUserReply);
 
 	rpc CreateUserDomain(CreateUserDomainRequest) returns (CreateUserDomainReply);
 	rpc GetUserDomain(GetUserDomainRequest) returns (GetUserDomainReply);
 	rpc ListUserDomains(ListUserDomainsRequest) returns (ListUserDomainsReply);
 	rpc ListUserDomainsByUserId(ListUserDomainsByUserIdRequest) returns (ListUserDomainsByUserIdReply);
 	rpc DeleteDomain(DeleteDomainRequest) returns (DeleteDomainReply);
+}
+
+message GetUserByUsernameRequest {
+	optional string username = 1;
 }
 
 message DeleteDomainRequest {
