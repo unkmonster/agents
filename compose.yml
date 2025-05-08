@@ -1,0 +1,24 @@
+services:
+  db:
+    image: mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: test
+  consul:
+    image: hashicorp/consul
+    restart: always
+    ports:
+      - 8500:8500
+  user:
+    build:
+      context: .
+      dockerfile: ./app/user/service/Dockerfile
+    depends_on:
+      - db
+      - consul
+    volumes:
+      - ./app/user/service/configs:/data/conf
+    ports:
+      - 8000:8000
+      - 9000:9000
