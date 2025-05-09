@@ -4,6 +4,7 @@ import (
 	"agents/app/order/service/internal/conf"
 
 	"github.com/go-kratos/kratos/v2/log"
+	_ "github.com/go-sql-driver/mysql"
 	"github.com/google/wire"
 	"github.com/jmoiron/sqlx"
 )
