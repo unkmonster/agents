@@ -35,6 +35,231 @@ var (
 	_ = sort.Sort
 )
 
+// Validate checks the field values on GetUserByDomainRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *GetUserByDomainRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on GetUserByDomainRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// GetUserByDomainRequestMultiError, or nil if none found.
+func (m *GetUserByDomainRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *GetUserByDomainRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if utf8.RuneCountInString(m.GetDomain()) < 1 {
+		err := GetUserByDomainRequestValidationError{
+			field:  "Domain",
+			reason: "value length must be at least 1 runes",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if len(errors) > 0 {
+		return GetUserByDomainRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// GetUserByDomainRequestMultiError is an error wrapping multiple validation
+// errors returned by GetUserByDomainRequest.ValidateAll() if the designated
+// constraints aren't met.
+type GetUserByDomainRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m GetUserByDomainRequestMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m GetUserByDomainRequestMultiError) AllErrors() []error { return m }
+
+// GetUserByDomainRequestValidationError is the validation error returned by
+// GetUserByDomainRequest.Validate if the designated constraints aren't met.
+type GetUserByDomainRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e GetUserByDomainRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e GetUserByDomainRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e GetUserByDomainRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e GetUserByDomainRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e GetUserByDomainRequestValidationError) ErrorName() string {
+	return "GetUserByDomainRequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e GetUserByDomainRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sGetUserByDomainRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = GetUserByDomainRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = GetUserByDomainRequestValidationError{}
+
+// Validate checks the field values on GetUserByDomainReply with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *GetUserByDomainReply) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on GetUserByDomainReply with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// GetUserByDomainReplyMultiError, or nil if none found.
+func (m *GetUserByDomainReply) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *GetUserByDomainReply) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Id
+
+	// no validation rules for Username
+
+	// no validation rules for Nickname
+
+	// no validation rules for ParentId
+
+	// no validation rules for Level
+
+	if len(errors) > 0 {
+		return GetUserByDomainReplyMultiError(errors)
+	}
+
+	return nil
+}
+
+// GetUserByDomainReplyMultiError is an error wrapping multiple validation
+// errors returned by GetUserByDomainReply.ValidateAll() if the designated
+// constraints aren't met.
+type GetUserByDomainReplyMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m GetUserByDomainReplyMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m GetUserByDomainReplyMultiError) AllErrors() []error { return m }
+
+// GetUserByDomainReplyValidationError is the validation error returned by
+// GetUserByDomainReply.Validate if the designated constraints aren't met.
+type GetUserByDomainReplyValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e GetUserByDomainReplyValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e GetUserByDomainReplyValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e GetUserByDomainReplyValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e GetUserByDomainReplyValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e GetUserByDomainReplyValidationError) ErrorName() string {
+	return "GetUserByDomainReplyValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e GetUserByDomainReplyValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sGetUserByDomainReply.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = GetUserByDomainReplyValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = GetUserByDomainReplyValidationError{}
+
 // Validate checks the field values on GetUserByUsernameRequest with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.

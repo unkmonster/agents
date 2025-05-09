@@ -73,3 +73,16 @@ func (r *userRepo) GetUserByUsername(ctx context.Context, username string) (*biz
 	err := r.data.db.GetContext(ctx, &dst, query, username)
 	return &dst, err
 }
+
+func (r *userRepo) GetUserByDomain(ctx context.Context, domain string) (*biz.User, error) {
+	query := `
+		SELECT users.*
+		FROM users
+		INNER JOIN user_domains
+		ON users.id = user_domains.user_id
+		WHERE user_domains.domain = ?;
+	`
+	dst := biz.User{}
+	err := r.data.db.GetContext(ctx, &dst, query, domain)
+	return &dst, err
+}

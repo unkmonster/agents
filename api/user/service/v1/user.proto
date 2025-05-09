@@ -45,6 +45,7 @@ service User {
 			body: "*"
 		};
 	};
+	// 获取域名
 	rpc GetUserDomain(GetUserDomainRequest) returns (GetUserDomainReply) {
 		option (google.api.http) = {
 			get: "/v1/domains/{id}",
@@ -65,6 +66,19 @@ service User {
 			delete: "/v1/domains/{id}",
 		};
 	};
+
+	rpc GetUserByDomain(GetUserByDomainRequest) returns (GetUserByDomainReply);
+}
+
+message GetUserByDomainRequest {
+	string domain = 1 [(validate.rules).string = {min_len: 1}];
+}
+message GetUserByDomainReply {
+	string id = 1;
+	string username = 2;
+	string nickname = 3;
+	string parent_id = 4;
+	int32 level = 5;
 }
 
 message GetUserByUsernameRequest {
