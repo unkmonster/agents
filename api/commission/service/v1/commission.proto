@@ -1,0 +1,58 @@
+syntax = "proto3";
+
+package api.commission.service.v1;
+
+import "google/api/annotations.proto";
+import "validate/validate.proto";
+
+option go_package = "agents/api/commission/service/v1;v1";
+option java_multiple_files = true;
+option java_package = "api.commission.service.v1";
+
+service Commission {
+	rpc HandleOrderCommission (HandleOrderCommissionRequest) returns (HandleOrderCommissionReply);
+	rpc GetUserCommission (GetUserCommissionRequest) returns (GetUserCommissionReply) {
+		option (google.api.http) = {
+			get: "/v1/users/{user_id}/commission"
+		};
+	};
+	rpc ListCommission (ListCommissionRequest) returns (ListCommissionReply) {
+		option (google.api.http) = {
+			get: "/v1/commissions"
+		};
+	};
+	rpc ListCommissionByParent(ListCommissionByParentReq) returns (ListCommissionByParentReply) {
+		option (google.api.http) = {
+			get: "/v1/users/{parent_id}/users/commissions"
+		};
+	};
+}
+
+message HandleOrderCommissionRequest {
+	string domain = 1 [(validate.rules).string = {min_len: 1}];
+	int32 amount = 2 [(validate.rules).int32 = {gt: 0}];
+}
+message HandleOrderCommissionReply {}
+
+message GetUserCommissionRequest {
+	string user_id = 1 [(validate.rules).string = {min_len: 1}];
+}
+message GetUserCommissionReply {
+	string id = 1;
+	string user_id = 2;
+	int32 total_commission = 3;
+	int32 today_commission = 4;
+	int32 settled_commission = 5;
+}
+
+message ListCommissionRequest {}
+message ListCommissionReply {
+	repeated GetUserCommissionReply commissions = 1;
+}
+
+message ListCommissionByParentReq{
+	string parent_id = 1 [(validate.rules).string = {min_len: 1}];
+}
+message ListCommissionByParentReply{
+	repeated GetUserCommissionReply commissions = 1;
+}

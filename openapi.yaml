@@ -3,17 +3,34 @@
 
 openapi: 3.0.3
 info:
-    title: Order API
-    description: 订单指支付完成且成功的订单
+    title: Commission API
     version: 0.0.1
 paths:
-    /v1/domains/{domain}/orders:
+    /v1/commissions:
         get:
             tags:
-                - Order
-            operationId: Order_ListOrderByDomain
+                - Commission
+            operationId: Commission_ListCommission
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ListCommissionReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1/users/{parentId}/users/commissions:
+        get:
+            tags:
+                - Commission
+            operationId: Commission_ListCommissionByParent
             parameters:
-                - name: domain
+                - name: parentId
                   in: path
                   required: true
                   schema:
@@ -24,83 +41,18 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/ListOrderReply'
+                                $ref: '#/components/schemas/ListCommissionByParentReply'
                 default:
                     description: Default error response
                     content:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/Status'
-    /v1/orders:
+    /v1/users/{userId}/commission:
         get:
             tags:
-                - Order
-            operationId: Order_ListOrder
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/ListOrderReply'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/Status'
-        post:
-            tags:
-                - Order
-            operationId: Order_CreateOrder
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/CreateOrderRequest'
-                required: true
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/CreateOrderReply'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/Status'
-    /v1/orders/{id}:
-        get:
-            tags:
-                - Order
-            operationId: Order_GetOrder
-            parameters:
-                - name: id
-                  in: path
-                  required: true
-                  schema:
-                    type: string
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/GetOrderReply'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/Status'
-    /v1/users/{userId}/orders:
-        get:
-            tags:
-                - Order
-            operationId: Order_ListOrderByUser
+                - Commission
+            operationId: Commission_GetUserCommission
             parameters:
                 - name: userId
                   in: path
@@ -113,7 +65,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/ListOrderReply'
+                                $ref: '#/components/schemas/GetUserCommissionReply'
                 default:
                     description: Default error response
                     content:
@@ -122,48 +74,22 @@ paths:
                                 $ref: '#/components/schemas/Status'
 components:
     schemas:
-        CreateOrderReply:
+        GetUserCommissionReply:
             type: object
             properties:
                 id:
                     type: string
-                paymentType:
+                userId:
                     type: string
-                name:
-                    type: string
-                amount:
+                totalCommission:
                     type: integer
                     format: int32
-                domain:
-                    type: string
-        CreateOrderRequest:
-            type: object
-            properties:
-                id:
-                    type: string
-                paymentType:
-                    type: string
-                name:
-                    type: string
-                amount:
+                todayCommission:
                     type: integer
                     format: int32
-                domain:
-                    type: string
-        GetOrderReply:
-            type: object
-            properties:
-                id:
-                    type: string
-                paymentType:
-                    type: string
-                name:
-                    type: string
-                amount:
+                settledCommission:
                     type: integer
                     format: int32
-                domain:
-                    type: string
         GoogleProtobufAny:
             type: object
             properties:
@@ -172,27 +98,20 @@ components:
                     description: The type of the serialized message.
             additionalProperties: true
             description: Contains an arbitrary serialized message along with a @type that describes the type of the serialized message.
-        ListOrderReply:
+        ListCommissionByParentReply:
             type: object
             properties:
-                orders:
+                commissions:
                     type: array
                     items:
-                        $ref: '#/components/schemas/ListOrderReply_Order'
-        ListOrderReply_Order:
+                        $ref: '#/components/schemas/GetUserCommissionReply'
+        ListCommissionReply:
             type: object
             properties:
-                id:
-                    type: string
-                paymentType:
-                    type: string
-                name:
-                    type: string
-                amount:
-                    type: integer
-                    format: int32
-                domain:
-                    type: string
+                commissions:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/GetUserCommissionReply'
         Status:
             type: object
             properties:
@@ -210,4 +129,4 @@ components:
                     description: A list of messages that carry the error details.  There is a common set of message types for APIs to use.
             description: 'The `Status` type defines a logical error model that is suitable for different programming environments, including REST APIs and RPC APIs. It is used by [gRPC](https://github.com/grpc). Each `Status` message contains three pieces of data: error code, error message, and error details. You can find out more about this error model and how to work with it in the [API Design Guide](https://cloud.google.com/apis/design/errors).'
 tags:
-    - name: Order
+    - name: Commission
