@@ -26,6 +26,7 @@ type UserRepo interface {
 	GetUser(ctx context.Context, id string) (*User, error)
 	DeleteUser(ctx context.Context, id string) error
 	GetUserByUsername(ctx context.Context, username string) (*User, error)
+	GetUserByDomain(ctx context.Context, domain string) (*User, error)
 }
 
 type UserUseCase struct {
@@ -76,4 +77,8 @@ func (uc *UserUseCase) DeleteUser(ctx context.Context, id string) error {
 
 func (uc *UserUseCase) GetUserByUsername(ctx context.Context, username string) (*User, error) {
 	return uc.repo.GetUserByUsername(ctx, username)
+}
+
+func (uc *UserUseCase) GetUserByDomain(ctx context.Context, domain string) (*User, error) {
+	return uc.repo.GetUserByDomain(ctx, domain)
 }

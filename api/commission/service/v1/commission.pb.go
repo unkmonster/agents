@@ -2,7 +2,7 @@
 // versions:
 // 	protoc-gen-go v1.36.6
 // 	protoc        v5.29.0--dev
-// source: api/commission/service/v1/commission.proto
+// source: commission/service/v1/commission.proto
 
 package v1
 
@@ -33,7 +33,7 @@ type HandleOrderCommissionRequest struct {
 
 func (x *HandleOrderCommissionRequest) Reset() {
 	*x = HandleOrderCommissionRequest{}
-	mi := &file_api_commission_service_v1_commission_proto_msgTypes[0]
+	mi := &file_commission_service_v1_commission_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -45,7 +45,7 @@ func (x *HandleOrderCommissionRequest) String() string {
 func (*HandleOrderCommissionRequest) ProtoMessage() {}
 
 func (x *HandleOrderCommissionRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_api_commission_service_v1_commission_proto_msgTypes[0]
+	mi := &file_commission_service_v1_commission_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -58,7 +58,7 @@ func (x *HandleOrderCommissionRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use HandleOrderCommissionRequest.ProtoReflect.Descriptor instead.
 func (*HandleOrderCommissionRequest) Descriptor() ([]byte, []int) {
-	return file_api_commission_service_v1_commission_proto_rawDescGZIP(), []int{0}
+	return file_commission_service_v1_commission_proto_rawDescGZIP(), []int{0}
 }
 
 func (x *HandleOrderCommissionRequest) GetDomain() string {
@@ -83,7 +83,7 @@ type HandleOrderCommissionReply struct {
 
 func (x *HandleOrderCommissionReply) Reset() {
 	*x = HandleOrderCommissionReply{}
-	mi := &file_api_commission_service_v1_commission_proto_msgTypes[1]
+	mi := &file_commission_service_v1_commission_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -95,7 +95,7 @@ func (x *HandleOrderCommissionReply) String() string {
 func (*HandleOrderCommissionReply) ProtoMessage() {}
 
 func (x *HandleOrderCommissionReply) ProtoReflect() protoreflect.Message {
-	mi := &file_api_commission_service_v1_commission_proto_msgTypes[1]
+	mi := &file_commission_service_v1_commission_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -108,7 +108,7 @@ func (x *HandleOrderCommissionReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use HandleOrderCommissionReply.ProtoReflect.Descriptor instead.
 func (*HandleOrderCommissionReply) Descriptor() ([]byte, []int) {
-	return file_api_commission_service_v1_commission_proto_rawDescGZIP(), []int{1}
+	return file_commission_service_v1_commission_proto_rawDescGZIP(), []int{1}
 }
 
 type GetUserCommissionRequest struct {
@@ -120,7 +120,7 @@ type GetUserCommissionRequest struct {
 
 func (x *GetUserCommissionRequest) Reset() {
 	*x = GetUserCommissionRequest{}
-	mi := &file_api_commission_service_v1_commission_proto_msgTypes[2]
+	mi := &file_commission_service_v1_commission_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -132,7 +132,7 @@ func (x *GetUserCommissionRequest) String() string {
 func (*GetUserCommissionRequest) ProtoMessage() {}
 
 func (x *GetUserCommissionRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_api_commission_service_v1_commission_proto_msgTypes[2]
+	mi := &file_commission_service_v1_commission_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -145,7 +145,7 @@ func (x *GetUserCommissionRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetUserCommissionRequest.ProtoReflect.Descriptor instead.
 func (*GetUserCommissionRequest) Descriptor() ([]byte, []int) {
-	return file_api_commission_service_v1_commission_proto_rawDescGZIP(), []int{2}
+	return file_commission_service_v1_commission_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *GetUserCommissionRequest) GetUserId() string {
@@ -168,7 +168,7 @@ type GetUserCommissionReply struct {
 
 func (x *GetUserCommissionReply) Reset() {
 	*x = GetUserCommissionReply{}
-	mi := &file_api_commission_service_v1_commission_proto_msgTypes[3]
+	mi := &file_commission_service_v1_commission_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -180,7 +180,7 @@ func (x *GetUserCommissionReply) String() string {
 func (*GetUserCommissionReply) ProtoMessage() {}
 
 func (x *GetUserCommissionReply) ProtoReflect() protoreflect.Message {
-	mi := &file_api_commission_service_v1_commission_proto_msgTypes[3]
+	mi := &file_commission_service_v1_commission_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -193,7 +193,7 @@ func (x *GetUserCommissionReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetUserCommissionReply.ProtoReflect.Descriptor instead.
 func (*GetUserCommissionReply) Descriptor() ([]byte, []int) {
-	return file_api_commission_service_v1_commission_proto_rawDescGZIP(), []int{3}
+	return file_commission_service_v1_commission_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *GetUserCommissionReply) GetId() string {
@@ -239,7 +239,7 @@ type ListCommissionRequest struct {
 
 func (x *ListCommissionRequest) Reset() {
 	*x = ListCommissionRequest{}
-	mi := &file_api_commission_service_v1_commission_proto_msgTypes[4]
+	mi := &file_commission_service_v1_commission_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -251,7 +251,7 @@ func (x *ListCommissionRequest) String() string {
 func (*ListCommissionRequest) ProtoMessage() {}
 
 func (x *ListCommissionRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_api_commission_service_v1_commission_proto_msgTypes[4]
+	mi := &file_commission_service_v1_commission_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -264,7 +264,7 @@ func (x *ListCommissionRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListCommissionRequest.ProtoReflect.Descriptor instead.
 func (*ListCommissionRequest) Descriptor() ([]byte, []int) {
-	return file_api_commission_service_v1_commission_proto_rawDescGZIP(), []int{4}
+	return file_commission_service_v1_commission_proto_rawDescGZIP(), []int{4}
 }
 
 type ListCommissionReply struct {
@@ -276,7 +276,7 @@ type ListCommissionReply struct {
 
 func (x *ListCommissionReply) Reset() {
 	*x = ListCommissionReply{}
-	mi := &file_api_commission_service_v1_commission_proto_msgTypes[5]
+	mi := &file_commission_service_v1_commission_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -288,7 +288,7 @@ func (x *ListCommissionReply) String() string {
 func (*ListCommissionReply) ProtoMessage() {}
 
 func (x *ListCommissionReply) ProtoReflect() protoreflect.Message {
-	mi := &file_api_commission_service_v1_commission_proto_msgTypes[5]
+	mi := &file_commission_service_v1_commission_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -301,7 +301,7 @@ func (x *ListCommissionReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListCommissionReply.ProtoReflect.Descriptor instead.
 func (*ListCommissionReply) Descriptor() ([]byte, []int) {
-	return file_api_commission_service_v1_commission_proto_rawDescGZIP(), []int{5}
+	return file_commission_service_v1_commission_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *ListCommissionReply) GetCommissions() []*GetUserCommissionReply {
@@ -320,7 +320,7 @@ type ListCommissionByParentReq struct {
 
 func (x *ListCommissionByParentReq) Reset() {
 	*x = ListCommissionByParentReq{}
-	mi := &file_api_commission_service_v1_commission_proto_msgTypes[6]
+	mi := &file_commission_service_v1_commission_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -332,7 +332,7 @@ func (x *ListCommissionByParentReq) String() string {
 func (*ListCommissionByParentReq) ProtoMessage() {}
 
 func (x *ListCommissionByParentReq) ProtoReflect() protoreflect.Message {
-	mi := &file_api_commission_service_v1_commission_proto_msgTypes[6]
+	mi := &file_commission_service_v1_commission_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -345,7 +345,7 @@ func (x *ListCommissionByParentReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListCommissionByParentReq.ProtoReflect.Descriptor instead.
 func (*ListCommissionByParentReq) Descriptor() ([]byte, []int) {
-	return file_api_commission_service_v1_commission_proto_rawDescGZIP(), []int{6}
+	return file_commission_service_v1_commission_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *ListCommissionByParentReq) GetParentId() string {
@@ -364,7 +364,7 @@ type ListCommissionByParentReply struct {
 
 func (x *ListCommissionByParentReply) Reset() {
 	*x = ListCommissionByParentReply{}
-	mi := &file_api_commission_service_v1_commission_proto_msgTypes[7]
+	mi := &file_commission_service_v1_commission_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -376,7 +376,7 @@ func (x *ListCommissionByParentReply) String() string {
 func (*ListCommissionByParentReply) ProtoMessage() {}
 
 func (x *ListCommissionByParentReply) ProtoReflect() protoreflect.Message {
-	mi := &file_api_commission_service_v1_commission_proto_msgTypes[7]
+	mi := &file_commission_service_v1_commission_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -389,7 +389,7 @@ func (x *ListCommissionByParentReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListCommissionByParentReply.ProtoReflect.Descriptor instead.
 func (*ListCommissionByParentReply) Descriptor() ([]byte, []int) {
-	return file_api_commission_service_v1_commission_proto_rawDescGZIP(), []int{7}
+	return file_commission_service_v1_commission_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *ListCommissionByParentReply) GetCommissions() []*GetUserCommissionReply {
@@ -399,11 +399,11 @@ func (x *ListCommissionByParentReply) GetCommissions() []*GetUserCommissionReply
 	return nil
 }
 
-var File_api_commission_service_v1_commission_proto protoreflect.FileDescriptor
+var File_commission_service_v1_commission_proto protoreflect.FileDescriptor
 
-const file_api_commission_service_v1_commission_proto_rawDesc = "" +
+const file_commission_service_v1_commission_proto_rawDesc = "" +
 	"\n" +
-	"*api/commission/service/v1/commission.proto\x12\x19api.commission.service.v1\x1a\x1cgoogle/api/annotations.proto\x1a\x17validate/validate.proto\"`\n" +
+	"&commission/service/v1/commission.proto\x12\x19api.commission.service.v1\x1a\x1cgoogle/api/annotations.proto\x1a\x17validate/validate.proto\"`\n" +
 	"\x1cHandleOrderCommissionRequest\x12\x1f\n" +
 	"\x06domain\x18\x01 \x01(\tB\a\xfaB\x04r\x02\x10\x01R\x06domain\x12\x1f\n" +
 	"\x06amount\x18\x02 \x01(\x05B\a\xfaB\x04\x1a\x02 \x00R\x06amount\"\x1c\n" +
@@ -432,19 +432,19 @@ const file_api_commission_service_v1_commission_proto_rawDesc = "" +
 	"\x19api.commission.service.v1P\x01Z#agents/api/commission/service/v1;v1b\x06proto3"
 
 var (
-	file_api_commission_service_v1_commission_proto_rawDescOnce sync.Once
-	file_api_commission_service_v1_commission_proto_rawDescData []byte
+	file_commission_service_v1_commission_proto_rawDescOnce sync.Once
+	file_commission_service_v1_commission_proto_rawDescData []byte
 )
 
-func file_api_commission_service_v1_commission_proto_rawDescGZIP() []byte {
-	file_api_commission_service_v1_commission_proto_rawDescOnce.Do(func() {
-		file_api_commission_service_v1_commission_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_api_commission_service_v1_commission_proto_rawDesc), len(file_api_commission_service_v1_commission_proto_rawDesc)))
+func file_commission_service_v1_commission_proto_rawDescGZIP() []byte {
+	file_commission_service_v1_commission_proto_rawDescOnce.Do(func() {
+		file_commission_service_v1_commission_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_commission_service_v1_commission_proto_rawDesc), len(file_commission_service_v1_commission_proto_rawDesc)))
 	})
-	return file_api_commission_service_v1_commission_proto_rawDescData
+	return file_commission_service_v1_commission_proto_rawDescData
 }
 
-var file_api_commission_service_v1_commission_proto_msgTypes = make([]protoimpl.MessageInfo, 8)
-var file_api_commission_service_v1_commission_proto_goTypes = []any{
+var file_commission_service_v1_commission_proto_msgTypes = make([]protoimpl.MessageInfo, 8)
+var file_commission_service_v1_commission_proto_goTypes = []any{
 	(*HandleOrderCommissionRequest)(nil), // 0: api.commission.service.v1.HandleOrderCommissionRequest
 	(*HandleOrderCommissionReply)(nil),   // 1: api.commission.service.v1.HandleOrderCommissionReply
 	(*GetUserCommissionRequest)(nil),     // 2: api.commission.service.v1.GetUserCommissionRequest
@@ -454,7 +454,7 @@ var file_api_commission_service_v1_commission_proto_goTypes = []any{
 	(*ListCommissionByParentReq)(nil),    // 6: api.commission.service.v1.ListCommissionByParentReq
 	(*ListCommissionByParentReply)(nil),  // 7: api.commission.service.v1.ListCommissionByParentReply
 }
-var file_api_commission_service_v1_commission_proto_depIdxs = []int32{
+var file_commission_service_v1_commission_proto_depIdxs = []int32{
 	3, // 0: api.commission.service.v1.ListCommissionReply.commissions:type_name -> api.commission.service.v1.GetUserCommissionReply
 	3, // 1: api.commission.service.v1.ListCommissionByParentReply.commissions:type_name -> api.commission.service.v1.GetUserCommissionReply
 	0, // 2: api.commission.service.v1.Commission.HandleOrderCommission:input_type -> api.commission.service.v1.HandleOrderCommissionRequest
@@ -472,26 +472,26 @@ var file_api_commission_service_v1_commission_proto_depIdxs = []int32{
 	0, // [0:2] is the sub-list for field type_name
 }
 
-func init() { file_api_commission_service_v1_commission_proto_init() }
-func file_api_commission_service_v1_commission_proto_init() {
-	if File_api_commission_service_v1_commission_proto != nil {
+func init() { file_commission_service_v1_commission_proto_init() }
+func file_commission_service_v1_commission_proto_init() {
+	if File_commission_service_v1_commission_proto != nil {
 		return
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: unsafe.Slice(unsafe.StringData(file_api_commission_service_v1_commission_proto_rawDesc), len(file_api_commission_service_v1_commission_proto_rawDesc)),
+			RawDescriptor: unsafe.Slice(unsafe.StringData(file_commission_service_v1_commission_proto_rawDesc), len(file_commission_service_v1_commission_proto_rawDesc)),
 			NumEnums:      0,
 			NumMessages:   8,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
-		GoTypes:           file_api_commission_service_v1_commission_proto_goTypes,
-		DependencyIndexes: file_api_commission_service_v1_commission_proto_depIdxs,
-		MessageInfos:      file_api_commission_service_v1_commission_proto_msgTypes,
+		GoTypes:           file_commission_service_v1_commission_proto_goTypes,
+		DependencyIndexes: file_commission_service_v1_commission_proto_depIdxs,
+		MessageInfos:      file_commission_service_v1_commission_proto_msgTypes,
 	}.Build()
-	File_api_commission_service_v1_commission_proto = out.File
-	file_api_commission_service_v1_commission_proto_goTypes = nil
-	file_api_commission_service_v1_commission_proto_depIdxs = nil
+	File_commission_service_v1_commission_proto = out.File
+	file_commission_service_v1_commission_proto_goTypes = nil
+	file_commission_service_v1_commission_proto_depIdxs = nil
 }

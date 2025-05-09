@@ -2,7 +2,7 @@
 // versions:
 // - protoc-gen-go-grpc v1.5.1
 // - protoc             v5.29.0--dev
-// source: api/commission/service/v1/commission.proto
+// source: commission/service/v1/commission.proto
 
 package v1
 
@@ -231,5 +231,5 @@ var Commission_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "api/commission/service/v1/commission.proto",
+	Metadata: "commission/service/v1/commission.proto",
 }

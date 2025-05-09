@@ -2,7 +2,7 @@
 // versions:
 // - protoc-gen-go-http v2.8.4
 // - protoc             v5.29.0--dev
-// source: api/user/service/v1/user.proto
+// source: user/service/v1/user.proto
 
 package v1
 
@@ -36,6 +36,7 @@ type UserHTTPServer interface {
 	DeleteDomain(context.Context, *DeleteDomainRequest) (*DeleteDomainReply, error)
 	DeleteUser(context.Context, *DeleteUserRequest) (*DeleteUserReply, error)
 	GetUser(context.Context, *GetUserRequest) (*GetUserReply, error)
+	// GetUserDomain 获取域名
 	GetUserDomain(context.Context, *GetUserDomainRequest) (*GetUserDomainReply, error)
 	ListUser(context.Context, *ListUserRequest) (*ListUserReply, error)
 	ListUserDomains(context.Context, *ListUserDomainsRequest) (*ListUserDomainsReply, error)

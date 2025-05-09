@@ -171,3 +171,18 @@ func (s *UserService) GetUserByUsername(ctx context.Context, req *pb.GetUserByUs
 		Level:    &user.Level,
 	}, nil
 }
+
+func (s *UserService) GetUserByDomain(ctx context.Context, req *pb.GetUserByDomainRequest) (*pb.GetUserByDomainReply, error) {
+	user, err := s.user.GetUserByDomain(ctx, req.Domain)
+	if err != nil {
+		return nil, err
+	}
+
+	return &pb.GetUserByDomainReply{
+		Id:       user.Id,
+		Username: user.Username,
+		Nickname: *user.Nickname,
+		ParentId: *user.ParentId,
+		Level:    user.Level,
+	}, nil
+}
