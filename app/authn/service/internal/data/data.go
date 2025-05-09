@@ -14,6 +14,7 @@ import (
 	userv1 "agents/api/user/service/v1"
 
 	consul "github.com/go-kratos/kratos/contrib/registry/consul/v2"
+	_ "github.com/go-sql-driver/mysql"
 	"github.com/hashicorp/consul/api"
 )
 
@@ -54,9 +55,15 @@ func NewSqlxClient(c *conf.Data) *sqlx.DB {
 	return db
 }
 
-func NewDiscovery() registry.Discovery {
+func NewDiscovery(registry *conf.Registry) registry.Discovery {
 	// new consul client
-	client, err := api.NewClient(api.DefaultConfig())
+	log.Infof("registry: %v", registry)
+	log.Infof("consul: %v", registry.Consul)
+
+	c := api.DefaultConfig()
+	c.Address = registry.Consul.Address
+	c.Scheme = registry.Consul.Scheme
+	client, err := api.NewClient(c)
 	if err != nil {
 		panic(err)
 	}

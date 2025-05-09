@@ -5,20 +5,60 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: password
       MYSQL_DATABASE: test
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "mysqladmin",
+          "ping",
+          "-h",
+          "localhost",
+          "-u",
+          "root",
+          "-ppassword",
+        ]
+      interval: 30s
+      retries: 3
+      start_period: 10s
+      timeout: 10s
   consul:
     image: hashicorp/consul
     restart: always
     ports:
       - 8500:8500
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8500/v1/status/leader"]
+      interval: 30s
+      retries: 3
+      start_period: 10s
+      timeout: 10s
   user:
     build:
       context: .
       dockerfile: ./app/user/service/Dockerfile
     depends_on:
-      - db
-      - consul
+      db:
+        condition: service_healthy
+        restart: true
+      consul:
+        condition: service_healthy
     volumes:
       - ./app/user/service/configs:/data/conf
     ports:
       - 8000:8000
       - 9000:9000
+  authn:
+    build:
+      context: .
+      dockerfile: ./app/authn/service/Dockerfile
+    depends_on:
+      db:
+        condition: service_healthy
+        restart: true
+      consul:
+        condition: service_healthy
+    volumes:
+      - ./app/authn/service/configs:/data/conf
+    ports:
+      - 8001:8000
+      - 9001:9000
