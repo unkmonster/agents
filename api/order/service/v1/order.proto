@@ -40,37 +40,37 @@ service Order {
 }
 
 message ListOrderByUserRequest {
-	optional string user_id = 1;
+	string user_id = 1 [(validate.rules).string = {min_len: 1}];
 }
 
 message ListOrderByDomainRequest {
-	optional string domain = 2;
+	string domain = 2 [(validate.rules).string = {min_len: 1}];
 }
 
 message CreateOrderRequest {
-	optional string id = 1;
-	optional string payment_type = 2;
-	optional string name = 3;
-	optional int32 amount = 4; // rmb 分
-	optional string domain = 5;
+	string id = 1 [(validate.rules).string = {min_len: 1}];
+	string payment_type = 2 [(validate.rules).string = {min_len: 1}];
+	string name = 3 [(validate.rules).string = {min_len: 1}];
+	int32 amount = 4 [(validate.rules).int32 = {gt: 0}]; // rmb 分
+	string domain = 5 [(validate.rules).string = {min_len: 1}];
 }
 message CreateOrderReply {
-	optional string id = 1;
-	optional string payment_type = 2;
-	optional string name = 3;
-	optional int32 amount = 4; // rmb 分
-	optional string domain = 5;
+	string id = 1;
+	string payment_type = 2;
+	string name = 3;
+	int32 amount = 4; // rmb 分
+	string domain = 5;
 }
 
 message GetOrderRequest {
-	optional string id = 1;
+	string id = 1 [(validate.rules).string = {min_len: 1}];
 }
 message GetOrderReply {
-	optional string id = 1;
-	optional string payment_type = 2;
-	optional string name = 3;
-	optional int32 amount = 4; // rmb 分
-	optional string domain = 5;
+	string id = 1;
+	string payment_type = 2;
+	string name = 3;
+	int32 amount = 4; // rmb 分
+	string domain = 5;
 }
 
 message ListOrderRequest {
@@ -78,11 +78,11 @@ message ListOrderRequest {
 }
 message ListOrderReply {
 	message Order {
-		optional string id = 1;
-		optional string payment_type = 2;
-		optional string name = 3;
-		optional int32 amount = 4; // rmb 分
-		optional string domain = 5;
+		string id = 1;
+		string payment_type = 2;
+		string name = 3;
+		int32 amount = 4; // rmb 分
+		string domain = 5;
 	}
 	repeated Order orders = 1;
 }

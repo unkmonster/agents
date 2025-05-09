@@ -57,8 +57,15 @@ func (m *ListOrderByUserRequest) validate(all bool) error {
 
 	var errors []error
 
-	if m.UserId != nil {
-		// no validation rules for UserId
+	if utf8.RuneCountInString(m.GetUserId()) < 1 {
+		err := ListOrderByUserRequestValidationError{
+			field:  "UserId",
+			reason: "value length must be at least 1 runes",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
 	}
 
 	if len(errors) > 0 {
@@ -163,8 +170,15 @@ func (m *ListOrderByDomainRequest) validate(all bool) error {
 
 	var errors []error
 
-	if m.Domain != nil {
-		// no validation rules for Domain
+	if utf8.RuneCountInString(m.GetDomain()) < 1 {
+		err := ListOrderByDomainRequestValidationError{
+			field:  "Domain",
+			reason: "value length must be at least 1 runes",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
 	}
 
 	if len(errors) > 0 {
@@ -269,24 +283,59 @@ func (m *CreateOrderRequest) validate(all bool) error {
 
 	var errors []error
 
-	if m.Id != nil {
-		// no validation rules for Id
+	if utf8.RuneCountInString(m.GetId()) < 1 {
+		err := CreateOrderRequestValidationError{
+			field:  "Id",
+			reason: "value length must be at least 1 runes",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
 	}
 
-	if m.PaymentType != nil {
-		// no validation rules for PaymentType
+	if utf8.RuneCountInString(m.GetPaymentType()) < 1 {
+		err := CreateOrderRequestValidationError{
+			field:  "PaymentType",
+			reason: "value length must be at least 1 runes",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
 	}
 
-	if m.Name != nil {
-		// no validation rules for Name
+	if utf8.RuneCountInString(m.GetName()) < 1 {
+		err := CreateOrderRequestValidationError{
+			field:  "Name",
+			reason: "value length must be at least 1 runes",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
 	}
 
-	if m.Amount != nil {
-		// no validation rules for Amount
+	if m.GetAmount() <= 0 {
+		err := CreateOrderRequestValidationError{
+			field:  "Amount",
+			reason: "value must be greater than 0",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
 	}
 
-	if m.Domain != nil {
-		// no validation rules for Domain
+	if utf8.RuneCountInString(m.GetDomain()) < 1 {
+		err := CreateOrderRequestValidationError{
+			field:  "Domain",
+			reason: "value length must be at least 1 runes",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
 	}
 
 	if len(errors) > 0 {
@@ -391,25 +440,15 @@ func (m *CreateOrderReply) validate(all bool) error {
 
 	var errors []error
 
-	if m.Id != nil {
-		// no validation rules for Id
-	}
+	// no validation rules for Id
 
-	if m.PaymentType != nil {
-		// no validation rules for PaymentType
-	}
+	// no validation rules for PaymentType
 
-	if m.Name != nil {
-		// no validation rules for Name
-	}
+	// no validation rules for Name
 
-	if m.Amount != nil {
-		// no validation rules for Amount
-	}
+	// no validation rules for Amount
 
-	if m.Domain != nil {
-		// no validation rules for Domain
-	}
+	// no validation rules for Domain
 
 	if len(errors) > 0 {
 		return CreateOrderReplyMultiError(errors)
@@ -511,8 +550,15 @@ func (m *GetOrderRequest) validate(all bool) error {
 
 	var errors []error
 
-	if m.Id != nil {
-		// no validation rules for Id
+	if utf8.RuneCountInString(m.GetId()) < 1 {
+		err := GetOrderRequestValidationError{
+			field:  "Id",
+			reason: "value length must be at least 1 runes",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
 	}
 
 	if len(errors) > 0 {
@@ -615,25 +661,15 @@ func (m *GetOrderReply) validate(all bool) error {
 
 	var errors []error
 
-	if m.Id != nil {
-		// no validation rules for Id
-	}
+	// no validation rules for Id
 
-	if m.PaymentType != nil {
-		// no validation rules for PaymentType
-	}
+	// no validation rules for PaymentType
 
-	if m.Name != nil {
-		// no validation rules for Name
-	}
+	// no validation rules for Name
 
-	if m.Amount != nil {
-		// no validation rules for Amount
-	}
+	// no validation rules for Amount
 
-	if m.Domain != nil {
-		// no validation rules for Domain
-	}
+	// no validation rules for Domain
 
 	if len(errors) > 0 {
 		return GetOrderReplyMultiError(errors)
@@ -969,25 +1005,15 @@ func (m *ListOrderReply_Order) validate(all bool) error {
 
 	var errors []error
 
-	if m.Id != nil {
-		// no validation rules for Id
-	}
+	// no validation rules for Id
 
-	if m.PaymentType != nil {
-		// no validation rules for PaymentType
-	}
+	// no validation rules for PaymentType
 
-	if m.Name != nil {
-		// no validation rules for Name
-	}
+	// no validation rules for Name
 
-	if m.Amount != nil {
-		// no validation rules for Amount
-	}
+	// no validation rules for Amount
 
-	if m.Domain != nil {
-		// no validation rules for Domain
-	}
+	// no validation rules for Domain
 
 	if len(errors) > 0 {
 		return ListOrderReply_OrderMultiError(errors)

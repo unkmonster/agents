@@ -7,6 +7,7 @@
 package v1
 
 import (
+	_ "github.com/envoyproxy/protoc-gen-validate/validate"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
@@ -24,7 +25,7 @@ const (
 
 type ListOrderByUserRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	UserId        *string                `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3,oneof" json:"user_id,omitempty"`
+	UserId        string                 `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -60,15 +61,15 @@ func (*ListOrderByUserRequest) Descriptor() ([]byte, []int) {
 }
 
 func (x *ListOrderByUserRequest) GetUserId() string {
-	if x != nil && x.UserId != nil {
-		return *x.UserId
+	if x != nil {
+		return x.UserId
 	}
 	return ""
 }
 
 type ListOrderByDomainRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Domain        *string                `protobuf:"bytes,2,opt,name=domain,proto3,oneof" json:"domain,omitempty"`
+	Domain        string                 `protobuf:"bytes,2,opt,name=domain,proto3" json:"domain,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -104,19 +105,19 @@ func (*ListOrderByDomainRequest) Descriptor() ([]byte, []int) {
 }
 
 func (x *ListOrderByDomainRequest) GetDomain() string {
-	if x != nil && x.Domain != nil {
-		return *x.Domain
+	if x != nil {
+		return x.Domain
 	}
 	return ""
 }
 
 type CreateOrderRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            *string                `protobuf:"bytes,1,opt,name=id,proto3,oneof" json:"id,omitempty"`
-	PaymentType   *string                `protobuf:"bytes,2,opt,name=payment_type,json=paymentType,proto3,oneof" json:"payment_type,omitempty"`
-	Name          *string                `protobuf:"bytes,3,opt,name=name,proto3,oneof" json:"name,omitempty"`
-	Amount        *int32                 `protobuf:"varint,4,opt,name=amount,proto3,oneof" json:"amount,omitempty"` // rmb 分
-	Domain        *string                `protobuf:"bytes,5,opt,name=domain,proto3,oneof" json:"domain,omitempty"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	PaymentType   string                 `protobuf:"bytes,2,opt,name=payment_type,json=paymentType,proto3" json:"payment_type,omitempty"`
+	Name          string                 `protobuf:"bytes,3,opt,name=name,proto3" json:"name,omitempty"`
+	Amount        int32                  `protobuf:"varint,4,opt,name=amount,proto3" json:"amount,omitempty"` // rmb 分
+	Domain        string                 `protobuf:"bytes,5,opt,name=domain,proto3" json:"domain,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -152,47 +153,47 @@ func (*CreateOrderRequest) Descriptor() ([]byte, []int) {
 }
 
 func (x *CreateOrderRequest) GetId() string {
-	if x != nil && x.Id != nil {
-		return *x.Id
+	if x != nil {
+		return x.Id
 	}
 	return ""
 }
 
 func (x *CreateOrderRequest) GetPaymentType() string {
-	if x != nil && x.PaymentType != nil {
-		return *x.PaymentType
+	if x != nil {
+		return x.PaymentType
 	}
 	return ""
 }
 
 func (x *CreateOrderRequest) GetName() string {
-	if x != nil && x.Name != nil {
-		return *x.Name
+	if x != nil {
+		return x.Name
 	}
 	return ""
 }
 
 func (x *CreateOrderRequest) GetAmount() int32 {
-	if x != nil && x.Amount != nil {
-		return *x.Amount
+	if x != nil {
+		return x.Amount
 	}
 	return 0
 }
 
 func (x *CreateOrderRequest) GetDomain() string {
-	if x != nil && x.Domain != nil {
-		return *x.Domain
+	if x != nil {
+		return x.Domain
 	}
 	return ""
 }
 
 type CreateOrderReply struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            *string                `protobuf:"bytes,1,opt,name=id,proto3,oneof" json:"id,omitempty"`
-	PaymentType   *string                `protobuf:"bytes,2,opt,name=payment_type,json=paymentType,proto3,oneof" json:"payment_type,omitempty"`
-	Name          *string                `protobuf:"bytes,3,opt,name=name,proto3,oneof" json:"name,omitempty"`
-	Amount        *int32                 `protobuf:"varint,4,opt,name=amount,proto3,oneof" json:"amount,omitempty"` // rmb 分
-	Domain        *string                `protobuf:"bytes,5,opt,name=domain,proto3,oneof" json:"domain,omitempty"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	PaymentType   string                 `protobuf:"bytes,2,opt,name=payment_type,json=paymentType,proto3" json:"payment_type,omitempty"`
+	Name          string                 `protobuf:"bytes,3,opt,name=name,proto3" json:"name,omitempty"`
+	Amount        int32                  `protobuf:"varint,4,opt,name=amount,proto3" json:"amount,omitempty"` // rmb 分
+	Domain        string                 `protobuf:"bytes,5,opt,name=domain,proto3" json:"domain,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -228,43 +229,43 @@ func (*CreateOrderReply) Descriptor() ([]byte, []int) {
 }
 
 func (x *CreateOrderReply) GetId() string {
-	if x != nil && x.Id != nil {
-		return *x.Id
+	if x != nil {
+		return x.Id
 	}
 	return ""
 }
 
 func (x *CreateOrderReply) GetPaymentType() string {
-	if x != nil && x.PaymentType != nil {
-		return *x.PaymentType
+	if x != nil {
+		return x.PaymentType
 	}
 	return ""
 }
 
 func (x *CreateOrderReply) GetName() string {
-	if x != nil && x.Name != nil {
-		return *x.Name
+	if x != nil {
+		return x.Name
 	}
 	return ""
 }
 
 func (x *CreateOrderReply) GetAmount() int32 {
-	if x != nil && x.Amount != nil {
-		return *x.Amount
+	if x != nil {
+		return x.Amount
 	}
 	return 0
 }
 
 func (x *CreateOrderReply) GetDomain() string {
-	if x != nil && x.Domain != nil {
-		return *x.Domain
+	if x != nil {
+		return x.Domain
 	}
 	return ""
 }
 
 type GetOrderRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            *string                `protobuf:"bytes,1,opt,name=id,proto3,oneof" json:"id,omitempty"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -300,19 +301,19 @@ func (*GetOrderRequest) Descriptor() ([]byte, []int) {
 }
 
 func (x *GetOrderRequest) GetId() string {
-	if x != nil && x.Id != nil {
-		return *x.Id
+	if x != nil {
+		return x.Id
 	}
 	return ""
 }
 
 type GetOrderReply struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            *string                `protobuf:"bytes,1,opt,name=id,proto3,oneof" json:"id,omitempty"`
-	PaymentType   *string                `protobuf:"bytes,2,opt,name=payment_type,json=paymentType,proto3,oneof" json:"payment_type,omitempty"`
-	Name          *string                `protobuf:"bytes,3,opt,name=name,proto3,oneof" json:"name,omitempty"`
-	Amount        *int32                 `protobuf:"varint,4,opt,name=amount,proto3,oneof" json:"amount,omitempty"` // rmb 分
-	Domain        *string                `protobuf:"bytes,5,opt,name=domain,proto3,oneof" json:"domain,omitempty"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	PaymentType   string                 `protobuf:"bytes,2,opt,name=payment_type,json=paymentType,proto3" json:"payment_type,omitempty"`
+	Name          string                 `protobuf:"bytes,3,opt,name=name,proto3" json:"name,omitempty"`
+	Amount        int32                  `protobuf:"varint,4,opt,name=amount,proto3" json:"amount,omitempty"` // rmb 分
+	Domain        string                 `protobuf:"bytes,5,opt,name=domain,proto3" json:"domain,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -348,36 +349,36 @@ func (*GetOrderReply) Descriptor() ([]byte, []int) {
 }
 
 func (x *GetOrderReply) GetId() string {
-	if x != nil && x.Id != nil {
-		return *x.Id
+	if x != nil {
+		return x.Id
 	}
 	return ""
 }
 
 func (x *GetOrderReply) GetPaymentType() string {
-	if x != nil && x.PaymentType != nil {
-		return *x.PaymentType
+	if x != nil {
+		return x.PaymentType
 	}
 	return ""
 }
 
 func (x *GetOrderReply) GetName() string {
-	if x != nil && x.Name != nil {
-		return *x.Name
+	if x != nil {
+		return x.Name
 	}
 	return ""
 }
 
 func (x *GetOrderReply) GetAmount() int32 {
-	if x != nil && x.Amount != nil {
-		return *x.Amount
+	if x != nil {
+		return x.Amount
 	}
 	return 0
 }
 
 func (x *GetOrderReply) GetDomain() string {
-	if x != nil && x.Domain != nil {
-		return *x.Domain
+	if x != nil {
+		return x.Domain
 	}
 	return ""
 }
@@ -464,11 +465,11 @@ func (x *ListOrderReply) GetOrders() []*ListOrderReply_Order {
 
 type ListOrderReply_Order struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            *string                `protobuf:"bytes,1,opt,name=id,proto3,oneof" json:"id,omitempty"`
-	PaymentType   *string                `protobuf:"bytes,2,opt,name=payment_type,json=paymentType,proto3,oneof" json:"payment_type,omitempty"`
-	Name          *string                `protobuf:"bytes,3,opt,name=name,proto3,oneof" json:"name,omitempty"`
-	Amount        *int32                 `protobuf:"varint,4,opt,name=amount,proto3,oneof" json:"amount,omitempty"` // rmb 分
-	Domain        *string                `protobuf:"bytes,5,opt,name=domain,proto3,oneof" json:"domain,omitempty"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	PaymentType   string                 `protobuf:"bytes,2,opt,name=payment_type,json=paymentType,proto3" json:"payment_type,omitempty"`
+	Name          string                 `protobuf:"bytes,3,opt,name=name,proto3" json:"name,omitempty"`
+	Amount        int32                  `protobuf:"varint,4,opt,name=amount,proto3" json:"amount,omitempty"` // rmb 分
+	Domain        string                 `protobuf:"bytes,5,opt,name=domain,proto3" json:"domain,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -504,36 +505,36 @@ func (*ListOrderReply_Order) Descriptor() ([]byte, []int) {
 }
 
 func (x *ListOrderReply_Order) GetId() string {
-	if x != nil && x.Id != nil {
-		return *x.Id
+	if x != nil {
+		return x.Id
 	}
 	return ""
 }
 
 func (x *ListOrderReply_Order) GetPaymentType() string {
-	if x != nil && x.PaymentType != nil {
-		return *x.PaymentType
+	if x != nil {
+		return x.PaymentType
 	}
 	return ""
 }
 
 func (x *ListOrderReply_Order) GetName() string {
-	if x != nil && x.Name != nil {
-		return *x.Name
+	if x != nil {
+		return x.Name
 	}
 	return ""
 }
 
 func (x *ListOrderReply_Order) GetAmount() int32 {
-	if x != nil && x.Amount != nil {
-		return *x.Amount
+	if x != nil {
+		return x.Amount
 	}
 	return 0
 }
 
 func (x *ListOrderReply_Order) GetDomain() string {
-	if x != nil && x.Domain != nil {
-		return *x.Domain
+	if x != nil {
+		return x.Domain
 	}
 	return ""
 }
@@ -542,64 +543,40 @@ var File_api_order_service_v1_order_proto protoreflect.FileDescriptor
 
 const file_api_order_service_v1_order_proto_rawDesc = "" +
 	"\n" +
-	" api/order/service/v1/order.proto\x12\x14api.order.service.v1\x1a\x1cgoogle/api/annotations.proto\"B\n" +
-	"\x16ListOrderByUserRequest\x12\x1c\n" +
-	"\auser_id\x18\x01 \x01(\tH\x00R\x06userId\x88\x01\x01B\n" +
-	"\n" +
-	"\b_user_id\"B\n" +
-	"\x18ListOrderByDomainRequest\x12\x1b\n" +
-	"\x06domain\x18\x02 \x01(\tH\x00R\x06domain\x88\x01\x01B\t\n" +
-	"\a_domain\"\xdb\x01\n" +
-	"\x12CreateOrderRequest\x12\x13\n" +
-	"\x02id\x18\x01 \x01(\tH\x00R\x02id\x88\x01\x01\x12&\n" +
-	"\fpayment_type\x18\x02 \x01(\tH\x01R\vpaymentType\x88\x01\x01\x12\x17\n" +
-	"\x04name\x18\x03 \x01(\tH\x02R\x04name\x88\x01\x01\x12\x1b\n" +
-	"\x06amount\x18\x04 \x01(\x05H\x03R\x06amount\x88\x01\x01\x12\x1b\n" +
-	"\x06domain\x18\x05 \x01(\tH\x04R\x06domain\x88\x01\x01B\x05\n" +
-	"\x03_idB\x0f\n" +
-	"\r_payment_typeB\a\n" +
-	"\x05_nameB\t\n" +
-	"\a_amountB\t\n" +
-	"\a_domain\"\xd9\x01\n" +
-	"\x10CreateOrderReply\x12\x13\n" +
-	"\x02id\x18\x01 \x01(\tH\x00R\x02id\x88\x01\x01\x12&\n" +
-	"\fpayment_type\x18\x02 \x01(\tH\x01R\vpaymentType\x88\x01\x01\x12\x17\n" +
-	"\x04name\x18\x03 \x01(\tH\x02R\x04name\x88\x01\x01\x12\x1b\n" +
-	"\x06amount\x18\x04 \x01(\x05H\x03R\x06amount\x88\x01\x01\x12\x1b\n" +
-	"\x06domain\x18\x05 \x01(\tH\x04R\x06domain\x88\x01\x01B\x05\n" +
-	"\x03_idB\x0f\n" +
-	"\r_payment_typeB\a\n" +
-	"\x05_nameB\t\n" +
-	"\a_amountB\t\n" +
-	"\a_domain\"-\n" +
-	"\x0fGetOrderRequest\x12\x13\n" +
-	"\x02id\x18\x01 \x01(\tH\x00R\x02id\x88\x01\x01B\x05\n" +
-	"\x03_id\"\xd6\x01\n" +
-	"\rGetOrderReply\x12\x13\n" +
-	"\x02id\x18\x01 \x01(\tH\x00R\x02id\x88\x01\x01\x12&\n" +
-	"\fpayment_type\x18\x02 \x01(\tH\x01R\vpaymentType\x88\x01\x01\x12\x17\n" +
-	"\x04name\x18\x03 \x01(\tH\x02R\x04name\x88\x01\x01\x12\x1b\n" +
-	"\x06amount\x18\x04 \x01(\x05H\x03R\x06amount\x88\x01\x01\x12\x1b\n" +
-	"\x06domain\x18\x05 \x01(\tH\x04R\x06domain\x88\x01\x01B\x05\n" +
-	"\x03_idB\x0f\n" +
-	"\r_payment_typeB\a\n" +
-	"\x05_nameB\t\n" +
-	"\a_amountB\t\n" +
-	"\a_domain\"\x12\n" +
-	"\x10ListOrderRequest\"\xa5\x02\n" +
+	" api/order/service/v1/order.proto\x12\x14api.order.service.v1\x1a\x1cgoogle/api/annotations.proto\x1a\x17validate/validate.proto\":\n" +
+	"\x16ListOrderByUserRequest\x12 \n" +
+	"\auser_id\x18\x01 \x01(\tB\a\xfaB\x04r\x02\x10\x01R\x06userId\";\n" +
+	"\x18ListOrderByDomainRequest\x12\x1f\n" +
+	"\x06domain\x18\x02 \x01(\tB\a\xfaB\x04r\x02\x10\x01R\x06domain\"\xb8\x01\n" +
+	"\x12CreateOrderRequest\x12\x17\n" +
+	"\x02id\x18\x01 \x01(\tB\a\xfaB\x04r\x02\x10\x01R\x02id\x12*\n" +
+	"\fpayment_type\x18\x02 \x01(\tB\a\xfaB\x04r\x02\x10\x01R\vpaymentType\x12\x1b\n" +
+	"\x04name\x18\x03 \x01(\tB\a\xfaB\x04r\x02\x10\x01R\x04name\x12\x1f\n" +
+	"\x06amount\x18\x04 \x01(\x05B\a\xfaB\x04\x1a\x02 \x00R\x06amount\x12\x1f\n" +
+	"\x06domain\x18\x05 \x01(\tB\a\xfaB\x04r\x02\x10\x01R\x06domain\"\x89\x01\n" +
+	"\x10CreateOrderReply\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12!\n" +
+	"\fpayment_type\x18\x02 \x01(\tR\vpaymentType\x12\x12\n" +
+	"\x04name\x18\x03 \x01(\tR\x04name\x12\x16\n" +
+	"\x06amount\x18\x04 \x01(\x05R\x06amount\x12\x16\n" +
+	"\x06domain\x18\x05 \x01(\tR\x06domain\"*\n" +
+	"\x0fGetOrderRequest\x12\x17\n" +
+	"\x02id\x18\x01 \x01(\tB\a\xfaB\x04r\x02\x10\x01R\x02id\"\x86\x01\n" +
+	"\rGetOrderReply\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12!\n" +
+	"\fpayment_type\x18\x02 \x01(\tR\vpaymentType\x12\x12\n" +
+	"\x04name\x18\x03 \x01(\tR\x04name\x12\x16\n" +
+	"\x06amount\x18\x04 \x01(\x05R\x06amount\x12\x16\n" +
+	"\x06domain\x18\x05 \x01(\tR\x06domain\"\x12\n" +
+	"\x10ListOrderRequest\"\xd4\x01\n" +
 	"\x0eListOrderReply\x12B\n" +
-	"\x06orders\x18\x01 \x03(\v2*.api.order.service.v1.ListOrderReply.OrderR\x06orders\x1a\xce\x01\n" +
-	"\x05Order\x12\x13\n" +
-	"\x02id\x18\x01 \x01(\tH\x00R\x02id\x88\x01\x01\x12&\n" +
-	"\fpayment_type\x18\x02 \x01(\tH\x01R\vpaymentType\x88\x01\x01\x12\x17\n" +
-	"\x04name\x18\x03 \x01(\tH\x02R\x04name\x88\x01\x01\x12\x1b\n" +
-	"\x06amount\x18\x04 \x01(\x05H\x03R\x06amount\x88\x01\x01\x12\x1b\n" +
-	"\x06domain\x18\x05 \x01(\tH\x04R\x06domain\x88\x01\x01B\x05\n" +
-	"\x03_idB\x0f\n" +
-	"\r_payment_typeB\a\n" +
-	"\x05_nameB\t\n" +
-	"\a_amountB\t\n" +
-	"\a_domain2\xfc\x04\n" +
+	"\x06orders\x18\x01 \x03(\v2*.api.order.service.v1.ListOrderReply.OrderR\x06orders\x1a~\n" +
+	"\x05Order\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12!\n" +
+	"\fpayment_type\x18\x02 \x01(\tR\vpaymentType\x12\x12\n" +
+	"\x04name\x18\x03 \x01(\tR\x04name\x12\x16\n" +
+	"\x06amount\x18\x04 \x01(\x05R\x06amount\x12\x16\n" +
+	"\x06domain\x18\x05 \x01(\tR\x06domain2\xfc\x04\n" +
 	"\x05Order\x12v\n" +
 	"\vCreateOrder\x12(.api.order.service.v1.CreateOrderRequest\x1a&.api.order.service.v1.CreateOrderReply\"\x15\x82\xd3\xe4\x93\x02\x0f:\x01*\"\n" +
 	"/v1/orders\x12o\n" +
@@ -658,13 +635,6 @@ func file_api_order_service_v1_order_proto_init() {
 	if File_api_order_service_v1_order_proto != nil {
 		return
 	}
-	file_api_order_service_v1_order_proto_msgTypes[0].OneofWrappers = []any{}
-	file_api_order_service_v1_order_proto_msgTypes[1].OneofWrappers = []any{}
-	file_api_order_service_v1_order_proto_msgTypes[2].OneofWrappers = []any{}
-	file_api_order_service_v1_order_proto_msgTypes[3].OneofWrappers = []any{}
-	file_api_order_service_v1_order_proto_msgTypes[4].OneofWrappers = []any{}
-	file_api_order_service_v1_order_proto_msgTypes[5].OneofWrappers = []any{}
-	file_api_order_service_v1_order_proto_msgTypes[8].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
