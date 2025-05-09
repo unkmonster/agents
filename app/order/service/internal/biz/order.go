@@ -2,16 +2,18 @@ package biz
 
 import (
 	"context"
+	"time"
 
 	"github.com/go-kratos/kratos/v2/log"
 )
 
 type Order struct {
-	Id          string `db:"id"`
-	PaymentType string `db:"payment_type"`
-	Name        string `db:"name"`
-	Amount      int32  `db:"amount"`
-	Domain      string `db:"domain"`
+	Id          string    `db:"id"`
+	PaymentType string    `db:"payment_type"`
+	Name        string    `db:"name"`
+	Amount      int32     `db:"amount"`
+	Domain      string    `db:"domain"`
+	CreatedAt   time.Time `db:"created_at"`
 }
 
 type OrderRepo interface {

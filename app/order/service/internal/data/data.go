@@ -5,20 +5,31 @@ import (
 
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/google/wire"
+	"github.com/jmoiron/sqlx"
 )
 
 // ProviderSet is data providers.
-var ProviderSet = wire.NewSet(NewData, NewGreeterRepo)
+var ProviderSet = wire.NewSet(NewData, NewOrderRepo)
 
 // Data .
 type Data struct {
 	// TODO wrapped database client
+	db *sqlx.DB
 }
 
 // NewData .
 func NewData(c *conf.Data, logger log.Logger) (*Data, func(), error) {
-	cleanup := func() {
-		log.NewHelper(logger).Info("closing the data resources")
+	log := log.NewHelper(logger)
+	db, err := sqlx.Connect(c.Database.Driver, c.Database.Source)
+	if err != nil {
+		log.Fatalf("failed to connect to database: %v", err)
 	}
-	return &Data{}, cleanup, nil
+
+	cleanup := func() {
+		log.Info("closing the data resources")
+		db.Close()
+	}
+	return &Data{
+		db: db,
+	}, cleanup, nil
 }

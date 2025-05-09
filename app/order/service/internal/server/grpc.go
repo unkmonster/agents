@@ -1,7 +1,6 @@
 package server
 
 import (
-	v1 "agents/api/helloworld/v1"
 	"agents/app/order/service/internal/conf"
 	"agents/app/order/service/internal/service"
 
