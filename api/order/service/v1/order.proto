@@ -1,0 +1,88 @@
+syntax = "proto3";
+
+package api.order.service.v1;
+
+import "google/api/annotations.proto";
+import "validate/validate.proto";
+
+option go_package = "agents/api/order/service/v1;v1";
+option java_multiple_files = true;
+option java_package = "api.order.service.v1";
+
+// 订单指支付完成且成功的订单
+service Order {
+	rpc CreateOrder (CreateOrderRequest) returns (CreateOrderReply) {
+		option (google.api.http) = {
+			post: "/v1/orders",
+			body: "*",
+		};
+	};
+	rpc GetOrder (GetOrderRequest) returns (GetOrderReply) {
+		option (google.api.http) = {
+			get: "/v1/orders/{id}",
+		};
+	};
+	rpc ListOrder (ListOrderRequest) returns (ListOrderReply) {
+		option (google.api.http) = {
+			get: "/v1/orders",
+		};
+	};
+	rpc ListOrderByUser(ListOrderByUserRequest) returns (ListOrderReply) {
+		option (google.api.http) = {
+			get: "/v1/users/{user_id}/orders",
+		};
+	};
+	rpc ListOrderByDomain(ListOrderByDomainRequest) returns (ListOrderReply) {
+		option (google.api.http) = {
+			get: "/v1/domains/{domain}/orders",
+		};
+	};
+}
+
+message ListOrderByUserRequest {
+	optional string user_id = 1;
+}
+
+message ListOrderByDomainRequest {
+	optional string domain = 2;
+}
+
+message CreateOrderRequest {
+	optional string id = 1;
+	optional string payment_type = 2;
+	optional string name = 3;
+	optional int32 amount = 4; // rmb 分
+	optional string domain = 5;
+}
+message CreateOrderReply {
+	optional string id = 1;
+	optional string payment_type = 2;
+	optional string name = 3;
+	optional int32 amount = 4; // rmb 分
+	optional string domain = 5;
+}
+
+message GetOrderRequest {
+	optional string id = 1;
+}
+message GetOrderReply {
+	optional string id = 1;
+	optional string payment_type = 2;
+	optional string name = 3;
+	optional int32 amount = 4; // rmb 分
+	optional string domain = 5;
+}
+
+message ListOrderRequest {
+
+}
+message ListOrderReply {
+	message Order {
+		optional string id = 1;
+		optional string payment_type = 2;
+		optional string name = 3;
+		optional int32 amount = 4; // rmb 分
+		optional string domain = 5;
+	}
+	repeated Order orders = 1;
+}

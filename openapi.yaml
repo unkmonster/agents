@@ -3,34 +3,17 @@
 
 openapi: 3.0.3
 info:
-    title: User API
+    title: Order API
+    description: 订单指支付完成且成功的订单
     version: 0.0.1
 paths:
-    /v1/domains:
+    /v1/domains/{domain}/orders:
         get:
             tags:
-                - User
-            operationId: User_ListUserDomains
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/ListUserDomainsReply'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/Status'
-    /v1/domains/{id}:
-        get:
-            tags:
-                - User
-            operationId: User_GetUserDomain
+                - Order
+            operationId: Order_ListOrderByDomain
             parameters:
-                - name: id
+                - name: domain
                   in: path
                   required: true
                   schema:
@@ -41,48 +24,25 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/GetUserDomainReply'
+                                $ref: '#/components/schemas/ListOrderReply'
                 default:
                     description: Default error response
                     content:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/Status'
-        delete:
-            tags:
-                - User
-            operationId: User_DeleteDomain
-            parameters:
-                - name: id
-                  in: path
-                  required: true
-                  schema:
-                    type: string
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/DeleteDomainReply'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/Status'
-    /v1/users:
+    /v1/orders:
         get:
             tags:
-                - User
-            operationId: User_ListUser
+                - Order
+            operationId: Order_ListOrder
             responses:
                 "200":
                     description: OK
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/ListUserReply'
+                                $ref: '#/components/schemas/ListOrderReply'
                 default:
                     description: Default error response
                     content:
@@ -91,13 +51,13 @@ paths:
                                 $ref: '#/components/schemas/Status'
         post:
             tags:
-                - User
-            operationId: User_CreateUser
+                - Order
+            operationId: Order_CreateOrder
             requestBody:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/CreateUserRequest'
+                            $ref: '#/components/schemas/CreateOrderRequest'
                 required: true
             responses:
                 "200":
@@ -105,18 +65,18 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/CreateUserReply'
+                                $ref: '#/components/schemas/CreateOrderReply'
                 default:
                     description: Default error response
                     content:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/Status'
-    /v1/users/{id}:
+    /v1/orders/{id}:
         get:
             tags:
-                - User
-            operationId: User_GetUser
+                - Order
+            operationId: Order_GetOrder
             parameters:
                 - name: id
                   in: path
@@ -129,70 +89,18 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/GetUserReply'
+                                $ref: '#/components/schemas/GetOrderReply'
                 default:
                     description: Default error response
                     content:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/Status'
-        delete:
-            tags:
-                - User
-            operationId: User_DeleteUser
-            parameters:
-                - name: id
-                  in: path
-                  required: true
-                  schema:
-                    type: string
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/DeleteUserReply'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/Status'
-        patch:
-            tags:
-                - User
-            operationId: User_UpdateUser
-            parameters:
-                - name: id
-                  in: path
-                  required: true
-                  schema:
-                    type: string
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/UpdateUserRequest'
-                required: true
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/UpdateUserReply'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/Status'
-    /v1/users/{userId}/domains:
+    /v1/users/{userId}/orders:
         get:
             tags:
-                - User
-            operationId: User_ListUserDomainsByUserId
+                - Order
+            operationId: Order_ListOrderByUser
             parameters:
                 - name: userId
                   in: path
@@ -205,36 +113,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/ListUserDomainsByUserIdReply'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/Status'
-        post:
-            tags:
-                - User
-            operationId: User_CreateUserDomain
-            parameters:
-                - name: userId
-                  in: path
-                  required: true
-                  schema:
-                    type: string
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/CreateUserDomainRequest'
-                required: true
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/CreateUserDomainReply'
+                                $ref: '#/components/schemas/ListOrderReply'
                 default:
                     description: Default error response
                     content:
@@ -243,77 +122,48 @@ paths:
                                 $ref: '#/components/schemas/Status'
 components:
     schemas:
-        CreateUserDomainReply:
+        CreateOrderReply:
             type: object
             properties:
                 id:
                     type: string
-                userId:
+                paymentType:
                     type: string
-                domain:
+                name:
                     type: string
-        CreateUserDomainRequest:
-            type: object
-            properties:
-                userId:
-                    type: string
-                domain:
-                    type: string
-        CreateUserReply:
-            type: object
-            properties:
-                id:
-                    type: string
-                username:
-                    type: string
-                nickname:
-                    type: string
-                parentId:
-                    type: string
-                level:
+                amount:
                     type: integer
                     format: int32
-        CreateUserRequest:
-            type: object
-            properties:
-                username:
-                    type: string
-                nickname:
-                    type: string
-                parentId:
-                    type: string
-                level:
-                    type: integer
-                    format: int32
-        DeleteDomainReply:
-            type: object
-            properties: {}
-        DeleteUserReply:
-            type: object
-            properties: {}
-        GetUserDomainReply:
-            type: object
-            properties:
-                id:
-                    type: string
-                userId:
-                    type: string
                 domain:
                     type: string
-        GetUserReply:
+        CreateOrderRequest:
             type: object
             properties:
                 id:
                     type: string
-                username:
+                paymentType:
                     type: string
-                nickname:
+                name:
                     type: string
-                parentId:
-                    type: string
-                level:
+                amount:
                     type: integer
                     format: int32
+                domain:
+                    type: string
+        GetOrderReply:
+            type: object
+            properties:
+                id:
+                    type: string
+                paymentType:
+                    type: string
+                name:
+                    type: string
+                amount:
+                    type: integer
+                    format: int32
+                domain:
+                    type: string
         GoogleProtobufAny:
             type: object
             properties:
@@ -322,59 +172,27 @@ components:
                     description: The type of the serialized message.
             additionalProperties: true
             description: Contains an arbitrary serialized message along with a @type that describes the type of the serialized message.
-        ListUserDomainsByUserIdReply:
+        ListOrderReply:
             type: object
             properties:
-                domains:
+                orders:
                     type: array
                     items:
-                        $ref: '#/components/schemas/ListUserDomainsByUserIdReply_Domain'
-        ListUserDomainsByUserIdReply_Domain:
+                        $ref: '#/components/schemas/ListOrderReply_Order'
+        ListOrderReply_Order:
             type: object
             properties:
                 id:
                     type: string
-                userId:
+                paymentType:
                     type: string
-                domain:
+                name:
                     type: string
-        ListUserDomainsReply:
-            type: object
-            properties:
-                domains:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/ListUserDomainsReply_Domain'
-        ListUserDomainsReply_Domain:
-            type: object
-            properties:
-                id:
-                    type: string
-                userId:
-                    type: string
-                domain:
-                    type: string
-        ListUserReply:
-            type: object
-            properties:
-                users:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/ListUserReply_User'
-        ListUserReply_User:
-            type: object
-            properties:
-                id:
-                    type: string
-                username:
-                    type: string
-                nickname:
-                    type: string
-                parentId:
-                    type: string
-                level:
+                amount:
                     type: integer
                     format: int32
+                domain:
+                    type: string
         Status:
             type: object
             properties:
@@ -391,28 +209,5 @@ components:
                         $ref: '#/components/schemas/GoogleProtobufAny'
                     description: A list of messages that carry the error details.  There is a common set of message types for APIs to use.
             description: 'The `Status` type defines a logical error model that is suitable for different programming environments, including REST APIs and RPC APIs. It is used by [gRPC](https://github.com/grpc). Each `Status` message contains three pieces of data: error code, error message, and error details. You can find out more about this error model and how to work with it in the [API Design Guide](https://cloud.google.com/apis/design/errors).'
-        UpdateUserReply:
-            type: object
-            properties:
-                id:
-                    type: string
-                username:
-                    type: string
-                nickname:
-                    type: string
-                parentId:
-                    type: string
-                level:
-                    type: integer
-                    format: int32
-        UpdateUserRequest:
-            type: object
-            properties:
-                id:
-                    type: string
-                password:
-                    type: string
-                nickname:
-                    type: string
 tags:
-    - name: User
+    - name: Order
