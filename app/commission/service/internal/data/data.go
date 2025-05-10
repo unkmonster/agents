@@ -14,6 +14,8 @@ import (
 	"github.com/jmoiron/sqlx"
 
 	userv1 "agents/api/user/service/v1"
+
+	_ "github.com/go-sql-driver/mysql"
 )
 
 // ProviderSet is data providers.

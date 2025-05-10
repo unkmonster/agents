@@ -26,7 +26,14 @@ service Commission {
 			get: "/v1/users/{parent_id}/users/commissions"
 		};
 	};
+	rpc InitUserCommission(InitUserCommissionReq) returns (InitUserCommissionReply);
 }
+
+message InitUserCommissionReq {
+	string user_id = 1 [(validate.rules).string = {min_len: 1}];
+}
+
+message InitUserCommissionReply{}
 
 message HandleOrderCommissionRequest {
 	string domain = 1 [(validate.rules).string = {min_len: 1}];

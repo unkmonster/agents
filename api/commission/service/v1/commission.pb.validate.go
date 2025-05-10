@@ -35,6 +35,221 @@ var (
 	_ = sort.Sort
 )
 
+// Validate checks the field values on InitUserCommissionReq with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *InitUserCommissionReq) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on InitUserCommissionReq with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// InitUserCommissionReqMultiError, or nil if none found.
+func (m *InitUserCommissionReq) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *InitUserCommissionReq) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if utf8.RuneCountInString(m.GetUserId()) < 1 {
+		err := InitUserCommissionReqValidationError{
+			field:  "UserId",
+			reason: "value length must be at least 1 runes",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if len(errors) > 0 {
+		return InitUserCommissionReqMultiError(errors)
+	}
+
+	return nil
+}
+
+// InitUserCommissionReqMultiError is an error wrapping multiple validation
+// errors returned by InitUserCommissionReq.ValidateAll() if the designated
+// constraints aren't met.
+type InitUserCommissionReqMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m InitUserCommissionReqMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m InitUserCommissionReqMultiError) AllErrors() []error { return m }
+
+// InitUserCommissionReqValidationError is the validation error returned by
+// InitUserCommissionReq.Validate if the designated constraints aren't met.
+type InitUserCommissionReqValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e InitUserCommissionReqValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e InitUserCommissionReqValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e InitUserCommissionReqValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e InitUserCommissionReqValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e InitUserCommissionReqValidationError) ErrorName() string {
+	return "InitUserCommissionReqValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e InitUserCommissionReqValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sInitUserCommissionReq.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = InitUserCommissionReqValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = InitUserCommissionReqValidationError{}
+
+// Validate checks the field values on InitUserCommissionReply with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *InitUserCommissionReply) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on InitUserCommissionReply with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// InitUserCommissionReplyMultiError, or nil if none found.
+func (m *InitUserCommissionReply) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *InitUserCommissionReply) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if len(errors) > 0 {
+		return InitUserCommissionReplyMultiError(errors)
+	}
+
+	return nil
+}
+
+// InitUserCommissionReplyMultiError is an error wrapping multiple validation
+// errors returned by InitUserCommissionReply.ValidateAll() if the designated
+// constraints aren't met.
+type InitUserCommissionReplyMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m InitUserCommissionReplyMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m InitUserCommissionReplyMultiError) AllErrors() []error { return m }
+
+// InitUserCommissionReplyValidationError is the validation error returned by
+// InitUserCommissionReply.Validate if the designated constraints aren't met.
+type InitUserCommissionReplyValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e InitUserCommissionReplyValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e InitUserCommissionReplyValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e InitUserCommissionReplyValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e InitUserCommissionReplyValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e InitUserCommissionReplyValidationError) ErrorName() string {
+	return "InitUserCommissionReplyValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e InitUserCommissionReplyValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sInitUserCommissionReply.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = InitUserCommissionReplyValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = InitUserCommissionReplyValidationError{}
+
 // Validate checks the field values on HandleOrderCommissionRequest with the
 // rules defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.

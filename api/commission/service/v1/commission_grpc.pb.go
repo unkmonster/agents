@@ -2,7 +2,7 @@
 // versions:
 // - protoc-gen-go-grpc v1.5.1
 // - protoc             v5.29.0--dev
-// source: commission/service/v1/commission.proto
+// source: api/commission/service/v1/commission.proto
 
 package v1
 
@@ -23,6 +23,7 @@ const (
 	Commission_GetUserCommission_FullMethodName      = "/api.commission.service.v1.Commission/GetUserCommission"
 	Commission_ListCommission_FullMethodName         = "/api.commission.service.v1.Commission/ListCommission"
 	Commission_ListCommissionByParent_FullMethodName = "/api.commission.service.v1.Commission/ListCommissionByParent"
+	Commission_InitUserCommission_FullMethodName     = "/api.commission.service.v1.Commission/InitUserCommission"
 )
 
 // CommissionClient is the client API for Commission service.
@@ -33,6 +34,7 @@ type CommissionClient interface {
 	GetUserCommission(ctx context.Context, in *GetUserCommissionRequest, opts ...grpc.CallOption) (*GetUserCommissionReply, error)
 	ListCommission(ctx context.Context, in *ListCommissionRequest, opts ...grpc.CallOption) (*ListCommissionReply, error)
 	ListCommissionByParent(ctx context.Context, in *ListCommissionByParentReq, opts ...grpc.CallOption) (*ListCommissionByParentReply, error)
+	InitUserCommission(ctx context.Context, in *InitUserCommissionReq, opts ...grpc.CallOption) (*InitUserCommissionReply, error)
 }
 
 type commissionClient struct {
@@ -83,6 +85,16 @@ func (c *commissionClient) ListCommissionByParent(ctx context.Context, in *ListC
 	return out, nil
 }
 
+func (c *commissionClient) InitUserCommission(ctx context.Context, in *InitUserCommissionReq, opts ...grpc.CallOption) (*InitUserCommissionReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(InitUserCommissionReply)
+	err := c.cc.Invoke(ctx, Commission_InitUserCommission_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // CommissionServer is the server API for Commission service.
 // All implementations must embed UnimplementedCommissionServer
 // for forward compatibility.
@@ -91,6 +103,7 @@ type CommissionServer interface {
 	GetUserCommission(context.Context, *GetUserCommissionRequest) (*GetUserCommissionReply, error)
 	ListCommission(context.Context, *ListCommissionRequest) (*ListCommissionReply, error)
 	ListCommissionByParent(context.Context, *ListCommissionByParentReq) (*ListCommissionByParentReply, error)
+	InitUserCommission(context.Context, *InitUserCommissionReq) (*InitUserCommissionReply, error)
 	mustEmbedUnimplementedCommissionServer()
 }
 
@@ -112,6 +125,9 @@ func (UnimplementedCommissionServer) ListCommission(context.Context, *ListCommis
 }
 func (UnimplementedCommissionServer) ListCommissionByParent(context.Context, *ListCommissionByParentReq) (*ListCommissionByParentReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListCommissionByParent not implemented")
+}
+func (UnimplementedCommissionServer) InitUserCommission(context.Context, *InitUserCommissionReq) (*InitUserCommissionReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method InitUserCommission not implemented")
 }
 func (UnimplementedCommissionServer) mustEmbedUnimplementedCommissionServer() {}
 func (UnimplementedCommissionServer) testEmbeddedByValue()                    {}
@@ -206,6 +222,24 @@ func _Commission_ListCommissionByParent_Handler(srv interface{}, ctx context.Con
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Commission_InitUserCommission_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(InitUserCommissionReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CommissionServer).InitUserCommission(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Commission_InitUserCommission_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CommissionServer).InitUserCommission(ctx, req.(*InitUserCommissionReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Commission_ServiceDesc is the grpc.ServiceDesc for Commission service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -229,7 +263,11 @@ var Commission_ServiceDesc = grpc.ServiceDesc{
 			MethodName: "ListCommissionByParent",
 			Handler:    _Commission_ListCommissionByParent_Handler,
 		},
+		{
+			MethodName: "InitUserCommission",
+			Handler:    _Commission_InitUserCommission_Handler,
+		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "commission/service/v1/commission.proto",
+	Metadata: "api/commission/service/v1/commission.proto",
 }

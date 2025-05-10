@@ -2,7 +2,7 @@
 // versions:
 // - protoc-gen-go-http v2.8.4
 // - protoc             v5.29.0--dev
-// source: commission/service/v1/commission.proto
+// source: api/commission/service/v1/commission.proto
 
 package v1
 

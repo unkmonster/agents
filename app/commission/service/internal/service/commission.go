@@ -78,3 +78,8 @@ func (s *CommissionService) ListCommissionByParent(ctx context.Context, req *pb.
 	}
 	return &reply, nil
 }
+
+func (s *CommissionService) InitUserCommission(ctx context.Context, req *pb.InitUserCommissionReq) (*pb.InitUserCommissionReply, error) {
+	err := s.comm.InitUserCommission(ctx, req.UserId)
+	return nil, err
+}

@@ -77,3 +77,18 @@ services:
     ports:
       - 8002:8000
       - 9002:9000
+  commission:
+    build:
+      context: .
+      dockerfile: ./app/commission/service/Dockerfile
+    depends_on:
+      db:
+        condition: service_healthy
+        restart: true
+      consul:
+        condition: service_healthy
+    volumes:
+      - ./app/commission/service/configs:/data/conf
+    ports:
+      - 8003:8000
+      - 9003:9000

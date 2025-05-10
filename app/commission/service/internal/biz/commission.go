@@ -91,14 +91,6 @@ func (uc *CommissionUseCase) InitUserCommission(ctx context.Context, userId stri
 	return uc.commission.InitUserCommission(ctx, userId)
 }
 
-func (uc *CommissionUseCase) InUserCommission(ctx context.Context, userId string, amount int32) error {
-	return uc.commission.IncUserCommission(ctx, userId, amount)
-}
-
-func (uc *CommissionUseCase) IncUserSettledCommission(ctx context.Context, userId string, amount int32) error {
-	return uc.commission.IncUserSettledCommission(ctx, userId, amount)
-}
-
 func (uc *CommissionUseCase) GetUserCommission(ctx context.Context, userId string) (*Commission, error) {
 	return uc.commission.GetUserCommission(ctx, userId)
 }

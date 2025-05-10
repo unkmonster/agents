@@ -32,14 +32,16 @@ type AuthUserCase struct {
 	ur   UserRepo
 	log  *log.Helper
 	auth *conf.Auth
+	comm CommissionRepo
 }
 
-func NewAuthUserCase(repo UserCredentialRepo, logger log.Logger, ur UserRepo, auth *conf.Auth) *AuthUserCase {
+func NewAuthUserCase(repo UserCredentialRepo, logger log.Logger, ur UserRepo, auth *conf.Auth, comm CommissionRepo) *AuthUserCase {
 	return &AuthUserCase{
 		cr:   repo,
 		log:  log.NewHelper(logger),
 		ur:   ur,
 		auth: auth,
+		comm: comm,
 	}
 }
 
@@ -90,6 +92,11 @@ func (uc *AuthUserCase) Register(ctx context.Context, req *pb.RegisterRequest) (
 		Username:       user.Username,
 		HashedPassword: hex.EncodeToString(h),
 	})
+	if err != nil {
+		return nil, err
+	}
+
+	err = uc.comm.InitUserCommission(ctx, user.Id)
 	if err != nil {
 		return nil, err
 	}
