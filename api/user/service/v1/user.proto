@@ -79,6 +79,7 @@ message GetUserByDomainReply {
 	string nickname = 3;
 	string parent_id = 4;
 	int32 level = 5;
+	float share_percent = 6;
 }
 
 message GetUserByUsernameRequest {
@@ -139,6 +140,7 @@ message CreateUserRequest {
 	optional string nickname = 4;
 	optional string parent_id = 5;
 	optional int32 level = 6;
+	optional float share_percent = 7;
 }
 message CreateUserReply {
 	optional string id = 1;
@@ -146,12 +148,14 @@ message CreateUserReply {
 	optional string nickname = 3;
 	optional string parent_id = 4;
 	optional int32 level = 5;
+	optional float share_percent = 6;
 }
 
 message UpdateUserRequest {
 	optional string id = 1;
 	optional string password = 3 [(validate.rules).string = {min_len: 8, max_len: 20}];
 	optional string nickname = 4 [(validate.rules).string = {max_len: 20}];
+	optional float share_percent = 5;
 }
 message UpdateUserReply {
 	optional string id = 1;
@@ -159,6 +163,7 @@ message UpdateUserReply {
 	optional string nickname = 3;
 	optional string parent_id = 4;
 	optional int32 level = 5;
+	optional float share_percent = 6;
 }
 
 message DeleteUserRequest {

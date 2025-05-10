@@ -544,6 +544,9 @@ components:
                 level:
                     type: integer
                     format: int32
+                sharePercent:
+                    type: number
+                    format: float
         api.user.service.v1.CreateUserRequest:
             type: object
             properties:
@@ -556,6 +559,9 @@ components:
                 level:
                     type: integer
                     format: int32
+                sharePercent:
+                    type: number
+                    format: float
         api.user.service.v1.DeleteDomainReply:
             type: object
             properties: {}
@@ -652,6 +658,9 @@ components:
                 level:
                     type: integer
                     format: int32
+                sharePercent:
+                    type: number
+                    format: float
         api.user.service.v1.UpdateUserRequest:
             type: object
             properties:
@@ -661,6 +670,9 @@ components:
                     type: string
                 nickname:
                     type: string
+                sharePercent:
+                    type: number
+                    format: float
 tags:
     - name: Authn
     - name: Commission

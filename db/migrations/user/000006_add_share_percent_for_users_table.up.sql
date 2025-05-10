@@ -1,0 +1,1 @@
+ALTER TABLE users ADD COLUMN share_percent FLOAT NOT NULL;
