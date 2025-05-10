@@ -180,6 +180,7 @@ message GetUserReply {
 	optional string nickname = 3;
 	optional string parent_id = 4;
 	optional int32 level = 5;
+	optional float share_percent = 6;
 }
 
 message ListUserRequest {}
@@ -190,6 +191,7 @@ message ListUserReply {
 		optional string nickname = 3;
 		optional string parent_id = 4;
 		optional int32 level = 5;
+		optional float share_percent = 6;
 	}
 	repeated User users = 1;
 }

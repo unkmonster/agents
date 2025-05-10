@@ -2364,6 +2364,10 @@ func (m *GetUserReply) validate(all bool) error {
 		// no validation rules for Level
 	}
 
+	if m.SharePercent != nil {
+		// no validation rules for SharePercent
+	}
+
 	if len(errors) > 0 {
 		return GetUserReplyMultiError(errors)
 	}
@@ -2947,6 +2951,10 @@ func (m *ListUserReply_User) validate(all bool) error {
 
 	if m.Level != nil {
 		// no validation rules for Level
+	}
+
+	if m.SharePercent != nil {
+		// no validation rules for SharePercent
 	}
 
 	if len(errors) > 0 {

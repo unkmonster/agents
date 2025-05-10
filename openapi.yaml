@@ -3,75 +3,9 @@
 
 openapi: 3.0.3
 info:
-    title: ""
+    title: User API
     version: 0.0.1
 paths:
-    /v1/auth/login:
-        post:
-            tags:
-                - Authn
-            operationId: Authn_Login
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/api.authn.service.v1.LoginRequest'
-                required: true
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.authn.service.v1.AuthReply'
-    /v1/auth/register:
-        post:
-            tags:
-                - Authn
-            operationId: Authn_Register
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/api.authn.service.v1.RegisterRequest'
-                required: true
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.authn.service.v1.AuthReply'
-    /v1/auth/verify:
-        post:
-            tags:
-                - Authn
-            operationId: Authn_Verify
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/api.authn.service.v1.VerifyRequest'
-                required: true
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.authn.service.v1.VerifyReply'
-    /v1/commissions:
-        get:
-            tags:
-                - Commission
-            operationId: Commission_ListCommission
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.commission.service.v1.ListCommissionReply'
     /v1/domains:
         get:
             tags:
@@ -83,25 +17,13 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/api.user.service.v1.ListUserDomainsReply'
-    /v1/domains/{domain}/orders:
-        get:
-            tags:
-                - Order
-            operationId: Order_ListOrderByDomain
-            parameters:
-                - name: domain
-                  in: path
-                  required: true
-                  schema:
-                    type: string
-            responses:
-                "200":
-                    description: OK
+                                $ref: '#/components/schemas/ListUserDomainsReply'
+                default:
+                    description: Default error response
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/api.order.service.v1.ListOrderReply'
+                                $ref: '#/components/schemas/Status'
     /v1/domains/{id}:
         get:
             tags:
@@ -120,7 +42,13 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/api.user.service.v1.GetUserDomainReply'
+                                $ref: '#/components/schemas/GetUserDomainReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
         delete:
             tags:
                 - User
@@ -137,54 +65,13 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/api.user.service.v1.DeleteDomainReply'
-    /v1/orders:
-        get:
-            tags:
-                - Order
-            operationId: Order_ListOrder
-            responses:
-                "200":
-                    description: OK
+                                $ref: '#/components/schemas/DeleteDomainReply'
+                default:
+                    description: Default error response
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/api.order.service.v1.ListOrderReply'
-        post:
-            tags:
-                - Order
-            operationId: Order_CreateOrder
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/api.order.service.v1.CreateOrderRequest'
-                required: true
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.order.service.v1.CreateOrderReply'
-    /v1/orders/{id}:
-        get:
-            tags:
-                - Order
-            operationId: Order_GetOrder
-            parameters:
-                - name: id
-                  in: path
-                  required: true
-                  schema:
-                    type: string
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.order.service.v1.GetOrderReply'
+                                $ref: '#/components/schemas/Status'
     /v1/users:
         get:
             tags:
@@ -196,7 +83,13 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/api.user.service.v1.ListUserReply'
+                                $ref: '#/components/schemas/ListUserReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
         post:
             tags:
                 - User
@@ -205,7 +98,7 @@ paths:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/api.user.service.v1.CreateUserRequest'
+                            $ref: '#/components/schemas/CreateUserRequest'
                 required: true
             responses:
                 "200":
@@ -213,7 +106,13 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/api.user.service.v1.CreateUserReply'
+                                $ref: '#/components/schemas/CreateUserReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
     /v1/users/{id}:
         get:
             tags:
@@ -231,7 +130,13 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/api.user.service.v1.GetUserReply'
+                                $ref: '#/components/schemas/GetUserReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
         delete:
             tags:
                 - User
@@ -248,7 +153,13 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/api.user.service.v1.DeleteUserReply'
+                                $ref: '#/components/schemas/DeleteUserReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
         patch:
             tags:
                 - User
@@ -263,7 +174,7 @@ paths:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/api.user.service.v1.UpdateUserRequest'
+                            $ref: '#/components/schemas/UpdateUserRequest'
                 required: true
             responses:
                 "200":
@@ -271,43 +182,13 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/api.user.service.v1.UpdateUserReply'
-    /v1/users/{parentId}/users/commissions:
-        get:
-            tags:
-                - Commission
-            operationId: Commission_ListCommissionByParent
-            parameters:
-                - name: parentId
-                  in: path
-                  required: true
-                  schema:
-                    type: string
-            responses:
-                "200":
-                    description: OK
+                                $ref: '#/components/schemas/UpdateUserReply'
+                default:
+                    description: Default error response
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/api.commission.service.v1.ListCommissionByParentReply'
-    /v1/users/{userId}/commission:
-        get:
-            tags:
-                - Commission
-            operationId: Commission_GetUserCommission
-            parameters:
-                - name: userId
-                  in: path
-                  required: true
-                  schema:
-                    type: string
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.commission.service.v1.GetUserCommissionReply'
+                                $ref: '#/components/schemas/Status'
     /v1/users/{userId}/domains:
         get:
             tags:
@@ -325,7 +206,13 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/api.user.service.v1.ListUserDomainsByUserIdReply'
+                                $ref: '#/components/schemas/ListUserDomainsByUserIdReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
         post:
             tags:
                 - User
@@ -340,7 +227,7 @@ paths:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/api.user.service.v1.CreateUserDomainRequest'
+                            $ref: '#/components/schemas/CreateUserDomainRequest'
                 required: true
             responses:
                 "200":
@@ -348,173 +235,16 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/api.user.service.v1.CreateUserDomainReply'
-    /v1/users/{userId}/orders:
-        get:
-            tags:
-                - Order
-            operationId: Order_ListOrderByUser
-            parameters:
-                - name: userId
-                  in: path
-                  required: true
-                  schema:
-                    type: string
-            responses:
-                "200":
-                    description: OK
+                                $ref: '#/components/schemas/CreateUserDomainReply'
+                default:
+                    description: Default error response
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/api.order.service.v1.ListOrderReply'
+                                $ref: '#/components/schemas/Status'
 components:
     schemas:
-        api.authn.service.v1.AuthReply:
-            type: object
-            properties:
-                token:
-                    type: string
-                user:
-                    $ref: '#/components/schemas/api.authn.service.v1.UserInfo'
-        api.authn.service.v1.LoginRequest:
-            type: object
-            properties:
-                username:
-                    type: string
-                password:
-                    type: string
-        api.authn.service.v1.RegisterRequest:
-            type: object
-            properties:
-                username:
-                    type: string
-                password:
-                    type: string
-                nickname:
-                    type: string
-                parentId:
-                    type: string
-                level:
-                    type: integer
-                    format: int32
-        api.authn.service.v1.UserInfo:
-            type: object
-            properties:
-                id:
-                    type: string
-                username:
-                    type: string
-                nickname:
-                    type: string
-                parentId:
-                    type: string
-                level:
-                    type: integer
-                    format: int32
-        api.authn.service.v1.VerifyReply:
-            type: object
-            properties:
-                user:
-                    $ref: '#/components/schemas/api.authn.service.v1.UserInfo'
-        api.authn.service.v1.VerifyRequest:
-            type: object
-            properties:
-                token:
-                    type: string
-        api.commission.service.v1.GetUserCommissionReply:
-            type: object
-            properties:
-                id:
-                    type: string
-                userId:
-                    type: string
-                totalCommission:
-                    type: integer
-                    format: int32
-                todayCommission:
-                    type: integer
-                    format: int32
-                settledCommission:
-                    type: integer
-                    format: int32
-        api.commission.service.v1.ListCommissionByParentReply:
-            type: object
-            properties:
-                commissions:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/api.commission.service.v1.GetUserCommissionReply'
-        api.commission.service.v1.ListCommissionReply:
-            type: object
-            properties:
-                commissions:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/api.commission.service.v1.GetUserCommissionReply'
-        api.order.service.v1.CreateOrderReply:
-            type: object
-            properties:
-                id:
-                    type: string
-                paymentType:
-                    type: string
-                name:
-                    type: string
-                amount:
-                    type: integer
-                    format: int32
-                domain:
-                    type: string
-        api.order.service.v1.CreateOrderRequest:
-            type: object
-            properties:
-                id:
-                    type: string
-                paymentType:
-                    type: string
-                name:
-                    type: string
-                amount:
-                    type: integer
-                    format: int32
-                domain:
-                    type: string
-        api.order.service.v1.GetOrderReply:
-            type: object
-            properties:
-                id:
-                    type: string
-                paymentType:
-                    type: string
-                name:
-                    type: string
-                amount:
-                    type: integer
-                    format: int32
-                domain:
-                    type: string
-        api.order.service.v1.ListOrderReply:
-            type: object
-            properties:
-                orders:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/api.order.service.v1.ListOrderReply_Order'
-        api.order.service.v1.ListOrderReply_Order:
-            type: object
-            properties:
-                id:
-                    type: string
-                paymentType:
-                    type: string
-                name:
-                    type: string
-                amount:
-                    type: integer
-                    format: int32
-                domain:
-                    type: string
-        api.user.service.v1.CreateUserDomainReply:
+        CreateUserDomainReply:
             type: object
             properties:
                 id:
@@ -523,14 +253,14 @@ components:
                     type: string
                 domain:
                     type: string
-        api.user.service.v1.CreateUserDomainRequest:
+        CreateUserDomainRequest:
             type: object
             properties:
                 userId:
                     type: string
                 domain:
                     type: string
-        api.user.service.v1.CreateUserReply:
+        CreateUserReply:
             type: object
             properties:
                 id:
@@ -547,7 +277,7 @@ components:
                 sharePercent:
                     type: number
                     format: float
-        api.user.service.v1.CreateUserRequest:
+        CreateUserRequest:
             type: object
             properties:
                 username:
@@ -562,13 +292,13 @@ components:
                 sharePercent:
                     type: number
                     format: float
-        api.user.service.v1.DeleteDomainReply:
+        DeleteDomainReply:
             type: object
             properties: {}
-        api.user.service.v1.DeleteUserReply:
+        DeleteUserReply:
             type: object
             properties: {}
-        api.user.service.v1.GetUserDomainReply:
+        GetUserDomainReply:
             type: object
             properties:
                 id:
@@ -577,7 +307,7 @@ components:
                     type: string
                 domain:
                     type: string
-        api.user.service.v1.GetUserReply:
+        GetUserReply:
             type: object
             properties:
                 id:
@@ -591,14 +321,25 @@ components:
                 level:
                     type: integer
                     format: int32
-        api.user.service.v1.ListUserDomainsByUserIdReply:
+                sharePercent:
+                    type: number
+                    format: float
+        GoogleProtobufAny:
+            type: object
+            properties:
+                '@type':
+                    type: string
+                    description: The type of the serialized message.
+            additionalProperties: true
+            description: Contains an arbitrary serialized message along with a @type that describes the type of the serialized message.
+        ListUserDomainsByUserIdReply:
             type: object
             properties:
                 domains:
                     type: array
                     items:
-                        $ref: '#/components/schemas/api.user.service.v1.ListUserDomainsByUserIdReply_Domain'
-        api.user.service.v1.ListUserDomainsByUserIdReply_Domain:
+                        $ref: '#/components/schemas/ListUserDomainsByUserIdReply_Domain'
+        ListUserDomainsByUserIdReply_Domain:
             type: object
             properties:
                 id:
@@ -607,14 +348,14 @@ components:
                     type: string
                 domain:
                     type: string
-        api.user.service.v1.ListUserDomainsReply:
+        ListUserDomainsReply:
             type: object
             properties:
                 domains:
                     type: array
                     items:
-                        $ref: '#/components/schemas/api.user.service.v1.ListUserDomainsReply_Domain'
-        api.user.service.v1.ListUserDomainsReply_Domain:
+                        $ref: '#/components/schemas/ListUserDomainsReply_Domain'
+        ListUserDomainsReply_Domain:
             type: object
             properties:
                 id:
@@ -623,28 +364,14 @@ components:
                     type: string
                 domain:
                     type: string
-        api.user.service.v1.ListUserReply:
+        ListUserReply:
             type: object
             properties:
                 users:
                     type: array
                     items:
-                        $ref: '#/components/schemas/api.user.service.v1.ListUserReply_User'
-        api.user.service.v1.ListUserReply_User:
-            type: object
-            properties:
-                id:
-                    type: string
-                username:
-                    type: string
-                nickname:
-                    type: string
-                parentId:
-                    type: string
-                level:
-                    type: integer
-                    format: int32
-        api.user.service.v1.UpdateUserReply:
+                        $ref: '#/components/schemas/ListUserReply_User'
+        ListUserReply_User:
             type: object
             properties:
                 id:
@@ -661,7 +388,40 @@ components:
                 sharePercent:
                     type: number
                     format: float
-        api.user.service.v1.UpdateUserRequest:
+        Status:
+            type: object
+            properties:
+                code:
+                    type: integer
+                    description: The status code, which should be an enum value of [google.rpc.Code][google.rpc.Code].
+                    format: int32
+                message:
+                    type: string
+                    description: A developer-facing error message, which should be in English. Any user-facing error message should be localized and sent in the [google.rpc.Status.details][google.rpc.Status.details] field, or localized by the client.
+                details:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/GoogleProtobufAny'
+                    description: A list of messages that carry the error details.  There is a common set of message types for APIs to use.
+            description: 'The `Status` type defines a logical error model that is suitable for different programming environments, including REST APIs and RPC APIs. It is used by [gRPC](https://github.com/grpc). Each `Status` message contains three pieces of data: error code, error message, and error details. You can find out more about this error model and how to work with it in the [API Design Guide](https://cloud.google.com/apis/design/errors).'
+        UpdateUserReply:
+            type: object
+            properties:
+                id:
+                    type: string
+                username:
+                    type: string
+                nickname:
+                    type: string
+                parentId:
+                    type: string
+                level:
+                    type: integer
+                    format: int32
+                sharePercent:
+                    type: number
+                    format: float
+        UpdateUserRequest:
             type: object
             properties:
                 id:
@@ -674,8 +434,4 @@ components:
                     type: number
                     format: float
 tags:
-    - name: Authn
-    - name: Commission
-    - name: Order
-      description: 订单指支付完成且成功的订单
     - name: User
