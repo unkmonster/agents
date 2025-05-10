@@ -69,7 +69,7 @@ func (uc *CommissionUseCase) CalcOrderCommission(ctx context.Context, req *commi
 	}
 
 	n := len(stk)
-	for i := 0; i < n; i++ {
+	for i := range n {
 		user := stk[n-i-1]
 		amount := int32(0)
 
