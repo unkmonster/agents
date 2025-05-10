@@ -28,13 +28,15 @@ func (r *userRepo) CreateUser(ctx context.Context, user *biz.User) error {
 			username,
 			nickname,
 			parent_id,
-			level
+			level,
+			share_percent
 		) VALUES (
 			:id,
 			:username,
 			:nickname,
 			:parent_id,
-			:level
+			:level,
+			:share_percent
 		);
 	`
 	_, err := r.data.db.NamedExecContext(ctx, query, user)

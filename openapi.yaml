@@ -274,6 +274,9 @@ components:
                 level:
                     type: integer
                     format: int32
+                sharePercent:
+                    type: number
+                    format: float
         CreateUserRequest:
             type: object
             properties:
@@ -286,6 +289,9 @@ components:
                 level:
                     type: integer
                     format: int32
+                sharePercent:
+                    type: number
+                    format: float
         DeleteDomainReply:
             type: object
             properties: {}
@@ -406,6 +412,9 @@ components:
                 level:
                     type: integer
                     format: int32
+                sharePercent:
+                    type: number
+                    format: float
         UpdateUserRequest:
             type: object
             properties:
@@ -415,5 +424,8 @@ components:
                     type: string
                 nickname:
                     type: string
+                sharePercent:
+                    type: number
+                    format: float
 tags:
     - name: User

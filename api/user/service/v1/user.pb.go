@@ -74,6 +74,7 @@ type GetUserByDomainReply struct {
 	Nickname      string                 `protobuf:"bytes,3,opt,name=nickname,proto3" json:"nickname,omitempty"`
 	ParentId      string                 `protobuf:"bytes,4,opt,name=parent_id,json=parentId,proto3" json:"parent_id,omitempty"`
 	Level         int32                  `protobuf:"varint,5,opt,name=level,proto3" json:"level,omitempty"`
+	SharePercent  float32                `protobuf:"fixed32,6,opt,name=share_percent,json=sharePercent,proto3" json:"share_percent,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -139,6 +140,13 @@ func (x *GetUserByDomainReply) GetParentId() string {
 func (x *GetUserByDomainReply) GetLevel() int32 {
 	if x != nil {
 		return x.Level
+	}
+	return 0
+}
+
+func (x *GetUserByDomainReply) GetSharePercent() float32 {
+	if x != nil {
+		return x.SharePercent
 	}
 	return 0
 }
@@ -657,6 +665,7 @@ type CreateUserRequest struct {
 	Nickname      *string                `protobuf:"bytes,4,opt,name=nickname,proto3,oneof" json:"nickname,omitempty"`
 	ParentId      *string                `protobuf:"bytes,5,opt,name=parent_id,json=parentId,proto3,oneof" json:"parent_id,omitempty"`
 	Level         *int32                 `protobuf:"varint,6,opt,name=level,proto3,oneof" json:"level,omitempty"`
+	SharePercent  *float32               `protobuf:"fixed32,7,opt,name=share_percent,json=sharePercent,proto3,oneof" json:"share_percent,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -719,6 +728,13 @@ func (x *CreateUserRequest) GetLevel() int32 {
 	return 0
 }
 
+func (x *CreateUserRequest) GetSharePercent() float32 {
+	if x != nil && x.SharePercent != nil {
+		return *x.SharePercent
+	}
+	return 0
+}
+
 type CreateUserReply struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Id            *string                `protobuf:"bytes,1,opt,name=id,proto3,oneof" json:"id,omitempty"`
@@ -726,6 +742,7 @@ type CreateUserReply struct {
 	Nickname      *string                `protobuf:"bytes,3,opt,name=nickname,proto3,oneof" json:"nickname,omitempty"`
 	ParentId      *string                `protobuf:"bytes,4,opt,name=parent_id,json=parentId,proto3,oneof" json:"parent_id,omitempty"`
 	Level         *int32                 `protobuf:"varint,5,opt,name=level,proto3,oneof" json:"level,omitempty"`
+	SharePercent  *float32               `protobuf:"fixed32,6,opt,name=share_percent,json=sharePercent,proto3,oneof" json:"share_percent,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -795,11 +812,19 @@ func (x *CreateUserReply) GetLevel() int32 {
 	return 0
 }
 
+func (x *CreateUserReply) GetSharePercent() float32 {
+	if x != nil && x.SharePercent != nil {
+		return *x.SharePercent
+	}
+	return 0
+}
+
 type UpdateUserRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Id            *string                `protobuf:"bytes,1,opt,name=id,proto3,oneof" json:"id,omitempty"`
 	Password      *string                `protobuf:"bytes,3,opt,name=password,proto3,oneof" json:"password,omitempty"`
 	Nickname      *string                `protobuf:"bytes,4,opt,name=nickname,proto3,oneof" json:"nickname,omitempty"`
+	SharePercent  *float32               `protobuf:"fixed32,5,opt,name=share_percent,json=sharePercent,proto3,oneof" json:"share_percent,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -855,6 +880,13 @@ func (x *UpdateUserRequest) GetNickname() string {
 	return ""
 }
 
+func (x *UpdateUserRequest) GetSharePercent() float32 {
+	if x != nil && x.SharePercent != nil {
+		return *x.SharePercent
+	}
+	return 0
+}
+
 type UpdateUserReply struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Id            *string                `protobuf:"bytes,1,opt,name=id,proto3,oneof" json:"id,omitempty"`
@@ -862,6 +894,7 @@ type UpdateUserReply struct {
 	Nickname      *string                `protobuf:"bytes,3,opt,name=nickname,proto3,oneof" json:"nickname,omitempty"`
 	ParentId      *string                `protobuf:"bytes,4,opt,name=parent_id,json=parentId,proto3,oneof" json:"parent_id,omitempty"`
 	Level         *int32                 `protobuf:"varint,5,opt,name=level,proto3,oneof" json:"level,omitempty"`
+	SharePercent  *float32               `protobuf:"fixed32,6,opt,name=share_percent,json=sharePercent,proto3,oneof" json:"share_percent,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -927,6 +960,13 @@ func (x *UpdateUserReply) GetParentId() string {
 func (x *UpdateUserReply) GetLevel() int32 {
 	if x != nil && x.Level != nil {
 		return *x.Level
+	}
+	return 0
+}
+
+func (x *UpdateUserReply) GetSharePercent() float32 {
+	if x != nil && x.SharePercent != nil {
+		return *x.SharePercent
 	}
 	return 0
 }
@@ -1413,13 +1453,14 @@ const file_api_user_service_v1_user_proto_rawDesc = "" +
 	"\n" +
 	"\x1eapi/user/service/v1/user.proto\x12\x13api.user.service.v1\x1a\x1cgoogle/api/annotations.proto\x1a\x17validate/validate.proto\"9\n" +
 	"\x16GetUserByDomainRequest\x12\x1f\n" +
-	"\x06domain\x18\x01 \x01(\tB\a\xfaB\x04r\x02\x10\x01R\x06domain\"\x91\x01\n" +
+	"\x06domain\x18\x01 \x01(\tB\a\xfaB\x04r\x02\x10\x01R\x06domain\"\xb6\x01\n" +
 	"\x14GetUserByDomainReply\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x1a\n" +
 	"\busername\x18\x02 \x01(\tR\busername\x12\x1a\n" +
 	"\bnickname\x18\x03 \x01(\tR\bnickname\x12\x1b\n" +
 	"\tparent_id\x18\x04 \x01(\tR\bparentId\x12\x14\n" +
-	"\x05level\x18\x05 \x01(\x05R\x05level\"H\n" +
+	"\x05level\x18\x05 \x01(\x05R\x05level\x12#\n" +
+	"\rshare_percent\x18\x06 \x01(\x02R\fsharePercent\"H\n" +
 	"\x18GetUserByUsernameRequest\x12\x1f\n" +
 	"\busername\x18\x01 \x01(\tH\x00R\busername\x88\x01\x01B\v\n" +
 	"\t_username\"1\n" +
@@ -1476,48 +1517,56 @@ const file_api_user_service_v1_user_proto_rawDesc = "" +
 	"\x03_idB\n" +
 	"\n" +
 	"\b_user_idB\t\n" +
-	"\a_domain\"\xc4\x01\n" +
+	"\a_domain\"\x80\x02\n" +
 	"\x11CreateUserRequest\x12\x1f\n" +
 	"\busername\x18\x02 \x01(\tH\x00R\busername\x88\x01\x01\x12\x1f\n" +
 	"\bnickname\x18\x04 \x01(\tH\x01R\bnickname\x88\x01\x01\x12 \n" +
 	"\tparent_id\x18\x05 \x01(\tH\x02R\bparentId\x88\x01\x01\x12\x19\n" +
-	"\x05level\x18\x06 \x01(\x05H\x03R\x05level\x88\x01\x01B\v\n" +
+	"\x05level\x18\x06 \x01(\x05H\x03R\x05level\x88\x01\x01\x12(\n" +
+	"\rshare_percent\x18\a \x01(\x02H\x04R\fsharePercent\x88\x01\x01B\v\n" +
 	"\t_usernameB\v\n" +
 	"\t_nicknameB\f\n" +
 	"\n" +
 	"_parent_idB\b\n" +
-	"\x06_level\"\xde\x01\n" +
+	"\x06_levelB\x10\n" +
+	"\x0e_share_percent\"\x9a\x02\n" +
 	"\x0fCreateUserReply\x12\x13\n" +
 	"\x02id\x18\x01 \x01(\tH\x00R\x02id\x88\x01\x01\x12\x1f\n" +
 	"\busername\x18\x02 \x01(\tH\x01R\busername\x88\x01\x01\x12\x1f\n" +
 	"\bnickname\x18\x03 \x01(\tH\x02R\bnickname\x88\x01\x01\x12 \n" +
 	"\tparent_id\x18\x04 \x01(\tH\x03R\bparentId\x88\x01\x01\x12\x19\n" +
-	"\x05level\x18\x05 \x01(\x05H\x04R\x05level\x88\x01\x01B\x05\n" +
+	"\x05level\x18\x05 \x01(\x05H\x04R\x05level\x88\x01\x01\x12(\n" +
+	"\rshare_percent\x18\x06 \x01(\x02H\x05R\fsharePercent\x88\x01\x01B\x05\n" +
 	"\x03_idB\v\n" +
 	"\t_usernameB\v\n" +
 	"\t_nicknameB\f\n" +
 	"\n" +
 	"_parent_idB\b\n" +
-	"\x06_level\"\x9f\x01\n" +
+	"\x06_levelB\x10\n" +
+	"\x0e_share_percent\"\xdb\x01\n" +
 	"\x11UpdateUserRequest\x12\x13\n" +
 	"\x02id\x18\x01 \x01(\tH\x00R\x02id\x88\x01\x01\x12*\n" +
 	"\bpassword\x18\x03 \x01(\tB\t\xfaB\x06r\x04\x10\b\x18\x14H\x01R\bpassword\x88\x01\x01\x12(\n" +
-	"\bnickname\x18\x04 \x01(\tB\a\xfaB\x04r\x02\x18\x14H\x02R\bnickname\x88\x01\x01B\x05\n" +
+	"\bnickname\x18\x04 \x01(\tB\a\xfaB\x04r\x02\x18\x14H\x02R\bnickname\x88\x01\x01\x12(\n" +
+	"\rshare_percent\x18\x05 \x01(\x02H\x03R\fsharePercent\x88\x01\x01B\x05\n" +
 	"\x03_idB\v\n" +
 	"\t_passwordB\v\n" +
-	"\t_nickname\"\xde\x01\n" +
+	"\t_nicknameB\x10\n" +
+	"\x0e_share_percent\"\x9a\x02\n" +
 	"\x0fUpdateUserReply\x12\x13\n" +
 	"\x02id\x18\x01 \x01(\tH\x00R\x02id\x88\x01\x01\x12\x1f\n" +
 	"\busername\x18\x02 \x01(\tH\x01R\busername\x88\x01\x01\x12\x1f\n" +
 	"\bnickname\x18\x03 \x01(\tH\x02R\bnickname\x88\x01\x01\x12 \n" +
 	"\tparent_id\x18\x04 \x01(\tH\x03R\bparentId\x88\x01\x01\x12\x19\n" +
-	"\x05level\x18\x05 \x01(\x05H\x04R\x05level\x88\x01\x01B\x05\n" +
+	"\x05level\x18\x05 \x01(\x05H\x04R\x05level\x88\x01\x01\x12(\n" +
+	"\rshare_percent\x18\x06 \x01(\x02H\x05R\fsharePercent\x88\x01\x01B\x05\n" +
 	"\x03_idB\v\n" +
 	"\t_usernameB\v\n" +
 	"\t_nicknameB\f\n" +
 	"\n" +
 	"_parent_idB\b\n" +
-	"\x06_level\"/\n" +
+	"\x06_levelB\x10\n" +
+	"\x0e_share_percent\"/\n" +
 	"\x11DeleteUserRequest\x12\x13\n" +
 	"\x02id\x18\x01 \x01(\tH\x00R\x02id\x88\x01\x01B\x05\n" +
 	"\x03_id\"\x11\n" +

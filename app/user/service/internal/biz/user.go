@@ -12,12 +12,13 @@ import (
 )
 
 type User struct {
-	Id        string    `db:"id"`
-	Username  string    `db:"username"`
-	Nickname  *string   `db:"nickname"`
-	ParentId  *string   `db:"parent_id"`
-	Level     int32     `db:"level"`
-	CreatedAt time.Time `db:"created_at"`
+	Id           string    `db:"id"`
+	Username     string    `db:"username"`
+	Nickname     *string   `db:"nickname"`
+	ParentId     *string   `db:"parent_id"`
+	Level        int32     `db:"level"`
+	CreatedAt    time.Time `db:"created_at"`
+	SharePercent float32   `db:"share_percent"`
 }
 
 // TODO: update, listByParentId
@@ -47,11 +48,12 @@ func (uc *UserUseCase) CreateUser(ctx context.Context, req *pb.CreateUserRequest
 	// TODO: parent_id 仅允许为调用者 ID, level 必须大于调用者 level 并且小于等于 max_level
 
 	user := User{
-		Id:       uuid.New().String(),
-		Username: *req.Username,
-		Nickname: req.Nickname,
-		ParentId: req.ParentId,
-		Level:    *req.Level,
+		Id:           uuid.New().String(),
+		Username:     *req.Username,
+		Nickname:     req.Nickname,
+		ParentId:     req.ParentId,
+		Level:        *req.Level,
+		SharePercent: *req.SharePercent,
 	}
 
 	if err := uc.repo.CreateUser(ctx, &user); err != nil {
@@ -59,11 +61,12 @@ func (uc *UserUseCase) CreateUser(ctx context.Context, req *pb.CreateUserRequest
 	}
 
 	return &pb.CreateUserReply{
-		Id:       &user.Id,
-		Username: &user.Username,
-		Nickname: user.Nickname,
-		ParentId: user.ParentId,
-		Level:    &(user.Level),
+		Id:           &user.Id,
+		Username:     &user.Username,
+		Nickname:     user.Nickname,
+		ParentId:     user.ParentId,
+		Level:        &(user.Level),
+		SharePercent: &user.SharePercent,
 	}, nil
 }
 

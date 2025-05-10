@@ -180,6 +180,8 @@ func (m *GetUserByDomainReply) validate(all bool) error {
 
 	// no validation rules for Level
 
+	// no validation rules for SharePercent
+
 	if len(errors) > 0 {
 		return GetUserByDomainReplyMultiError(errors)
 	}
@@ -1538,6 +1540,10 @@ func (m *CreateUserRequest) validate(all bool) error {
 		// no validation rules for Level
 	}
 
+	if m.SharePercent != nil {
+		// no validation rules for SharePercent
+	}
+
 	if len(errors) > 0 {
 		return CreateUserRequestMultiError(errors)
 	}
@@ -1658,6 +1664,10 @@ func (m *CreateUserReply) validate(all bool) error {
 
 	if m.Level != nil {
 		// no validation rules for Level
+	}
+
+	if m.SharePercent != nil {
+		// no validation rules for SharePercent
 	}
 
 	if len(errors) > 0 {
@@ -1794,6 +1804,10 @@ func (m *UpdateUserRequest) validate(all bool) error {
 
 	}
 
+	if m.SharePercent != nil {
+		// no validation rules for SharePercent
+	}
+
 	if len(errors) > 0 {
 		return UpdateUserRequestMultiError(errors)
 	}
@@ -1914,6 +1928,10 @@ func (m *UpdateUserReply) validate(all bool) error {
 
 	if m.Level != nil {
 		// no validation rules for Level
+	}
+
+	if m.SharePercent != nil {
+		// no validation rules for SharePercent
 	}
 
 	if len(errors) > 0 {
