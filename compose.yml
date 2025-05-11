@@ -46,8 +46,6 @@ services:
         restart: true
       consul:
         condition: service_healthy
-    volumes:
-      - ./app/user/service/configs:/data/conf
     ports:
       - 8000:8000
       - 9000:9000
@@ -63,8 +61,6 @@ services:
         restart: true
       consul:
         condition: service_healthy
-    volumes:
-      - ./app/authn/service/configs:/data/conf
     ports:
       - 8001:8000
       - 9001:9000
@@ -80,8 +76,6 @@ services:
         restart: true
       consul:
         condition: service_healthy
-    volumes:
-      - ./app/order/service/configs:/data/conf
     ports:
       - 8002:8000
       - 9002:9000
@@ -97,8 +91,6 @@ services:
         restart: true
       consul:
         condition: service_healthy
-    volumes:
-      - ./app/commission/service/configs:/data/conf
     ports:
       - 8003:8000
       - 9003:9000
