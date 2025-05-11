@@ -4,7 +4,6 @@ services:
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: password
-      MYSQL_DATABASE: test
     healthcheck:
       test:
         [
@@ -22,7 +21,10 @@ services:
       start_period: 10s
       timeout: 10s
     networks:
-      apisix:
+      kong-net:
+    volumes:
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - mysql-data:/var/lib/mysql # 将 MySQL 数据挂载到命名卷
   consul:
     image: hashicorp/consul
     restart: always
@@ -35,7 +37,7 @@ services:
       start_period: 10s
       timeout: 10s
     networks:
-      apisix:
+      kong-net:
   user:
     build:
       context: .
@@ -46,11 +48,11 @@ services:
         restart: true
       consul:
         condition: service_healthy
-    ports:
-      - 8000:8000
-      - 9000:9000
+    # ports:
+    #   - 8000:8000
+    #   - 9000:9000
     networks:
-      apisix:
+      kong-net:
   authn:
     build:
       context: .
@@ -61,11 +63,11 @@ services:
         restart: true
       consul:
         condition: service_healthy
-    ports:
-      - 8001:8000
-      - 9001:9000
+    # ports:
+    #   - 8001:8000
+    #   - 9001:9000
     networks:
-      apisix:
+      kong-net:
   order:
     build:
       context: .
@@ -76,11 +78,11 @@ services:
         restart: true
       consul:
         condition: service_healthy
-    ports:
-      - 8002:8000
-      - 9002:9000
+    # ports:
+    #   - 8002:8000
+    #   - 9002:9000
     networks:
-      apisix:
+      kong-net:
   commission:
     build:
       context: .
@@ -91,12 +93,14 @@ services:
         restart: true
       consul:
         condition: service_healthy
-    ports:
-      - 8003:8000
-      - 9003:9000
+    # ports:
+    #   - 8003:8000
+    #   - 9003:9000
     networks:
-      apisix:
+      kong-net:
 networks:
-  apisix:
+  kong-net:
     driver: bridge
     external: true
+volumes:
+  mysql-data:
