@@ -54,7 +54,7 @@ func (uc *AuthUserCase) generateTokenReply(user *User) (*pb.AuthReply, error) {
 	tokenStr, err := jwt.GenerateJwt(&jwt.User{
 		UserId: user.Id,
 		Level:  int(user.Level),
-	}, *uc.auth.JwtSecret, time.Now().Add(uc.auth.TokenTtl.AsDuration()))
+	}, uc.auth.Secret, time.Now().Add(uc.auth.TokenDuration.AsDuration()), uc.auth.SigningMethod)
 
 	if err != nil {
 		return nil, err
@@ -151,9 +151,4 @@ func (uc *AuthUserCase) Login(ctx context.Context, req *pb.LoginRequest) (*pb.Au
 		return nil, err
 	}
 	return uc.generateTokenReply(user)
-}
-
-func (uc *AuthUserCase) Verify(ctx context.Context, req *pb.VerifyRequest) (*pb.VerifyReply, error) {
-	_, err := jwt.ParseJWT(*req.Token, *uc.auth.JwtSecret)
-	return &pb.VerifyReply{}, err // TODO 暂不返回用户信息
 }

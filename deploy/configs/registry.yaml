@@ -11,3 +11,4 @@ auth:
   secret: "secret"
   public_key: "pb"
   token_duration: 3600s
+  signing_method: "RS256"

@@ -47,8 +47,5 @@ func (s *AuthnService) Register(ctx context.Context, req *pb.RegisterRequest) (*
 }
 
 func (s *AuthnService) Verify(ctx context.Context, req *pb.VerifyRequest) (*pb.VerifyReply, error) {
-	if req.Token == nil {
-		return nil, errors.New(400, "MISSING_TOKEN", "缺少 token")
-	}
-	return s.uc.Verify(ctx, req)
+	panic("unimplement")
 }

@@ -2,6 +2,7 @@ package jwt
 
 import (
 	"fmt"
+	"strings"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -17,9 +18,23 @@ type User struct {
 	Level  int
 }
 
+func ConvertSigningMethod(method string) (jwt.SigningMethod, error) {
+	switch strings.ToUpper(method) {
+	case "RS256":
+		return jwt.SigningMethodRS256, nil
+	default:
+		return nil, fmt.Errorf("unsupported signing method: %s", method)
+	}
+}
+
 // GenerateJwt 签名方法为 HS256
-func GenerateJwt(user *User, secret string, expiresAt time.Time) (string, error) {
-	j := jwt.NewWithClaims(jwt.SigningMethodHS256, UserClaims{
+func GenerateJwt(user *User, secret string, expiresAt time.Time, method string) (string, error) {
+	signingMethod, err := ConvertSigningMethod(method)
+	if err != nil {
+		return "", err
+	}
+
+	j := jwt.NewWithClaims(signingMethod, UserClaims{
 		RegisteredClaims: jwt.RegisteredClaims{
 			Subject:   user.UserId,
 			ExpiresAt: jwt.NewNumericDate(expiresAt),
