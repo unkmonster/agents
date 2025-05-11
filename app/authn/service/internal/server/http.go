@@ -4,8 +4,8 @@ import (
 	authnv1 "agents/api/authn/service/v1"
 	"agents/app/authn/service/internal/conf"
 	"agents/app/authn/service/internal/service"
+	"agents/pkg/middleware"
 
-	"github.com/go-kratos/kratos/contrib/middleware/validate/v2"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/go-kratos/kratos/v2/middleware/auth/jwt"
 	"github.com/go-kratos/kratos/v2/middleware/recovery"
@@ -31,7 +31,7 @@ func NewHTTPServer(c *conf.Server, logger log.Logger, auth *service.AuthnService
 	}
 
 	opts = append(opts, http.Middleware(
-		validate.ProtoValidate(),
+		middleware.ServerBasic(logger),
 		jwt.Server(func(token *jwtv5.Token) (interface{}, error) {
 			return []byte(*ac.JwtSecret), nil
 		}),

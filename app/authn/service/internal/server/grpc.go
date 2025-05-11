@@ -4,8 +4,8 @@ import (
 	authnv1 "agents/api/authn/service/v1"
 	"agents/app/authn/service/internal/conf"
 	"agents/app/authn/service/internal/service"
+	"agents/pkg/middleware"
 
-	validate "github.com/go-kratos/kratos/contrib/middleware/validate/v2"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/go-kratos/kratos/v2/middleware/auth/jwt"
 	"github.com/go-kratos/kratos/v2/middleware/recovery"
@@ -32,11 +32,12 @@ func NewGRPCServer(c *conf.Server, authn *service.AuthnService, logger log.Logge
 	}
 
 	opts = append(opts, grpc.Middleware(
-		validate.ProtoValidate(),
+		middleware.ServerBasic(logger),
 		jwt.Server(func(token *jwtv5.Token) (interface{}, error) {
 			return []byte(*auth.JwtSecret), nil
 		}),
 	))
+
 	srv := grpc.NewServer(opts...)
 
 	authnv1.RegisterAuthnServer(srv, authn)
