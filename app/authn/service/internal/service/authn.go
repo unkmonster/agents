@@ -40,9 +40,9 @@ func (s *AuthnService) Register(ctx context.Context, req *pb.RegisterRequest) (*
 	if req.Level == nil {
 		return nil, errors.New(400, "MISSING_LEVEL", "缺少等级")
 	}
-	if req.ParentId == nil {
-		return nil, errors.New(400, "MISSING_PARENT_ID", "缺少 parent_id")
-	}
+	// if req.ParentId == nil {
+	// 	return nil, errors.New(400, "MISSING_PARENT_ID", "缺少 parent_id")
+	// }
 	return s.uc.Register(ctx, req)
 }
 

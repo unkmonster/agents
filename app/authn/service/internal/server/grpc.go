@@ -7,12 +7,15 @@ import (
 
 	validate "github.com/go-kratos/kratos/contrib/middleware/validate/v2"
 	"github.com/go-kratos/kratos/v2/log"
+	"github.com/go-kratos/kratos/v2/middleware/auth/jwt"
 	"github.com/go-kratos/kratos/v2/middleware/recovery"
 	"github.com/go-kratos/kratos/v2/transport/grpc"
+
+	jwtv5 "github.com/golang-jwt/jwt/v5"
 )
 
 // NewGRPCServer new a gRPC server.
-func NewGRPCServer(c *conf.Server, authn *service.AuthnService, logger log.Logger) *grpc.Server {
+func NewGRPCServer(c *conf.Server, authn *service.AuthnService, logger log.Logger, auth *conf.Auth) *grpc.Server {
 	var opts = []grpc.ServerOption{
 		grpc.Middleware(
 			recovery.Recovery(),
@@ -30,6 +33,9 @@ func NewGRPCServer(c *conf.Server, authn *service.AuthnService, logger log.Logge
 
 	opts = append(opts, grpc.Middleware(
 		validate.ProtoValidate(),
+		jwt.Server(func(token *jwtv5.Token) (interface{}, error) {
+			return []byte(*auth.JwtSecret), nil
+		}),
 	))
 	srv := grpc.NewServer(opts...)
 

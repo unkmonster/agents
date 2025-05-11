@@ -21,6 +21,8 @@ services:
       retries: 3
       start_period: 10s
       timeout: 10s
+    networks:
+      apisix:
   consul:
     image: hashicorp/consul
     restart: always
@@ -32,6 +34,8 @@ services:
       retries: 3
       start_period: 10s
       timeout: 10s
+    networks:
+      apisix:
   user:
     build:
       context: .
@@ -47,6 +51,8 @@ services:
     ports:
       - 8000:8000
       - 9000:9000
+    networks:
+      apisix:
   authn:
     build:
       context: .
@@ -62,6 +68,8 @@ services:
     ports:
       - 8001:8000
       - 9001:9000
+    networks:
+      apisix:
   order:
     build:
       context: .
@@ -77,6 +85,8 @@ services:
     ports:
       - 8002:8000
       - 9002:9000
+    networks:
+      apisix:
   commission:
     build:
       context: .
@@ -92,3 +102,9 @@ services:
     ports:
       - 8003:8000
       - 9003:9000
+    networks:
+      apisix:
+networks:
+  apisix:
+    driver: bridge
+    external: true

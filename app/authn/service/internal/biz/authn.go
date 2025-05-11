@@ -9,10 +9,14 @@ import (
 	"agents/app/authn/service/internal/conf"
 	"agents/pkg/jwt"
 
+	"github.com/go-kratos/kratos/v2/errors"
 	"github.com/go-kratos/kratos/v2/log"
+	mjwt "github.com/go-kratos/kratos/v2/middleware/auth/jwt"
 	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
 )
+
+const MaxAgentLevel = 2
 
 type UserCredential struct {
 	Id             string    `db:"id"`
@@ -68,8 +72,23 @@ func (uc *AuthUserCase) generateTokenReply(user *User) (*pb.AuthReply, error) {
 	}, nil
 }
 
+// Register 不是注册，用于上级代理创建他的下级
 func (uc *AuthUserCase) Register(ctx context.Context, req *pb.RegisterRequest) (*pb.AuthReply, error) {
-	// TODO 被注册用户等级不允许小于调用者，并且不大于 MAX_LEVEL
+	t, _ := mjwt.FromContext(ctx)
+	token, ok := t.(jwt.UserClaims)
+	if !ok {
+		return nil, errors.New(401, "INVALID_TOKEN", "无效 token")
+	}
+
+	if token.ID != *req.ParentId {
+		return nil, errors.New(403, "ILLEGAL_PARENT_ID", "非法父代理 ID")
+	}
+
+	// 被注册用户等级不允许小于调用者，并且不大于 MAX_LEVEL
+	if *req.Level > MaxAgentLevel || *req.Level <= int32(token.Level) {
+		return nil, errors.New(403, "ILLEGAL_USER_LEVEL", "不合法的代理等级")
+	}
+
 	user, err := uc.ur.Create(ctx, &User{
 		Username: *req.Username,
 		Nickname: req.Nickname,
@@ -101,8 +120,15 @@ func (uc *AuthUserCase) Register(ctx context.Context, req *pb.RegisterRequest) (
 		return nil, err
 	}
 
-	// generate token
-	return uc.generateTokenReply(user)
+	return &pb.AuthReply{
+		User: &pb.UserInfo{
+			Id:       &user.Id,
+			Username: &user.Username,
+			Nickname: user.Nickname,
+			ParentId: user.ParentId,
+			Level:    &user.Level,
+		},
+	}, nil
 }
 
 func (uc *AuthUserCase) Login(ctx context.Context, req *pb.LoginRequest) (*pb.AuthReply, error) {
