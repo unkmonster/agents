@@ -2,6 +2,7 @@ package data
 
 import (
 	"agents/app/authn/service/internal/conf"
+	"agents/pkg/migration"
 	"context"
 
 	"github.com/go-kratos/kratos/v2/log"
@@ -17,6 +18,9 @@ import (
 	consul "github.com/go-kratos/kratos/contrib/registry/consul/v2"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/hashicorp/consul/api"
+
+	"github.com/golang-migrate/migrate/v4"
+	_ "github.com/golang-migrate/migrate/v4/source/file"
 )
 
 // ProviderSet is data providers.
@@ -52,11 +56,17 @@ func NewData(c *conf.Data, logger log.Logger, db *sqlx.DB, uc userv1.UserClient,
 	}, cleanup, nil
 }
 
-func NewSqlxClient(c *conf.Data) *sqlx.DB {
+func NewSqlxClient(c *conf.Data, logger log.Logger) *sqlx.DB {
 	db, err := sqlx.Connect(c.Database.Driver, c.Database.Source)
 	if err != nil {
-		panic(err)
+		log.NewHelper(logger).Fatal(err)
 	}
+
+	m := migration.New(logger, db.DB, c.Database.Driver, c.Database.MigrationSource)
+	if err := m.Up(); err != nil && err != migrate.ErrNoChange {
+		log.NewHelper(logger).Fatal(err)
+	}
+
 	return db
 }
 

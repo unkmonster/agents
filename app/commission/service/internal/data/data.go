@@ -2,6 +2,7 @@ package data
 
 import (
 	"agents/app/commission/service/internal/conf"
+	"agents/pkg/migration"
 	"context"
 
 	"github.com/go-kratos/kratos/contrib/registry/consul/v2"
@@ -9,6 +10,7 @@ import (
 	"github.com/go-kratos/kratos/v2/middleware/recovery"
 	"github.com/go-kratos/kratos/v2/registry"
 	"github.com/go-kratos/kratos/v2/transport/grpc"
+	"github.com/golang-migrate/migrate/v4"
 	"github.com/google/wire"
 	"github.com/hashicorp/consul/api"
 	"github.com/jmoiron/sqlx"
@@ -16,6 +18,7 @@ import (
 	userv1 "agents/api/user/service/v1"
 
 	_ "github.com/go-sql-driver/mysql"
+	_ "github.com/golang-migrate/migrate/v4/source/file"
 )
 
 // ProviderSet is data providers.
@@ -33,6 +36,11 @@ func NewData(c *conf.Data, logger log.Logger, uc userv1.UserClient) (*Data, func
 	db, err := sqlx.Connect(c.Database.Driver, c.Database.Source)
 	if err != nil {
 		log.NewHelper(logger).Fatalf("failed to connect to db: %v", err)
+	}
+
+	m := migration.New(logger, db.DB, c.Database.Driver, c.Database.MigrationSource)
+	if err := m.Up(); err != nil && err != migrate.ErrNoChange {
+		log.NewHelper(logger).Fatal(err)
 	}
 
 	cleanup := func() {

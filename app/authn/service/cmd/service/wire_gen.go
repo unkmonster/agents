@@ -24,7 +24,7 @@ import (
 
 // wireApp init kratos application.
 func wireApp(confServer *conf.Server, confData *conf.Data, logger log.Logger, auth *conf.Auth, registry *conf.Registry) (*kratos.App, func(), error) {
-	db := data.NewSqlxClient(confData)
+	db := data.NewSqlxClient(confData, logger)
 	discovery := data.NewDiscovery(registry)
 	userClient := data.NewUserServiceClient(discovery)
 	commissionClient := data.NewCommissionServiceClient(discovery)

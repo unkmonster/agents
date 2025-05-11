@@ -18,6 +18,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 COPY --from=builder /src/app/user/service/bin /app
 COPY --from=builder /src/deploy/configs /data/conf
+COPY --from=builder /src/db/migrations/user /migrations
 WORKDIR /app
 
 EXPOSE 8000
