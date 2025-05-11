@@ -6,3 +6,8 @@ registry:
 data:
   database:
     migration_source: file:///migrations
+
+auth:
+  secret: "secret"
+  public_key: "pb"
+  token_duration: 3600s

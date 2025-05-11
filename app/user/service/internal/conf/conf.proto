@@ -9,6 +9,7 @@ message Bootstrap {
   Server server = 1;
   Data data = 2;
   Registry registry = 3;
+  Auth auth =  4;
 }
 
 message Server {
@@ -48,4 +49,11 @@ message Registry {
       string scheme = 2;
   }
   Consul consul = 1;
+}
+
+message Auth {
+  string secret = 1;
+  string public_key = 2;
+  google.protobuf.Duration token_duration = 3;
+  string signing_method = 4;
 }
