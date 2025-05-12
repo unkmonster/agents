@@ -6,12 +6,13 @@ import (
 )
 
 type User struct {
-	Id        string    `db:"id"`
-	Username  string    `db:"username"`
-	Nickname  *string   `db:"nickname"`
-	ParentId  *string   `db:"parent_id"`
-	Level     int32     `db:"level"`
-	CreatedAt time.Time `db:"created_at"`
+	Id           string    `db:"id"`
+	Username     string    `db:"username"`
+	Nickname     *string   `db:"nickname"`
+	ParentId     *string   `db:"parent_id"`
+	Level        int32     `db:"level"`
+	CreatedAt    time.Time `db:"created_at"`
+	SharePercent float32
 }
 
 type UserRepo interface {

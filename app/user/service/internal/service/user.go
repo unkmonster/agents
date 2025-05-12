@@ -57,11 +57,12 @@ func (s *UserService) GetUser(ctx context.Context, req *pb.GetUserRequest) (*pb.
 	}
 
 	return &pb.GetUserReply{
-		Id:       &user.Id,
-		Username: &user.Username,
-		Nickname: user.Nickname,
-		ParentId: user.ParentId,
-		Level:    &user.Level,
+		Id:           &user.Id,
+		Username:     &user.Username,
+		Nickname:     user.Nickname,
+		ParentId:     user.ParentId,
+		Level:        &user.Level,
+		SharePercent: &user.SharePercent,
 	}, nil
 }
 
@@ -164,11 +165,12 @@ func (s *UserService) GetUserByUsername(ctx context.Context, req *pb.GetUserByUs
 	}
 
 	return &pb.GetUserReply{
-		Id:       &user.Id,
-		Username: &user.Username,
-		Nickname: user.Nickname,
-		ParentId: user.ParentId,
-		Level:    &user.Level,
+		Id:           &user.Id,
+		Username:     &user.Username,
+		Nickname:     user.Nickname,
+		ParentId:     user.ParentId,
+		Level:        &user.Level,
+		SharePercent: &user.SharePercent,
 	}, nil
 }
 
@@ -179,10 +181,11 @@ func (s *UserService) GetUserByDomain(ctx context.Context, req *pb.GetUserByDoma
 	}
 
 	return &pb.GetUserByDomainReply{
-		Id:       user.Id,
-		Username: user.Username,
-		Nickname: *user.Nickname,
-		ParentId: *user.ParentId,
-		Level:    user.Level,
+		Id:           user.Id,
+		Username:     user.Username,
+		Nickname:     *user.Nickname,
+		ParentId:     *user.ParentId,
+		Level:        user.Level,
+		SharePercent: user.SharePercent,
 	}, nil
 }

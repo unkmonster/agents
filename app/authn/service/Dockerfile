@@ -4,7 +4,7 @@ COPY . /src
 WORKDIR /src/app/authn/service
 
 # 合并服务配置和公共配置
-RUN cp -r configs/* /src/deploy/configs 
+RUN cp -r configs/* /src/configs 
 
 RUN make build
 
@@ -17,7 +17,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && apt-get autoremove -y && apt-get autoclean -y
 
 COPY --from=builder /src/app/authn/service/bin /app
-COPY --from=builder /src/deploy/configs /data/conf
+COPY --from=builder /src/configs /data/conf
 COPY --from=builder /src/db/migrations/authn /migrations
 WORKDIR /app
 

@@ -8,7 +8,7 @@ data:
     migration_source: file:///migrations
 
 auth:
-  secret: "secret"
-  public_key: "pb"
+  secret: "/data/conf/dev/private.pem"
+  public_key: "/data/conf/dev/public.pem"
   token_duration: 3600s
   signing_method: "RS256"

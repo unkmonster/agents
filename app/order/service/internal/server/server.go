@@ -24,9 +24,6 @@ func NewRegistrar(logger log.Logger, conf *conf.Registry) registry.Registrar {
 	return consul.NewRegistrar(logger, c)
 }
 
-func NewBasicMiddleware(logger log.Logger, auth *conf.Auth) kratosMiddleware.Middleware {
-	return middleware.ServerBasic(logger, &middleware.JwtConfig{
-		PublicKey: auth.PublicKey,
-		Method:    auth.SigningMethod,
-	})
+func NewBasicMiddleware(logger log.Logger) kratosMiddleware.Middleware {
+	return middleware.ServerBasic(logger)
 }

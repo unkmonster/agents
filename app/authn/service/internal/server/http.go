@@ -4,6 +4,7 @@ import (
 	authnv1 "agents/api/authn/service/v1"
 	"agents/app/authn/service/internal/conf"
 	"agents/app/authn/service/internal/service"
+	"agents/pkg/encrypt"
 	myjwt "agents/pkg/jwt"
 	"context"
 
@@ -39,14 +40,24 @@ func NewHTTPServer(c *conf.Server, logger log.Logger, auth *service.AuthnService
 		log.NewHelper(logger).Fatal(err)
 	}
 
+	var pubKey interface{} = conf.PublicKey
+	if conf.SigningMethod == "RS256" {
+		pubKey, err = encrypt.LoadRSAPublicKey(conf.PublicKey)
+		if err != nil {
+			log.NewHelper(logger).Fatal(err)
+		}
+	}
+
 	opts = append(opts, http.Middleware(
 		recovery.Recovery(),
 		logging.Server(logger),
 
 		selector.Server(jwt.Server(
 			func(token *jwtv5.Token) (interface{}, error) {
-				return []byte(conf.PublicKey), nil
-			}, jwt.WithSigningMethod(method),
+				return pubKey, nil
+			},
+			jwt.WithSigningMethod(method),
+			jwt.WithClaims(func() jwtv5.Claims { return &myjwt.UserClaims{} }),
 		)).Match(func(ctx context.Context, operation string) bool {
 			return operation != "/api.authn.service.v1.Authn/Login"
 		}).Build(),

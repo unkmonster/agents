@@ -7,7 +7,6 @@ import (
 	"github.com/go-kratos/kratos/contrib/middleware/validate/v2"
 	"github.com/go-kratos/kratos/v2/log"
 	kratosMiddleware "github.com/go-kratos/kratos/v2/middleware"
-	"github.com/go-kratos/kratos/v2/middleware/auth/jwt"
 	"github.com/go-kratos/kratos/v2/middleware/logging"
 	"github.com/go-kratos/kratos/v2/middleware/recovery"
 	jwtv5 "github.com/golang-jwt/jwt/v5"
@@ -32,18 +31,10 @@ func convertSigningMethod(method string) (jwtv5.SigningMethod, error) {
 // 2. logging
 // 3. jwt
 // 4. validate
-func ServerBasic(logger log.Logger, jwtConf *JwtConfig) kratosMiddleware.Middleware {
-	jwtMethod, err := convertSigningMethod(jwtConf.Method)
-	if err != nil {
-		log.NewHelper(logger).Fatal(err)
-	}
-
+func ServerBasic(logger log.Logger) kratosMiddleware.Middleware {
 	return kratosMiddleware.Chain(
 		recovery.Recovery(),
 		logging.Server(logger),
-		jwt.Server(func(token *jwtv5.Token) (interface{}, error) {
-			return []byte(jwtConf.PublicKey), nil
-		}, jwt.WithSigningMethod(jwtMethod)),
 		validate.ProtoValidate(),
 	)
 }

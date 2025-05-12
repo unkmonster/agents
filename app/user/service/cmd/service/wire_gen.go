@@ -34,7 +34,7 @@ func wireApp(confServer *conf.Server, confData *conf.Data, logger log.Logger, re
 	userDomainRepo := data.NewUserDomainRepo(dataData, logger)
 	userDomainUseCase := biz.NewUserDomainUseCase(userDomainRepo, logger)
 	userService := service.NewUserService(userUseCase, userDomainUseCase)
-	middleware := server.NewMiddleware(logger, auth)
+	middleware := server.NewMiddleware(logger)
 	grpcServer := server.NewGRPCServer(confServer, userService, logger, middleware)
 	httpServer := server.NewHTTPServer(confServer, logger, userService, middleware)
 	registrar := server.NewRegistrar(registry)

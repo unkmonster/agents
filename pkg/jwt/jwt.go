@@ -28,7 +28,7 @@ func ConvertSigningMethod(method string) (jwt.SigningMethod, error) {
 }
 
 // GenerateJwt 签名方法为 HS256
-func GenerateJwt(user *User, secret string, expiresAt time.Time, method string) (string, error) {
+func GenerateJwt(user *User, secret interface{}, expiresAt time.Time, method string) (string, error) {
 	signingMethod, err := ConvertSigningMethod(method)
 	if err != nil {
 		return "", err
@@ -41,7 +41,7 @@ func GenerateJwt(user *User, secret string, expiresAt time.Time, method string) 
 		},
 		Level: user.Level,
 	})
-	return j.SignedString([]byte(secret))
+	return j.SignedString(secret)
 }
 
 // ParseJWT 解析 token string 到结构体，如果过期或签名无效返回错误

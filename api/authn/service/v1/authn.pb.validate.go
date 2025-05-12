@@ -57,6 +57,8 @@ func (m *UserInfo) validate(all bool) error {
 
 	var errors []error
 
+	// no validation rules for SharePercent
+
 	if m.Id != nil {
 		// no validation rules for Id
 	}
@@ -668,6 +670,8 @@ func (m *RegisterRequest) validate(all bool) error {
 	}
 
 	var errors []error
+
+	// no validation rules for SharePercent
 
 	if m.Username != nil {
 

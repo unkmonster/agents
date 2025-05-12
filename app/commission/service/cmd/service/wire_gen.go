@@ -34,7 +34,7 @@ func wireApp(confServer *conf.Server, confData *conf.Data, logger log.Logger, re
 	userRepo := data.NewUserRepo(dataData)
 	commissionUseCase := biz.NewCommissionUseCase(commissionRepo, logger, userRepo)
 	commissionService := service.NewCommissionService(commissionUseCase)
-	middleware := server.NewBasicMiddleware(logger, auth)
+	middleware := server.NewBasicMiddleware(logger)
 	grpcServer := server.NewGRPCServer(confServer, logger, commissionService, middleware)
 	httpServer := server.NewHTTPServer(confServer, logger, commissionService, middleware)
 	registrar := server.NewRegistrar(logger, registry)

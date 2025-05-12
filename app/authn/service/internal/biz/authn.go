@@ -2,11 +2,11 @@ package biz
 
 import (
 	"context"
-	"encoding/hex"
 	"time"
 
 	pb "agents/api/authn/service/v1"
 	"agents/app/authn/service/internal/conf"
+	"agents/pkg/encrypt"
 	"agents/pkg/jwt"
 
 	"github.com/go-kratos/kratos/v2/errors"
@@ -35,17 +35,43 @@ type AuthUserCase struct {
 	cr   UserCredentialRepo
 	ur   UserRepo
 	log  *log.Helper
-	auth *conf.Auth
 	comm CommissionRepo
+
+	privKey       interface{}
+	pubKey        interface{}
+	tokenDuration time.Duration
+	signMethod    string
 }
 
 func NewAuthUserCase(repo UserCredentialRepo, logger log.Logger, ur UserRepo, auth *conf.Auth, comm CommissionRepo) *AuthUserCase {
+	var privKey interface{}
+	var pubKey interface{}
+	var err error
+
+	if auth.SigningMethod == "RS256" {
+		privKey, err = encrypt.LoadRsaPrivateKey(auth.Secret)
+		if err == nil {
+			pubKey, err = encrypt.LoadRSAPublicKey(auth.PublicKey)
+		}
+	} else {
+		privKey = auth.Secret
+		pubKey = auth.PublicKey
+	}
+
+	if err != nil {
+		log.NewHelper(logger).Fatal(err)
+	}
+
 	return &AuthUserCase{
 		cr:   repo,
 		log:  log.NewHelper(logger),
 		ur:   ur,
-		auth: auth,
 		comm: comm,
+
+		privKey:       privKey,
+		pubKey:        pubKey,
+		tokenDuration: auth.TokenDuration.AsDuration(),
+		signMethod:    auth.SigningMethod,
 	}
 }
 
@@ -54,7 +80,7 @@ func (uc *AuthUserCase) generateTokenReply(user *User) (*pb.AuthReply, error) {
 	tokenStr, err := jwt.GenerateJwt(&jwt.User{
 		UserId: user.Id,
 		Level:  int(user.Level),
-	}, uc.auth.Secret, time.Now().Add(uc.auth.TokenDuration.AsDuration()), uc.auth.SigningMethod)
+	}, uc.privKey, time.Now().Add(uc.tokenDuration), uc.signMethod)
 
 	if err != nil {
 		return nil, err
@@ -63,11 +89,12 @@ func (uc *AuthUserCase) generateTokenReply(user *User) (*pb.AuthReply, error) {
 	return &pb.AuthReply{
 		Token: &tokenStr,
 		User: &pb.UserInfo{
-			Id:       &user.Id,
-			Username: &user.Username,
-			Nickname: user.Nickname,
-			ParentId: user.ParentId,
-			Level:    &user.Level,
+			Id:           &user.Id,
+			Username:     &user.Username,
+			Nickname:     user.Nickname,
+			ParentId:     user.ParentId,
+			Level:        &user.Level,
+			SharePercent: user.SharePercent,
 		},
 	}, nil
 }
@@ -75,12 +102,12 @@ func (uc *AuthUserCase) generateTokenReply(user *User) (*pb.AuthReply, error) {
 // Register 不是注册，用于上级代理创建他的下级
 func (uc *AuthUserCase) Register(ctx context.Context, req *pb.RegisterRequest) (*pb.AuthReply, error) {
 	t, _ := mjwt.FromContext(ctx)
-	token, ok := t.(jwt.UserClaims)
+	token, ok := t.(*jwt.UserClaims)
 	if !ok {
 		return nil, errors.New(401, "INVALID_TOKEN", "无效 token")
 	}
 
-	if token.ID != *req.ParentId {
+	if token.Subject != *req.ParentId {
 		return nil, errors.New(403, "ILLEGAL_PARENT_ID", "非法父代理 ID")
 	}
 
@@ -90,10 +117,11 @@ func (uc *AuthUserCase) Register(ctx context.Context, req *pb.RegisterRequest) (
 	}
 
 	user, err := uc.ur.Create(ctx, &User{
-		Username: *req.Username,
-		Nickname: req.Nickname,
-		ParentId: req.ParentId,
-		Level:    *req.Level,
+		Username:     *req.Username,
+		Nickname:     req.Nickname,
+		ParentId:     req.ParentId,
+		Level:        *req.Level,
+		SharePercent: req.SharePercent,
 	})
 	if err != nil {
 		return nil, err
@@ -109,7 +137,7 @@ func (uc *AuthUserCase) Register(ctx context.Context, req *pb.RegisterRequest) (
 		Id:             uuid.NewString(),
 		UserId:         user.Id,
 		Username:       user.Username,
-		HashedPassword: hex.EncodeToString(h),
+		HashedPassword: string(h),
 	})
 	if err != nil {
 		return nil, err
@@ -122,11 +150,12 @@ func (uc *AuthUserCase) Register(ctx context.Context, req *pb.RegisterRequest) (
 
 	return &pb.AuthReply{
 		User: &pb.UserInfo{
-			Id:       &user.Id,
-			Username: &user.Username,
-			Nickname: user.Nickname,
-			ParentId: user.ParentId,
-			Level:    &user.Level,
+			Id:           &user.Id,
+			Username:     &user.Username,
+			Nickname:     user.Nickname,
+			ParentId:     user.ParentId,
+			Level:        &user.Level,
+			SharePercent: user.SharePercent,
 		},
 	}, nil
 }
@@ -137,12 +166,7 @@ func (uc *AuthUserCase) Login(ctx context.Context, req *pb.LoginRequest) (*pb.Au
 		return nil, err
 	}
 
-	h, err := hex.DecodeString(credential.HashedPassword)
-	if err != nil {
-		return nil, err
-	}
-
-	if err := bcrypt.CompareHashAndPassword(h, []byte(*req.Password)); err != nil {
+	if err := bcrypt.CompareHashAndPassword([]byte(credential.HashedPassword), []byte(*req.Password)); err != nil {
 		return nil, err
 	}
 

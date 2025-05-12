@@ -3,69 +3,75 @@
 
 openapi: 3.0.3
 info:
-    title: Commission API
+    title: Authn API
     version: 0.0.1
 paths:
-    /v1/commissions:
-        get:
+    /v1/auth/login:
+        post:
             tags:
-                - Commission
-            operationId: Commission_ListCommission
+                - Authn
+            operationId: Authn_Login
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/LoginRequest'
+                required: true
             responses:
                 "200":
                     description: OK
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/ListCommissionReply'
+                                $ref: '#/components/schemas/AuthReply'
                 default:
                     description: Default error response
                     content:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/Status'
-    /v1/users/{parentId}/users/commissions:
-        get:
+    /v1/auth/register:
+        post:
             tags:
-                - Commission
-            operationId: Commission_ListCommissionByParent
-            parameters:
-                - name: parentId
-                  in: path
-                  required: true
-                  schema:
-                    type: string
+                - Authn
+            operationId: Authn_Register
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/RegisterRequest'
+                required: true
             responses:
                 "200":
                     description: OK
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/ListCommissionByParentReply'
+                                $ref: '#/components/schemas/AuthReply'
                 default:
                     description: Default error response
                     content:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/Status'
-    /v1/users/{userId}/commission:
-        get:
+    /v1/auth/verify:
+        post:
             tags:
-                - Commission
-            operationId: Commission_GetUserCommission
-            parameters:
-                - name: userId
-                  in: path
-                  required: true
-                  schema:
-                    type: string
+                - Authn
+            operationId: Authn_Verify
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/VerifyRequest'
+                required: true
             responses:
                 "200":
                     description: OK
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/GetUserCommissionReply'
+                                $ref: '#/components/schemas/VerifyReply'
                 default:
                     description: Default error response
                     content:
@@ -74,22 +80,13 @@ paths:
                                 $ref: '#/components/schemas/Status'
 components:
     schemas:
-        GetUserCommissionReply:
+        AuthReply:
             type: object
             properties:
-                id:
+                token:
                     type: string
-                userId:
-                    type: string
-                totalCommission:
-                    type: integer
-                    format: int32
-                todayCommission:
-                    type: integer
-                    format: int32
-                settledCommission:
-                    type: integer
-                    format: int32
+                user:
+                    $ref: '#/components/schemas/UserInfo'
         GoogleProtobufAny:
             type: object
             properties:
@@ -98,20 +95,30 @@ components:
                     description: The type of the serialized message.
             additionalProperties: true
             description: Contains an arbitrary serialized message along with a @type that describes the type of the serialized message.
-        ListCommissionByParentReply:
+        LoginRequest:
             type: object
             properties:
-                commissions:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/GetUserCommissionReply'
-        ListCommissionReply:
+                username:
+                    type: string
+                password:
+                    type: string
+        RegisterRequest:
             type: object
             properties:
-                commissions:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/GetUserCommissionReply'
+                username:
+                    type: string
+                password:
+                    type: string
+                nickname:
+                    type: string
+                parentId:
+                    type: string
+                level:
+                    type: integer
+                    format: int32
+                sharePercent:
+                    type: number
+                    format: float
         Status:
             type: object
             properties:
@@ -128,5 +135,32 @@ components:
                         $ref: '#/components/schemas/GoogleProtobufAny'
                     description: A list of messages that carry the error details.  There is a common set of message types for APIs to use.
             description: 'The `Status` type defines a logical error model that is suitable for different programming environments, including REST APIs and RPC APIs. It is used by [gRPC](https://github.com/grpc). Each `Status` message contains three pieces of data: error code, error message, and error details. You can find out more about this error model and how to work with it in the [API Design Guide](https://cloud.google.com/apis/design/errors).'
+        UserInfo:
+            type: object
+            properties:
+                id:
+                    type: string
+                username:
+                    type: string
+                nickname:
+                    type: string
+                parentId:
+                    type: string
+                level:
+                    type: integer
+                    format: int32
+                sharePercent:
+                    type: number
+                    format: float
+        VerifyReply:
+            type: object
+            properties:
+                user:
+                    $ref: '#/components/schemas/UserInfo'
+        VerifyRequest:
+            type: object
+            properties:
+                token:
+                    type: string
 tags:
-    - name: Commission
+    - name: Authn
