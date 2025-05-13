@@ -1,0 +1,97 @@
+syntax = "proto3";
+
+package api.commission.service.v1;
+
+import "google/api/annotations.proto";
+import "validate/validate.proto";
+
+option go_package = "agents/api/commission/service/v1;v1";
+option java_multiple_files = true;
+option java_package = "api.commission.service.v1";
+
+service Wallet {
+	rpc CreateWallet (CreateWalletRequest) returns (CreateWalletReply) {
+		option (google.api.http) = {
+			post: "/v1/users/{user_id}/wallets",
+			body: "*",
+		};
+	};
+	rpc UpdateWallet (UpdateWalletRequest) returns (UpdateWalletReply) {
+		option (google.api.http) = {
+			patch: "/v1/wallets/{id}"
+			body: "*",
+		};
+	};
+	rpc DeleteWallet (DeleteWalletRequest) returns (DeleteWalletReply) {
+		option (google.api.http) = {
+			delete: "/v1/wallets/{id}"
+		};
+	};
+	rpc GetWallet (GetWalletRequest) returns (GetWalletReply) {
+		option (google.api.http) = {
+			get: "/v1/wallets/{id}"
+		};
+	};
+	rpc ListWallet (ListWalletRequest) returns (ListWalletReply) {
+		option (google.api.http) = {
+			get: "/v1/wallets"
+		};
+	};
+	rpc ListWalletByUser(ListWalletByUserRequest) returns (ListWalletReply) {
+		option (google.api.http) = {
+			get: "/v1/users/{user_id}/wallets"
+		};
+	};
+}
+
+message CreateWalletRequest {
+	string user_id = 1 [(validate.rules).string = {uuid: true}];
+	string wallet_type = 2 [(validate.rules).string = {in: ["alipay", "wxpay", "tron"]}];
+	optional string account = 3;
+	optional string qr_code = 4;
+}
+message CreateWalletReply {
+	string user_id = 1;
+	string wallet_type = 2;
+	optional string account = 3;
+	optional string qr_code = 4;
+	string id = 5;
+}
+
+message UpdateWalletRequest {
+	string id = 1 [(validate.rules).string = {uuid: true}];
+	optional string account = 3;
+	optional string qr_code = 4;
+}
+message UpdateWalletReply {
+	string user_id = 1;
+	string wallet_type = 2;
+	optional string account = 3;
+	optional string qr_code = 4;
+	string id = 5;
+}
+
+message DeleteWalletRequest {
+	string id = 1 [(validate.rules).string = {uuid: true}];
+}
+message DeleteWalletReply {}
+
+message GetWalletRequest {
+	string id = 1 [(validate.rules).string = {uuid: true}];
+}
+message GetWalletReply {
+	string user_id = 1;
+	string wallet_type = 2;
+	optional string account = 3;
+	optional string qr_code = 4;
+	string id = 5;
+}
+
+message ListWalletRequest {}
+message ListWalletReply {
+	repeated GetWalletReply wallets = 1;
+}
+
+message ListWalletByUserRequest {
+	string user_id = 1 [(validate.rules).string = {uuid: true}];
+}
