@@ -11,6 +11,7 @@ import (
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
@@ -98,6 +99,7 @@ type CreateWalletReply struct {
 	Account       *string                `protobuf:"bytes,3,opt,name=account,proto3,oneof" json:"account,omitempty"`
 	QrCode        *string                `protobuf:"bytes,4,opt,name=qr_code,json=qrCode,proto3,oneof" json:"qr_code,omitempty"`
 	Id            string                 `protobuf:"bytes,5,opt,name=id,proto3" json:"id,omitempty"`
+	CreatedAt     *timestamppb.Timestamp `protobuf:"bytes,6,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -167,6 +169,13 @@ func (x *CreateWalletReply) GetId() string {
 	return ""
 }
 
+func (x *CreateWalletReply) GetCreatedAt() *timestamppb.Timestamp {
+	if x != nil {
+		return x.CreatedAt
+	}
+	return nil
+}
+
 type UpdateWalletRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
@@ -234,6 +243,7 @@ type UpdateWalletReply struct {
 	Account       *string                `protobuf:"bytes,3,opt,name=account,proto3,oneof" json:"account,omitempty"`
 	QrCode        *string                `protobuf:"bytes,4,opt,name=qr_code,json=qrCode,proto3,oneof" json:"qr_code,omitempty"`
 	Id            string                 `protobuf:"bytes,5,opt,name=id,proto3" json:"id,omitempty"`
+	CreatedAt     *timestamppb.Timestamp `protobuf:"bytes,6,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -301,6 +311,13 @@ func (x *UpdateWalletReply) GetId() string {
 		return x.Id
 	}
 	return ""
+}
+
+func (x *UpdateWalletReply) GetCreatedAt() *timestamppb.Timestamp {
+	if x != nil {
+		return x.CreatedAt
+	}
+	return nil
 }
 
 type DeleteWalletRequest struct {
@@ -434,6 +451,7 @@ type GetWalletReply struct {
 	Account       *string                `protobuf:"bytes,3,opt,name=account,proto3,oneof" json:"account,omitempty"`
 	QrCode        *string                `protobuf:"bytes,4,opt,name=qr_code,json=qrCode,proto3,oneof" json:"qr_code,omitempty"`
 	Id            string                 `protobuf:"bytes,5,opt,name=id,proto3" json:"id,omitempty"`
+	CreatedAt     *timestamppb.Timestamp `protobuf:"bytes,6,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -501,6 +519,13 @@ func (x *GetWalletReply) GetId() string {
 		return x.Id
 	}
 	return ""
+}
+
+func (x *GetWalletReply) GetCreatedAt() *timestamppb.Timestamp {
+	if x != nil {
+		return x.CreatedAt
+	}
+	return nil
 }
 
 type ListWalletRequest struct {
@@ -631,7 +656,7 @@ var File_api_commission_service_v1_wallet_proto protoreflect.FileDescriptor
 
 const file_api_commission_service_v1_wallet_proto_rawDesc = "" +
 	"\n" +
-	"&api/commission/service/v1/wallet.proto\x12\x19api.commission.service.v1\x1a\x1cgoogle/api/annotations.proto\x1a\x17validate/validate.proto\"\xca\x01\n" +
+	"&api/commission/service/v1/wallet.proto\x12\x19api.commission.service.v1\x1a\x1cgoogle/api/annotations.proto\x1a\x17validate/validate.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"\xca\x01\n" +
 	"\x13CreateWalletRequest\x12!\n" +
 	"\auser_id\x18\x01 \x01(\tB\b\xfaB\x05r\x03\xb0\x01\x01R\x06userId\x12;\n" +
 	"\vwallet_type\x18\x02 \x01(\tB\x1a\xfaB\x17r\x15R\x06alipayR\x05wxpayR\x04tronR\n" +
@@ -641,14 +666,16 @@ const file_api_commission_service_v1_wallet_proto_rawDesc = "" +
 	"\n" +
 	"\b_accountB\n" +
 	"\n" +
-	"\b_qr_code\"\xb2\x01\n" +
+	"\b_qr_code\"\xed\x01\n" +
 	"\x11CreateWalletReply\x12\x17\n" +
 	"\auser_id\x18\x01 \x01(\tR\x06userId\x12\x1f\n" +
 	"\vwallet_type\x18\x02 \x01(\tR\n" +
 	"walletType\x12\x1d\n" +
 	"\aaccount\x18\x03 \x01(\tH\x00R\aaccount\x88\x01\x01\x12\x1c\n" +
 	"\aqr_code\x18\x04 \x01(\tH\x01R\x06qrCode\x88\x01\x01\x12\x0e\n" +
-	"\x02id\x18\x05 \x01(\tR\x02idB\n" +
+	"\x02id\x18\x05 \x01(\tR\x02id\x129\n" +
+	"\n" +
+	"created_at\x18\x06 \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAtB\n" +
 	"\n" +
 	"\b_accountB\n" +
 	"\n" +
@@ -660,14 +687,16 @@ const file_api_commission_service_v1_wallet_proto_rawDesc = "" +
 	"\n" +
 	"\b_accountB\n" +
 	"\n" +
-	"\b_qr_code\"\xb2\x01\n" +
+	"\b_qr_code\"\xed\x01\n" +
 	"\x11UpdateWalletReply\x12\x17\n" +
 	"\auser_id\x18\x01 \x01(\tR\x06userId\x12\x1f\n" +
 	"\vwallet_type\x18\x02 \x01(\tR\n" +
 	"walletType\x12\x1d\n" +
 	"\aaccount\x18\x03 \x01(\tH\x00R\aaccount\x88\x01\x01\x12\x1c\n" +
 	"\aqr_code\x18\x04 \x01(\tH\x01R\x06qrCode\x88\x01\x01\x12\x0e\n" +
-	"\x02id\x18\x05 \x01(\tR\x02idB\n" +
+	"\x02id\x18\x05 \x01(\tR\x02id\x129\n" +
+	"\n" +
+	"created_at\x18\x06 \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAtB\n" +
 	"\n" +
 	"\b_accountB\n" +
 	"\n" +
@@ -676,14 +705,16 @@ const file_api_commission_service_v1_wallet_proto_rawDesc = "" +
 	"\x02id\x18\x01 \x01(\tB\b\xfaB\x05r\x03\xb0\x01\x01R\x02id\"\x13\n" +
 	"\x11DeleteWalletReply\",\n" +
 	"\x10GetWalletRequest\x12\x18\n" +
-	"\x02id\x18\x01 \x01(\tB\b\xfaB\x05r\x03\xb0\x01\x01R\x02id\"\xaf\x01\n" +
+	"\x02id\x18\x01 \x01(\tB\b\xfaB\x05r\x03\xb0\x01\x01R\x02id\"\xea\x01\n" +
 	"\x0eGetWalletReply\x12\x17\n" +
 	"\auser_id\x18\x01 \x01(\tR\x06userId\x12\x1f\n" +
 	"\vwallet_type\x18\x02 \x01(\tR\n" +
 	"walletType\x12\x1d\n" +
 	"\aaccount\x18\x03 \x01(\tH\x00R\aaccount\x88\x01\x01\x12\x1c\n" +
 	"\aqr_code\x18\x04 \x01(\tH\x01R\x06qrCode\x88\x01\x01\x12\x0e\n" +
-	"\x02id\x18\x05 \x01(\tR\x02idB\n" +
+	"\x02id\x18\x05 \x01(\tR\x02id\x129\n" +
+	"\n" +
+	"created_at\x18\x06 \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAtB\n" +
 	"\n" +
 	"\b_accountB\n" +
 	"\n" +
@@ -728,26 +759,30 @@ var file_api_commission_service_v1_wallet_proto_goTypes = []any{
 	(*ListWalletRequest)(nil),       // 8: api.commission.service.v1.ListWalletRequest
 	(*ListWalletReply)(nil),         // 9: api.commission.service.v1.ListWalletReply
 	(*ListWalletByUserRequest)(nil), // 10: api.commission.service.v1.ListWalletByUserRequest
+	(*timestamppb.Timestamp)(nil),   // 11: google.protobuf.Timestamp
 }
 var file_api_commission_service_v1_wallet_proto_depIdxs = []int32{
-	7,  // 0: api.commission.service.v1.ListWalletReply.wallets:type_name -> api.commission.service.v1.GetWalletReply
-	0,  // 1: api.commission.service.v1.Wallet.CreateWallet:input_type -> api.commission.service.v1.CreateWalletRequest
-	2,  // 2: api.commission.service.v1.Wallet.UpdateWallet:input_type -> api.commission.service.v1.UpdateWalletRequest
-	4,  // 3: api.commission.service.v1.Wallet.DeleteWallet:input_type -> api.commission.service.v1.DeleteWalletRequest
-	6,  // 4: api.commission.service.v1.Wallet.GetWallet:input_type -> api.commission.service.v1.GetWalletRequest
-	8,  // 5: api.commission.service.v1.Wallet.ListWallet:input_type -> api.commission.service.v1.ListWalletRequest
-	10, // 6: api.commission.service.v1.Wallet.ListWalletByUser:input_type -> api.commission.service.v1.ListWalletByUserRequest
-	1,  // 7: api.commission.service.v1.Wallet.CreateWallet:output_type -> api.commission.service.v1.CreateWalletReply
-	3,  // 8: api.commission.service.v1.Wallet.UpdateWallet:output_type -> api.commission.service.v1.UpdateWalletReply
-	5,  // 9: api.commission.service.v1.Wallet.DeleteWallet:output_type -> api.commission.service.v1.DeleteWalletReply
-	7,  // 10: api.commission.service.v1.Wallet.GetWallet:output_type -> api.commission.service.v1.GetWalletReply
-	9,  // 11: api.commission.service.v1.Wallet.ListWallet:output_type -> api.commission.service.v1.ListWalletReply
-	9,  // 12: api.commission.service.v1.Wallet.ListWalletByUser:output_type -> api.commission.service.v1.ListWalletReply
-	7,  // [7:13] is the sub-list for method output_type
-	1,  // [1:7] is the sub-list for method input_type
-	1,  // [1:1] is the sub-list for extension type_name
-	1,  // [1:1] is the sub-list for extension extendee
-	0,  // [0:1] is the sub-list for field type_name
+	11, // 0: api.commission.service.v1.CreateWalletReply.created_at:type_name -> google.protobuf.Timestamp
+	11, // 1: api.commission.service.v1.UpdateWalletReply.created_at:type_name -> google.protobuf.Timestamp
+	11, // 2: api.commission.service.v1.GetWalletReply.created_at:type_name -> google.protobuf.Timestamp
+	7,  // 3: api.commission.service.v1.ListWalletReply.wallets:type_name -> api.commission.service.v1.GetWalletReply
+	0,  // 4: api.commission.service.v1.Wallet.CreateWallet:input_type -> api.commission.service.v1.CreateWalletRequest
+	2,  // 5: api.commission.service.v1.Wallet.UpdateWallet:input_type -> api.commission.service.v1.UpdateWalletRequest
+	4,  // 6: api.commission.service.v1.Wallet.DeleteWallet:input_type -> api.commission.service.v1.DeleteWalletRequest
+	6,  // 7: api.commission.service.v1.Wallet.GetWallet:input_type -> api.commission.service.v1.GetWalletRequest
+	8,  // 8: api.commission.service.v1.Wallet.ListWallet:input_type -> api.commission.service.v1.ListWalletRequest
+	10, // 9: api.commission.service.v1.Wallet.ListWalletByUser:input_type -> api.commission.service.v1.ListWalletByUserRequest
+	1,  // 10: api.commission.service.v1.Wallet.CreateWallet:output_type -> api.commission.service.v1.CreateWalletReply
+	3,  // 11: api.commission.service.v1.Wallet.UpdateWallet:output_type -> api.commission.service.v1.UpdateWalletReply
+	5,  // 12: api.commission.service.v1.Wallet.DeleteWallet:output_type -> api.commission.service.v1.DeleteWalletReply
+	7,  // 13: api.commission.service.v1.Wallet.GetWallet:output_type -> api.commission.service.v1.GetWalletReply
+	9,  // 14: api.commission.service.v1.Wallet.ListWallet:output_type -> api.commission.service.v1.ListWalletReply
+	9,  // 15: api.commission.service.v1.Wallet.ListWalletByUser:output_type -> api.commission.service.v1.ListWalletReply
+	10, // [10:16] is the sub-list for method output_type
+	4,  // [4:10] is the sub-list for method input_type
+	4,  // [4:4] is the sub-list for extension type_name
+	4,  // [4:4] is the sub-list for extension extendee
+	0,  // [0:4] is the sub-list for field type_name
 }
 
 func init() { file_api_commission_service_v1_wallet_proto_init() }

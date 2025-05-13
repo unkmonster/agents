@@ -4,7 +4,10 @@ import (
 	"context"
 	"time"
 
+	pb "agents/api/commission/service/v1"
+
 	"github.com/go-kratos/kratos/v2/log"
+	"github.com/google/uuid"
 )
 
 type Wallet struct {
@@ -37,8 +40,14 @@ func NewWalletUseCase(repo WalletRepo, logger log.Logger) *WalletUseCase {
 	}
 }
 
-func (uc *WalletUseCase) Create(ctx context.Context, wallet *Wallet) (*Wallet, error) {
-	return uc.repo.Create(ctx, wallet)
+func (uc *WalletUseCase) Create(ctx context.Context, req *pb.CreateWalletRequest) (*Wallet, error) {
+	return uc.repo.Create(ctx, &Wallet{
+		Id:         uuid.NewString(),
+		UserId:     req.UserId,
+		WalletType: req.WalletType,
+		Account:    req.Account,
+		QrCode:     req.QrCode,
+	})
 }
 
 func (uc *WalletUseCase) Update(ctx context.Context, wallet *Wallet) (*Wallet, error) {

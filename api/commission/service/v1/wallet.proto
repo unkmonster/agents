@@ -4,6 +4,7 @@ package api.commission.service.v1;
 
 import "google/api/annotations.proto";
 import "validate/validate.proto";
+import "google/protobuf/timestamp.proto";
 
 option go_package = "agents/api/commission/service/v1;v1";
 option java_multiple_files = true;
@@ -56,6 +57,7 @@ message CreateWalletReply {
 	optional string account = 3;
 	optional string qr_code = 4;
 	string id = 5;
+	google.protobuf.Timestamp created_at = 6;
 }
 
 message UpdateWalletRequest {
@@ -69,6 +71,7 @@ message UpdateWalletReply {
 	optional string account = 3;
 	optional string qr_code = 4;
 	string id = 5;
+	google.protobuf.Timestamp created_at = 6;
 }
 
 message DeleteWalletRequest {
@@ -85,6 +88,7 @@ message GetWalletReply {
 	optional string account = 3;
 	optional string qr_code = 4;
 	string id = 5;
+	google.protobuf.Timestamp created_at = 6;
 }
 
 message ListWalletRequest {}

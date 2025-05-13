@@ -168,6 +168,9 @@ components:
                     type: string
                 id:
                     type: string
+                createdAt:
+                    type: string
+                    format: date-time
         CreateWalletRequest:
             type: object
             properties:
@@ -195,6 +198,9 @@ components:
                     type: string
                 id:
                     type: string
+                createdAt:
+                    type: string
+                    format: date-time
         GoogleProtobufAny:
             type: object
             properties:
@@ -239,6 +245,9 @@ components:
                     type: string
                 id:
                     type: string
+                createdAt:
+                    type: string
+                    format: date-time
         UpdateWalletRequest:
             type: object
             properties:
