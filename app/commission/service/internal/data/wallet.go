@@ -11,7 +11,7 @@ type walletRepo struct {
 	data *Data
 }
 
-func NewWalletRepo(data *Data) *walletRepo {
+func NewWalletRepo(data *Data) biz.WalletRepo {
 	return &walletRepo{
 		data: data,
 	}

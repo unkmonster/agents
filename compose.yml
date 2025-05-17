@@ -1,5 +1,5 @@
 services:
-  db:
+  mysql:
     image: mysql
     restart: always
     environment:
@@ -45,7 +45,7 @@ services:
       context: .
       dockerfile: ./app/user/service/Dockerfile
     depends_on:
-      db:
+      mysql:
         condition: service_healthy
         restart: true
       consul:
@@ -60,7 +60,7 @@ services:
       context: .
       dockerfile: ./app/authn/service/Dockerfile
     depends_on:
-      db:
+      mysql:
         condition: service_healthy
         restart: true
       consul:
@@ -75,7 +75,7 @@ services:
       context: .
       dockerfile: ./app/order/service/Dockerfile
     depends_on:
-      db:
+      mysql:
         condition: service_healthy
         restart: true
       consul:
@@ -90,7 +90,7 @@ services:
       context: .
       dockerfile: ./app/commission/service/Dockerfile
     depends_on:
-      db:
+      mysql:
         condition: service_healthy
         restart: true
       consul:

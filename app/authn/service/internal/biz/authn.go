@@ -2,6 +2,7 @@ package biz
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	pb "agents/api/authn/service/v1"
@@ -12,6 +13,7 @@ import (
 	"github.com/go-kratos/kratos/v2/errors"
 	"github.com/go-kratos/kratos/v2/log"
 	mjwt "github.com/go-kratos/kratos/v2/middleware/auth/jwt"
+	"github.com/go-resty/resty/v2"
 	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -41,9 +43,13 @@ type AuthUserCase struct {
 	pubKey        interface{}
 	tokenDuration time.Duration
 	signMethod    string
+
+	cli *resty.Client
+
+	kong *conf.Kong
 }
 
-func NewAuthUserCase(repo UserCredentialRepo, logger log.Logger, ur UserRepo, auth *conf.Auth, comm CommissionRepo) *AuthUserCase {
+func NewAuthUserCase(repo UserCredentialRepo, logger log.Logger, ur UserRepo, auth *conf.Auth, comm CommissionRepo, kong *conf.Kong) *AuthUserCase {
 	var privKey interface{}
 	var pubKey interface{}
 	var err error
@@ -62,6 +68,8 @@ func NewAuthUserCase(repo UserCredentialRepo, logger log.Logger, ur UserRepo, au
 		log.NewHelper(logger).Fatal(err)
 	}
 
+	client := resty.New()
+
 	return &AuthUserCase{
 		cr:   repo,
 		log:  log.NewHelper(logger),
@@ -72,6 +80,9 @@ func NewAuthUserCase(repo UserCredentialRepo, logger log.Logger, ur UserRepo, au
 		pubKey:        pubKey,
 		tokenDuration: auth.TokenDuration.AsDuration(),
 		signMethod:    auth.SigningMethod,
+
+		cli:  client,
+		kong: kong,
 	}
 }
 
@@ -97,6 +108,31 @@ func (uc *AuthUserCase) generateTokenReply(user *User) (*pb.AuthReply, error) {
 			SharePercent: user.SharePercent,
 		},
 	}, nil
+}
+
+func (uc *AuthUserCase) createKongConsumer(ctx context.Context, user *User, role string) error {
+	req := uc.cli.R().SetContext(ctx)
+	req.SetBody(map[string]interface{}{
+		"custom_id": user.Id,
+		"username":  fmt.Sprintf("%s-%s", role, user.Username),
+		"tags": []string{
+			role,
+		},
+	})
+
+	if uc.kong.ApiKey != "" {
+		req.SetHeader("X-API-KEY", uc.kong.ApiKey)
+	}
+
+	resp, err := req.Post(uc.kong.AdminApi + "/consumers")
+	if err != nil {
+		return err
+	}
+
+	if resp.IsError() {
+		return fmt.Errorf("%s", string(resp.Body()))
+	}
+	return nil
 }
 
 // Register 不是注册，用于上级代理创建他的下级
@@ -144,6 +180,11 @@ func (uc *AuthUserCase) Register(ctx context.Context, req *pb.RegisterRequest) (
 	}
 
 	err = uc.comm.InitUserCommission(ctx, user.Id)
+	if err != nil {
+		return nil, err
+	}
+
+	err = uc.createKongConsumer(ctx, user, "user")
 	if err != nil {
 		return nil, err
 	}

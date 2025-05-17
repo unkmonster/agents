@@ -8,7 +8,7 @@ server:
 data:
   database:
     driver: mysql
-    source: root:password@tcp(db:3306)/order_service?parseTime=True&loc=Local
+    source: root:password@tcp(mysql:3306)/order_service?parseTime=True&loc=Local
   redis:
     addr: 127.0.0.1:6379
     read_timeout: 0.2s
@@ -17,4 +17,3 @@ registry:
   consul:
     address: consul:8500
     schema: http
-

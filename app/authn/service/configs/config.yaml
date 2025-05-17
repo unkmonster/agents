@@ -8,7 +8,7 @@ server:
 data:
   database:
     driver: mysql
-    source: root:password@tcp(db:3306)/authn_service?parseTime=True&loc=Local
+    source: root:password@tcp(mysql:3306)/authn_service?parseTime=True&loc=Local
     migration_source: file:///migrations
   redis:
     addr: 127.0.0.1:6379
@@ -21,4 +21,5 @@ registry:
   consul:
     address: consul:8500
     schema: http
-
+kong:
+  admin_api: "http://kong:8001"
