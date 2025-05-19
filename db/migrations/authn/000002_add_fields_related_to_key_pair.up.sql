@@ -1,4 +1,5 @@
-ALTER TABLE user_credentials ADD COLUMN alg VARCHAR(10) NULL;
-ALTER TABLE user_credentials ADD COLUMN public_key TEXT NULL; 
-ALTER TABLE user_credentials ADD COLUMN private_key TEXT NULL;
-ALTER TABLE user_credentials ADD COLUMN secret TEXT NULL;
+ALTER TABLE user_credentials ADD COLUMN alg VARCHAR(10) NOT NULL DEFAULT 'RS256',
+  ADD COLUMN public_key TEXT NULL,
+  ADD COLUMN private_key TEXT NULL,
+  ADD COLUMN secret TEXT NULL,
+  ADD COLUMN token_key TEXT NOT NULL;

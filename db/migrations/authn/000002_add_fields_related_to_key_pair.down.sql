@@ -1,4 +1,6 @@
-ALTER TABLE user_credentials DROP COLUMN alg;
-ALTER TABLE user_credentials DROP COLUMN public_key; 
-ALTER TABLE user_credentials DROP COLUMN private_key;
-ALTER TABLE user_credentials DROP COLUMN secret;
+ALTER TABLE user_credentials
+  DROP COLUMN alg,
+  DROP COLUMN public_key,
+  DROP COLUMN private_key,
+  DROP COLUMN secret,
+  DROP COLUMN token_key;
