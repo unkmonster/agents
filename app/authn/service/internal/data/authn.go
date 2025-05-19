@@ -28,12 +28,20 @@ func (u *userCredentialRepo) Create(ctx context.Context, uc *biz.UserCredential)
 			id,
 			username,
 			user_id,
-			hashed_password
+			hashed_password,
+			alg,
+			public_key,
+			private_key,
+			token_key
 		) VALUES (
 			:id,
 			:username,
 			:user_id,
-			:hashed_password
+			:hashed_password,
+			:alg,
+			:public_key,
+			:private_key,
+			:token_key
 		)
 	`
 	_, err := u.data.db.NamedExecContext(ctx, query, uc)

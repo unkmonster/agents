@@ -13,7 +13,7 @@ import (
 )
 
 // NewHTTPServer new an HTTP server.
-func NewHTTPServer(c *conf.Server, logger log.Logger, comm *service.CommissionService, basic middleware.Middleware) *http.Server {
+func NewHTTPServer(c *conf.Server, logger log.Logger, comm *service.CommissionService, basic middleware.Middleware, wallet *service.WalletService) *http.Server {
 	var opts = []http.ServerOption{
 		http.Middleware(
 			recovery.Recovery(),
@@ -36,5 +36,6 @@ func NewHTTPServer(c *conf.Server, logger log.Logger, comm *service.CommissionSe
 	srv := http.NewServer(opts...)
 
 	commv1.RegisterCommissionHTTPServer(srv, comm)
+	commv1.RegisterWalletHTTPServer(srv, wallet)
 	return srv
 }

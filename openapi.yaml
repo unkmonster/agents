@@ -3,43 +3,48 @@
 
 openapi: 3.0.3
 info:
-    title: Authn API
+    title: Wallet API
     version: 0.0.1
 paths:
-    /v1/auth/login:
-        post:
+    /v1/users/{userId}/wallets:
+        get:
             tags:
-                - Authn
-            operationId: Authn_Login
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/LoginRequest'
-                required: true
+                - Wallet
+            operationId: Wallet_ListWalletByUser
+            parameters:
+                - name: userId
+                  in: path
+                  required: true
+                  schema:
+                    type: string
             responses:
                 "200":
                     description: OK
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/AuthReply'
+                                $ref: '#/components/schemas/ListWalletReply'
                 default:
                     description: Default error response
                     content:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/Status'
-    /v1/auth/register:
         post:
             tags:
-                - Authn
-            operationId: Authn_Register
+                - Wallet
+            operationId: Wallet_CreateWallet
+            parameters:
+                - name: userId
+                  in: path
+                  required: true
+                  schema:
+                    type: string
             requestBody:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/RegisterRequest'
+                            $ref: '#/components/schemas/CreateWalletRequest'
                 required: true
             responses:
                 "200":
@@ -47,23 +52,93 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/AuthReply'
+                                $ref: '#/components/schemas/CreateWalletReply'
                 default:
                     description: Default error response
                     content:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/Status'
-    /v1/auth/verify:
-        post:
+    /v1/wallets:
+        get:
             tags:
-                - Authn
-            operationId: Authn_Verify
+                - Wallet
+            operationId: Wallet_ListWallet
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ListWalletReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1/wallets/{id}:
+        get:
+            tags:
+                - Wallet
+            operationId: Wallet_GetWallet
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GetWalletReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        delete:
+            tags:
+                - Wallet
+            operationId: Wallet_DeleteWallet
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/DeleteWalletReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        patch:
+            tags:
+                - Wallet
+            operationId: Wallet_UpdateWallet
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: string
             requestBody:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/VerifyRequest'
+                            $ref: '#/components/schemas/UpdateWalletRequest'
                 required: true
             responses:
                 "200":
@@ -71,7 +146,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/VerifyReply'
+                                $ref: '#/components/schemas/UpdateWalletReply'
                 default:
                     description: Default error response
                     content:
@@ -80,13 +155,52 @@ paths:
                                 $ref: '#/components/schemas/Status'
 components:
     schemas:
-        AuthReply:
+        CreateWalletReply:
             type: object
             properties:
-                token:
+                userId:
                     type: string
-                user:
-                    $ref: '#/components/schemas/UserInfo'
+                walletType:
+                    type: string
+                account:
+                    type: string
+                qrCode:
+                    type: string
+                id:
+                    type: string
+                createdAt:
+                    type: string
+                    format: date-time
+        CreateWalletRequest:
+            type: object
+            properties:
+                userId:
+                    type: string
+                walletType:
+                    type: string
+                account:
+                    type: string
+                qrCode:
+                    type: string
+        DeleteWalletReply:
+            type: object
+            properties: {}
+        GetWalletReply:
+            type: object
+            properties:
+                userId:
+                    type: string
+                walletType:
+                    type: string
+                account:
+                    type: string
+                qrCode:
+                    type: string
+                id:
+                    type: string
+                createdAt:
+                    type: string
+                    format: date-time
         GoogleProtobufAny:
             type: object
             properties:
@@ -95,30 +209,13 @@ components:
                     description: The type of the serialized message.
             additionalProperties: true
             description: Contains an arbitrary serialized message along with a @type that describes the type of the serialized message.
-        LoginRequest:
+        ListWalletReply:
             type: object
             properties:
-                username:
-                    type: string
-                password:
-                    type: string
-        RegisterRequest:
-            type: object
-            properties:
-                username:
-                    type: string
-                password:
-                    type: string
-                nickname:
-                    type: string
-                parentId:
-                    type: string
-                level:
-                    type: integer
-                    format: int32
-                sharePercent:
-                    type: number
-                    format: float
+                wallets:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/GetWalletReply'
         Status:
             type: object
             properties:
@@ -135,32 +232,30 @@ components:
                         $ref: '#/components/schemas/GoogleProtobufAny'
                     description: A list of messages that carry the error details.  There is a common set of message types for APIs to use.
             description: 'The `Status` type defines a logical error model that is suitable for different programming environments, including REST APIs and RPC APIs. It is used by [gRPC](https://github.com/grpc). Each `Status` message contains three pieces of data: error code, error message, and error details. You can find out more about this error model and how to work with it in the [API Design Guide](https://cloud.google.com/apis/design/errors).'
-        UserInfo:
+        UpdateWalletReply:
+            type: object
+            properties:
+                userId:
+                    type: string
+                walletType:
+                    type: string
+                account:
+                    type: string
+                qrCode:
+                    type: string
+                id:
+                    type: string
+                createdAt:
+                    type: string
+                    format: date-time
+        UpdateWalletRequest:
             type: object
             properties:
                 id:
                     type: string
-                username:
+                account:
                     type: string
-                nickname:
-                    type: string
-                parentId:
-                    type: string
-                level:
-                    type: integer
-                    format: int32
-                sharePercent:
-                    type: number
-                    format: float
-        VerifyReply:
-            type: object
-            properties:
-                user:
-                    $ref: '#/components/schemas/UserInfo'
-        VerifyRequest:
-            type: object
-            properties:
-                token:
+                qrCode:
                     type: string
 tags:
-    - name: Authn
+    - name: Wallet

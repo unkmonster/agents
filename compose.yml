@@ -1,5 +1,14 @@
 services:
-  db:
+  swagger:
+    image: swaggerapi/swagger-ui
+    restart: always
+    environment:
+      - SWAGGER_JSON=/openapi.json
+    volumes:
+      - ./openapi/api.swagger.swagger.json:/openapi.json
+    ports:
+      - 5000:8080
+  mysql:
     image: mysql
     restart: always
     environment:
@@ -45,7 +54,7 @@ services:
       context: .
       dockerfile: ./app/user/service/Dockerfile
     depends_on:
-      db:
+      mysql:
         condition: service_healthy
         restart: true
       consul:
@@ -60,7 +69,7 @@ services:
       context: .
       dockerfile: ./app/authn/service/Dockerfile
     depends_on:
-      db:
+      mysql:
         condition: service_healthy
         restart: true
       consul:
@@ -75,7 +84,7 @@ services:
       context: .
       dockerfile: ./app/order/service/Dockerfile
     depends_on:
-      db:
+      mysql:
         condition: service_healthy
         restart: true
       consul:
@@ -90,7 +99,7 @@ services:
       context: .
       dockerfile: ./app/commission/service/Dockerfile
     depends_on:
-      db:
+      mysql:
         condition: service_healthy
         restart: true
       consul:

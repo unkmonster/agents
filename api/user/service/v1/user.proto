@@ -83,22 +83,22 @@ message GetUserByDomainReply {
 }
 
 message GetUserByUsernameRequest {
-	optional string username = 1;
+	string username = 1;
 }
 
 message DeleteDomainRequest {
-	optional string id = 1;
+	string id = 1;
 }
 message DeleteDomainReply {}
 
 message ListUserDomainsByUserIdRequest {
-	optional string user_id =1;
+	string user_id =1;
 }
 message ListUserDomainsByUserIdReply {
 	message Domain {
-		optional string id = 1;
-		optional string user_id = 2;
-		optional string domain = 3;
+		string id = 1;
+		string user_id = 2;
+		string domain = 3;
 	}
 	repeated Domain domains = 1;
 }
@@ -109,89 +109,89 @@ message ListUserDomainsRequest {
 
 message ListUserDomainsReply {
 	message Domain {
-		optional string id = 1;
-		optional string user_id = 2;
-		optional string domain = 3;
+		string id = 1;
+		string user_id = 2;
+		string domain = 3;
 	}
 	repeated Domain domains = 1;
 }
 
 message GetUserDomainRequest {
-	optional string id = 1;
+	string id = 1;
 }
 message GetUserDomainReply {
-	optional string id = 1;
-	optional string user_id = 2;
-	optional string domain = 3;
+	string id = 1;
+	string user_id = 2;
+	string domain = 3;
 }
 
 message CreateUserDomainRequest{
-	optional string user_id = 2;
-	optional string domain = 3;
+	string user_id = 2;
+	string domain = 3;
 }
 message CreateUserDomainReply{
-	optional string id = 1;
-	optional string user_id = 2;
-	optional string domain = 3;
+	string id = 1;
+	string user_id = 2;
+	string domain = 3;
 }
 
 message CreateUserRequest {
-	optional string username = 2;
+	string username = 2;
 	optional string nickname = 4;
 	optional string parent_id = 5;
-	optional int32 level = 6;
-	optional float share_percent = 7;
+	int32 level = 6;
+	float share_percent = 7;
 }
 message CreateUserReply {
-	optional string id = 1;
-	optional string username = 2;
-	optional string nickname = 3;
-	optional string parent_id = 4;
-	optional int32 level = 5;
-	optional float share_percent = 6;
+	string id = 1;
+	string username = 2;
+	string nickname = 3;
+	string parent_id = 4;
+	int32 level = 5;
+	float share_percent = 6;
 }
 
 message UpdateUserRequest {
-	optional string id = 1;
+	string id = 1;
 	optional string password = 3 [(validate.rules).string = {min_len: 8, max_len: 20}];
 	optional string nickname = 4 [(validate.rules).string = {max_len: 20}];
 	optional float share_percent = 5;
 }
 message UpdateUserReply {
-	optional string id = 1;
-	optional string username = 2;
-	optional string nickname = 3;
-	optional string parent_id = 4;
-	optional int32 level = 5;
-	optional float share_percent = 6;
+	string id = 1;
+	string username = 2;
+	string nickname = 3;
+	string parent_id = 4;
+	int32 level = 5;
+	float share_percent = 6;
 }
 
 message DeleteUserRequest {
-	optional string id = 1;
+	string id = 1;
 }
 message DeleteUserReply {}
 
 message GetUserRequest {
-	optional string id = 1;
+	string id = 1;
 }
 message GetUserReply {
-	optional string id = 1;
-	optional string username = 2;
-	optional string nickname = 3;
-	optional string parent_id = 4;
-	optional int32 level = 5;
-	optional float share_percent = 6;
+	string id = 1;
+	string username = 2;
+	string nickname = 3;
+	string parent_id = 4;
+	int32 level = 5;
+	float share_percent = 6;
 }
 
 message ListUserRequest {}
 message ListUserReply {
 	message User {
-		optional string id = 1;
-		optional string username = 2;
-		optional string nickname = 3;
-		optional string parent_id = 4;
-		optional int32 level = 5;
-		optional float share_percent = 6;
+		string id = 1;
+		string username = 2;
+		string nickname = 3;
+		string parent_id = 4;
+		int32 level = 5;
+		float share_percent = 6;
 	}
 	repeated User users = 1;
 }
