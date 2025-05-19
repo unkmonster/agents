@@ -9,6 +9,7 @@ import (
 	"github.com/go-kratos/kratos/v2/middleware/recovery"
 	"github.com/go-kratos/kratos/v2/registry"
 	"github.com/go-kratos/kratos/v2/transport/grpc"
+	"github.com/go-resty/resty/v2"
 	"github.com/google/wire"
 	"github.com/jmoiron/sqlx"
 
@@ -33,14 +34,16 @@ var ProviderSet = wire.NewSet(
 	NewUserRepo,
 	NewCommissionServiceClient,
 	NewCommissionRepo,
+	NewGatewayRepo,
 )
 
 // Data .
 type Data struct {
 	// TODO wrapped database client
-	db *sqlx.DB
-	uc userv1.UserClient
-	cc commv1.CommissionClient
+	db  *sqlx.DB
+	uc  userv1.UserClient
+	cc  commv1.CommissionClient
+	cli *resty.Client
 }
 
 // NewData .
@@ -50,9 +53,10 @@ func NewData(c *conf.Data, logger log.Logger, db *sqlx.DB, uc userv1.UserClient,
 		db.Close()
 	}
 	return &Data{
-		db: db,
-		uc: uc,
-		cc: cc,
+		db:  db,
+		uc:  uc,
+		cc:  cc,
+		cli: resty.New(),
 	}, cleanup, nil
 }
 

@@ -65,3 +65,11 @@ func (u *userRepo) GetByUsername(ctx context.Context, username string) (*biz.Use
 		SharePercent: *reply.SharePercent,
 	}, nil
 }
+
+// Delete implements biz.UserRepo.
+func (u *userRepo) Delete(ctx context.Context, userId string) error {
+	_, err := u.data.uc.DeleteUser(ctx, &userv1.DeleteUserRequest{
+		Id: &userId,
+	})
+	return err
+}

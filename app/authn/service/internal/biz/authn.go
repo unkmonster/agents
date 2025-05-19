@@ -2,6 +2,9 @@ package biz
 
 import (
 	"context"
+	"crypto/rsa"
+	"crypto/x509"
+	"encoding/pem"
 	"fmt"
 	"time"
 
@@ -13,18 +16,24 @@ import (
 	"github.com/go-kratos/kratos/v2/errors"
 	"github.com/go-kratos/kratos/v2/log"
 	mjwt "github.com/go-kratos/kratos/v2/middleware/auth/jwt"
-	"github.com/go-resty/resty/v2"
+	jwtv5 "github.com/golang-jwt/jwt/v5"
 	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
 )
 
 const MaxAgentLevel = 2
+const DefaultSigningAlg = "RS256"
 
 type UserCredential struct {
 	Id             string    `db:"id"`
 	Username       string    `db:"username"`
 	UserId         string    `db:"user_id"`
 	HashedPassword string    `db:"hashed_password"`
+	Alg            string    `db:"alg"`    // 总是 RS256
+	Secret         *string   `db:"secret"` // 未使用
+	PublicKey      *string   `db:"public_key"`
+	PrivateKey     *string   `db:"private_key"`
+	TokenKey       string    `db:"token_key"`
 	CreatedAt      time.Time `db:"created_at"`
 }
 
@@ -39,100 +48,36 @@ type AuthUserCase struct {
 	log  *log.Helper
 	comm CommissionRepo
 
-	privKey       interface{}
-	pubKey        interface{}
 	tokenDuration time.Duration
-	signMethod    string
 
-	cli *resty.Client
-
-	kong *conf.Kong
+	gateway GatewayRepo
 }
 
-func NewAuthUserCase(repo UserCredentialRepo, logger log.Logger, ur UserRepo, auth *conf.Auth, comm CommissionRepo, kong *conf.Kong) *AuthUserCase {
-	var privKey interface{}
-	var pubKey interface{}
-	var err error
-
-	if auth.SigningMethod == "RS256" {
-		privKey, err = encrypt.LoadRsaPrivateKey(auth.Secret)
-		if err == nil {
-			pubKey, err = encrypt.LoadRSAPublicKey(auth.PublicKey)
-		}
-	} else {
-		privKey = auth.Secret
-		pubKey = auth.PublicKey
-	}
-
-	if err != nil {
-		log.NewHelper(logger).Fatal(err)
-	}
-
-	client := resty.New()
-
+func NewAuthUserCase(repo UserCredentialRepo, logger log.Logger, ur UserRepo, auth *conf.Auth, comm CommissionRepo, gateway GatewayRepo) *AuthUserCase {
 	return &AuthUserCase{
 		cr:   repo,
 		log:  log.NewHelper(logger),
 		ur:   ur,
 		comm: comm,
 
-		privKey:       privKey,
-		pubKey:        pubKey,
 		tokenDuration: auth.TokenDuration.AsDuration(),
-		signMethod:    auth.SigningMethod,
-
-		cli:  client,
-		kong: kong,
+		gateway:       gateway,
 	}
 }
 
-func (uc *AuthUserCase) generateTokenReply(user *User) (*pb.AuthReply, error) {
-	// generate token
-	tokenStr, err := jwt.GenerateJwt(&jwt.User{
-		UserId: user.Id,
-		Level:  int(user.Level),
-	}, uc.privKey, time.Now().Add(uc.tokenDuration), uc.signMethod)
+// 解析 PEM 格式的 RSA 私钥
+func parseRSAPrivateKeyFromPEM(pemData []byte) (*rsa.PrivateKey, error) {
+	block, _ := pem.Decode(pemData)
+	if block == nil || block.Type != "RSA PRIVATE KEY" {
+		return nil, fmt.Errorf("failed to decode PEM block containing RSA private key")
+	}
 
+	privKey, err := x509.ParsePKCS1PrivateKey(block.Bytes)
 	if err != nil {
 		return nil, err
 	}
 
-	return &pb.AuthReply{
-		Token: &tokenStr,
-		User: &pb.UserInfo{
-			Id:           &user.Id,
-			Username:     &user.Username,
-			Nickname:     user.Nickname,
-			ParentId:     user.ParentId,
-			Level:        &user.Level,
-			SharePercent: user.SharePercent,
-		},
-	}, nil
-}
-
-func (uc *AuthUserCase) createKongConsumer(ctx context.Context, user *User, role string) error {
-	req := uc.cli.R().SetContext(ctx)
-	req.SetBody(map[string]interface{}{
-		"custom_id": user.Id,
-		"username":  fmt.Sprintf("%s-%s", role, user.Username),
-		"tags": []string{
-			role,
-		},
-	})
-
-	if uc.kong.ApiKey != "" {
-		req.SetHeader("X-API-KEY", uc.kong.ApiKey)
-	}
-
-	resp, err := req.Post(uc.kong.AdminApi + "/consumers")
-	if err != nil {
-		return err
-	}
-
-	if resp.IsError() {
-		return fmt.Errorf("%s", string(resp.Body()))
-	}
-	return nil
+	return privKey, nil
 }
 
 // Register 不是注册，用于上级代理创建他的下级
@@ -163,8 +108,29 @@ func (uc *AuthUserCase) Register(ctx context.Context, req *pb.RegisterRequest) (
 		return nil, err
 	}
 
+	err = uc.comm.InitUserCommission(ctx, user.Id)
+	if err != nil {
+		return nil, err
+	}
+
 	// hash password
 	h, err := bcrypt.GenerateFromPassword([]byte(*req.Password), bcrypt.DefaultCost)
+	if err != nil {
+		return nil, err
+	}
+
+	// 根据签名算法生成 key-pair 或 secret
+	priv, pub, err := encrypt.GenerateRS256KeyPair()
+	if err != nil {
+		return nil, err
+	}
+
+	consumer, err := uc.gateway.CreateUserConsumer(ctx, user)
+	if err != nil {
+		return nil, err
+	}
+
+	jwtKey, err := uc.gateway.EnableJwtPluginForConsumer(ctx, consumer, pub)
 	if err != nil {
 		return nil, err
 	}
@@ -174,17 +140,11 @@ func (uc *AuthUserCase) Register(ctx context.Context, req *pb.RegisterRequest) (
 		UserId:         user.Id,
 		Username:       user.Username,
 		HashedPassword: string(h),
+		Alg:            DefaultSigningAlg,
+		PublicKey:      &pub,
+		PrivateKey:     &priv,
+		TokenKey:       jwtKey,
 	})
-	if err != nil {
-		return nil, err
-	}
-
-	err = uc.comm.InitUserCommission(ctx, user.Id)
-	if err != nil {
-		return nil, err
-	}
-
-	err = uc.createKongConsumer(ctx, user, "user")
 	if err != nil {
 		return nil, err
 	}
@@ -215,5 +175,27 @@ func (uc *AuthUserCase) Login(ctx context.Context, req *pb.LoginRequest) (*pb.Au
 	if err != nil {
 		return nil, err
 	}
-	return uc.generateTokenReply(user)
+
+	// pem -> *rsa.PrivateKey
+	pk, err := parseRSAPrivateKeyFromPEM([]byte(*credential.PrivateKey))
+	if err != nil {
+		return nil, err
+	}
+
+	tokenStr, err := jwt.GenerateJwt(jwt.UserClaims{
+		RegisteredClaims: jwtv5.RegisteredClaims{
+			Subject:   user.Id,
+			ExpiresAt: jwtv5.NewNumericDate(time.Now().Add(uc.tokenDuration)),
+			NotBefore: jwtv5.NewNumericDate(time.Now()),
+			Issuer:    credential.TokenKey,
+		},
+		Level: int(user.Level),
+	}, pk)
+	if err != nil {
+		return nil, err
+	}
+
+	return &pb.AuthReply{
+		Token: &tokenStr,
+	}, nil
 }

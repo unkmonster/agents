@@ -15,6 +15,14 @@ else
 	API_PROTO_FILES=$(shell find api -name *.proto)
 endif
 
+.PHONY: openapi
+openapi:
+	protoc --proto_path=. \
+		--proto_path=./third_party \
+		--openapiv2_out=./ \
+		--openapiv2_opt=allow_merge=true,merge_file_name=api.swagger.json \
+		$(API_PROTO_FILES)
+
 .PHONY: validate
 # generate validate proto
 validate:
