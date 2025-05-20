@@ -5,6 +5,7 @@ import { Button, Checkbox, Form, Input, Flex } from "antd";
 import { Card } from "antd";
 import { Typography } from "antd";
 import { Alert } from "antd";
+import { jwtDecode } from "jwt-decode"; // ✅ 推荐写法
 
 function LoginForm() {
   const [err, setErr] = useState(null);
@@ -30,7 +31,10 @@ function LoginForm() {
       return;
     }
 
+    const decoded = jwtDecode(json.token);
+    console.log(decoded);
     localStorage.setItem("token", json.token);
+    localStorage.setItem("userId", decoded.sub);
     window.location.href = "/dashboard";
   };
 
