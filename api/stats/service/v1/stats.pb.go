@@ -8,6 +8,7 @@ package v1
 
 import (
 	_ "github.com/envoyproxy/protoc-gen-validate/validate"
+	_ "github.com/go-kratos/kratos/v2/errors"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
@@ -23,6 +24,49 @@ const (
 	// Verify that runtime/protoimpl is sufficiently up-to-date.
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
+
+type ErrorReason int32
+
+const (
+	ErrorReason_UNKNOWN_EVENT_TYPE ErrorReason = 0
+)
+
+// Enum value maps for ErrorReason.
+var (
+	ErrorReason_name = map[int32]string{
+		0: "UNKNOWN_EVENT_TYPE",
+	}
+	ErrorReason_value = map[string]int32{
+		"UNKNOWN_EVENT_TYPE": 0,
+	}
+)
+
+func (x ErrorReason) Enum() *ErrorReason {
+	p := new(ErrorReason)
+	*p = x
+	return p
+}
+
+func (x ErrorReason) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (ErrorReason) Descriptor() protoreflect.EnumDescriptor {
+	return file_api_stats_service_v1_stats_proto_enumTypes[0].Descriptor()
+}
+
+func (ErrorReason) Type() protoreflect.EnumType {
+	return &file_api_stats_service_v1_stats_proto_enumTypes[0]
+}
+
+func (x ErrorReason) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use ErrorReason.Descriptor instead.
+func (ErrorReason) EnumDescriptor() ([]byte, []int) {
+	return file_api_stats_service_v1_stats_proto_rawDescGZIP(), []int{0}
+}
 
 type RegisterEvent struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
@@ -274,7 +318,7 @@ var File_api_stats_service_v1_stats_proto protoreflect.FileDescriptor
 
 const file_api_stats_service_v1_stats_proto_rawDesc = "" +
 	"\n" +
-	" api/stats/service/v1/stats.proto\x12\x14api.stats.service.v1\x1a\x1cgoogle/api/annotations.proto\x1a\x17validate/validate.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"R\n" +
+	" api/stats/service/v1/stats.proto\x12\x14api.stats.service.v1\x1a\x1cgoogle/api/annotations.proto\x1a\x17validate/validate.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x13errors/errors.proto\"R\n" +
 	"\rRegisterEvent\x12\x1f\n" +
 	"\x06domain\x18\x01 \x01(\tB\a\xfaB\x04r\x02\x10\x01R\x06domain\x12 \n" +
 	"\auser_id\x18\x02 \x01(\tB\a\xfaB\x04r\x02\x10\x01R\x06userId\"\x96\x01\n" +
@@ -289,7 +333,9 @@ const file_api_stats_service_v1_stats_proto_rawDesc = "" +
 	" \x01(\v2#.api.stats.service.v1.RegisterEventH\x00R\bregister\x12A\n" +
 	"\brecharge\x18\v \x01(\v2#.api.stats.service.v1.RechargeEventH\x00R\brechargeB\x06\n" +
 	"\x04data\"\x12\n" +
-	"\x10CreateEventReply2\x81\x01\n" +
+	"\x10CreateEventReply*1\n" +
+	"\vErrorReason\x12\x1c\n" +
+	"\x12UNKNOWN_EVENT_TYPE\x10\x00\x1a\x04\xa8E\x90\x03\x1a\x04\xa0E\xf4\x032\x81\x01\n" +
 	"\x05Stats\x12x\n" +
 	"\vCreateEvent\x12$.api.stats.service.v1.CreateEventReq\x1a&.api.stats.service.v1.CreateEventReply\"\x1b\x82\xd3\xe4\x93\x02\x15:\x01*\"\x10/v1/stats/eventsB8\n" +
 	"\x14api.stats.service.v1P\x01Z\x1eagents/api/stats/service/v1;v1b\x06proto3"
@@ -306,18 +352,20 @@ func file_api_stats_service_v1_stats_proto_rawDescGZIP() []byte {
 	return file_api_stats_service_v1_stats_proto_rawDescData
 }
 
+var file_api_stats_service_v1_stats_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
 var file_api_stats_service_v1_stats_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
 var file_api_stats_service_v1_stats_proto_goTypes = []any{
-	(*RegisterEvent)(nil),    // 0: api.stats.service.v1.RegisterEvent
-	(*RechargeEvent)(nil),    // 1: api.stats.service.v1.RechargeEvent
-	(*CreateEventReq)(nil),   // 2: api.stats.service.v1.CreateEventReq
-	(*CreateEventReply)(nil), // 3: api.stats.service.v1.CreateEventReply
+	(ErrorReason)(0),         // 0: api.stats.service.v1.ErrorReason
+	(*RegisterEvent)(nil),    // 1: api.stats.service.v1.RegisterEvent
+	(*RechargeEvent)(nil),    // 2: api.stats.service.v1.RechargeEvent
+	(*CreateEventReq)(nil),   // 3: api.stats.service.v1.CreateEventReq
+	(*CreateEventReply)(nil), // 4: api.stats.service.v1.CreateEventReply
 }
 var file_api_stats_service_v1_stats_proto_depIdxs = []int32{
-	0, // 0: api.stats.service.v1.CreateEventReq.register:type_name -> api.stats.service.v1.RegisterEvent
-	1, // 1: api.stats.service.v1.CreateEventReq.recharge:type_name -> api.stats.service.v1.RechargeEvent
-	2, // 2: api.stats.service.v1.Stats.CreateEvent:input_type -> api.stats.service.v1.CreateEventReq
-	3, // 3: api.stats.service.v1.Stats.CreateEvent:output_type -> api.stats.service.v1.CreateEventReply
+	1, // 0: api.stats.service.v1.CreateEventReq.register:type_name -> api.stats.service.v1.RegisterEvent
+	2, // 1: api.stats.service.v1.CreateEventReq.recharge:type_name -> api.stats.service.v1.RechargeEvent
+	3, // 2: api.stats.service.v1.Stats.CreateEvent:input_type -> api.stats.service.v1.CreateEventReq
+	4, // 3: api.stats.service.v1.Stats.CreateEvent:output_type -> api.stats.service.v1.CreateEventReply
 	3, // [3:4] is the sub-list for method output_type
 	2, // [2:3] is the sub-list for method input_type
 	2, // [2:2] is the sub-list for extension type_name
@@ -339,13 +387,14 @@ func file_api_stats_service_v1_stats_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_api_stats_service_v1_stats_proto_rawDesc), len(file_api_stats_service_v1_stats_proto_rawDesc)),
-			NumEnums:      0,
+			NumEnums:      1,
 			NumMessages:   4,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
 		GoTypes:           file_api_stats_service_v1_stats_proto_goTypes,
 		DependencyIndexes: file_api_stats_service_v1_stats_proto_depIdxs,
+		EnumInfos:         file_api_stats_service_v1_stats_proto_enumTypes,
 		MessageInfos:      file_api_stats_service_v1_stats_proto_msgTypes,
 	}.Build()
 	File_api_stats_service_v1_stats_proto = out.File

@@ -109,6 +109,18 @@ services:
     #   - 9003:9000
     networks:
       kong-net:
+  stats:
+    build:
+      context: .
+      dockerfile: ./app/stats/service/Dockerfile
+    depends_on:
+      mysql:
+        condition: service_healthy
+        restart: true
+      consul:
+        condition: service_healthy
+    networks:
+      kong-net:
 networks:
   kong-net:
     driver: bridge

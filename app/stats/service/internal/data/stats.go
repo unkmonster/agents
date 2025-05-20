@@ -110,7 +110,7 @@ func (s *statsRepo) AddRegister(ctx context.Context, domain string) error {
 	return err
 }
 
-func NewStatsRepo(data *Data) *statsRepo {
+func NewStatsRepo(data *Data) biz.StatsRepo {
 	return &statsRepo{
 		data: data,
 	}

@@ -1,10 +1,13 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "agents",
+    "title": "api/stats/service/v1/stats.proto",
     "version": "version not set"
   },
   "tags": [
+    {
+      "name": "Stats"
+    },
     {
       "name": "Authn"
     },
@@ -336,6 +339,38 @@
         ],
         "tags": [
           "Order"
+        ]
+      }
+    },
+    "/v1/stats/events": {
+      "post": {
+        "operationId": "Stats_CreateEvent",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1CreateEventReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1CreateEventReq"
+            }
+          }
+        ],
+        "tags": [
+          "Stats"
         ]
       }
     },
@@ -959,6 +994,23 @@
         }
       }
     },
+    "v1CreateEventReply": {
+      "type": "object"
+    },
+    "v1CreateEventReq": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string"
+        },
+        "register": {
+          "$ref": "#/definitions/v1RegisterEvent"
+        },
+        "recharge": {
+          "$ref": "#/definitions/v1RechargeEvent"
+        }
+      }
+    },
     "v1CreateOrderReply": {
       "type": "object",
       "properties": {
@@ -1355,6 +1407,35 @@
           "type": "string"
         },
         "password": {
+          "type": "string"
+        }
+      }
+    },
+    "v1RechargeEvent": {
+      "type": "object",
+      "properties": {
+        "domain": {
+          "type": "string"
+        },
+        "userId": {
+          "type": "string"
+        },
+        "amount": {
+          "type": "string",
+          "format": "int64"
+        },
+        "product": {
+          "type": "string"
+        }
+      }
+    },
+    "v1RegisterEvent": {
+      "type": "object",
+      "properties": {
+        "domain": {
+          "type": "string"
+        },
+        "userId": {
           "type": "string"
         }
       }
