@@ -1,0 +1,42 @@
+syntax = "proto3";
+
+package api.stats.service.v1;
+
+import "google/api/annotations.proto";
+import "validate/validate.proto";
+import "google/protobuf/timestamp.proto";
+
+option go_package = "agents/api/stats/service/v1;v1";
+option java_multiple_files = true;
+option java_package = "api.stats.service.v1";
+
+service Stats {
+	rpc CreateEvent(CreateEventReq) returns (CreateEventReply) {
+		option (google.api.http) = {
+			post: "/v1/stats/events",
+			body: "*",
+		};
+	};
+}
+
+message RegisterEvent {
+	string domain = 1 [(validate.rules).string = {min_len: 1}];
+	string user_id = 2 [(validate.rules).string = {min_len: 1}];
+}
+
+message RechargeEvent {
+	string domain = 1 [(validate.rules).string = {min_len: 1}];
+	string user_id = 2 [(validate.rules).string = {min_len: 1}];
+	int64 amount = 3 [(validate.rules).int64 = {gt: 1}];
+	string product = 4 [(validate.rules).string = {min_len: 1}];
+}
+
+message CreateEventReq {
+	string type = 1 [(validate.rules).string = {min_len: 1}];
+
+	oneof data {
+		RegisterEvent register = 10;
+		RechargeEvent recharge = 11;
+	}
+}
+message CreateEventReply{}
