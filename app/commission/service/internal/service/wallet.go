@@ -27,11 +27,12 @@ func (s *WalletService) CreateWallet(ctx context.Context, req *pb.CreateWalletRe
 	}
 
 	return &pb.CreateWalletReply{
-		UserId:    wallet.UserId,
-		Account:   wallet.Account,
-		QrCode:    wallet.QrCode,
-		Id:        wallet.Id,
-		CreatedAt: timestamppb.New(wallet.CreatedAt),
+		UserId:     wallet.UserId,
+		Account:    wallet.Account,
+		QrCode:     wallet.QrCode,
+		Id:         wallet.Id,
+		WalletType: wallet.WalletType,
+		CreatedAt:  timestamppb.New(wallet.CreatedAt),
 	}, nil
 }
 
@@ -46,11 +47,12 @@ func (s *WalletService) UpdateWallet(ctx context.Context, req *pb.UpdateWalletRe
 	}
 
 	return &pb.UpdateWalletReply{
-		UserId:    wallet.UserId,
-		Account:   wallet.Account,
-		QrCode:    wallet.QrCode,
-		Id:        wallet.Id,
-		CreatedAt: timestamppb.New(wallet.CreatedAt),
+		UserId:     wallet.UserId,
+		Account:    wallet.Account,
+		QrCode:     wallet.QrCode,
+		Id:         wallet.Id,
+		WalletType: wallet.WalletType,
+		CreatedAt:  timestamppb.New(wallet.CreatedAt),
 	}, nil
 }
 func (s *WalletService) DeleteWallet(ctx context.Context, req *pb.DeleteWalletRequest) (*pb.DeleteWalletReply, error) {
@@ -65,11 +67,12 @@ func (s *WalletService) GetWallet(ctx context.Context, req *pb.GetWalletRequest)
 	}
 
 	return &pb.GetWalletReply{
-		UserId:    wallet.UserId,
-		Account:   wallet.Account,
-		QrCode:    wallet.QrCode,
-		Id:        wallet.Id,
-		CreatedAt: timestamppb.New(wallet.CreatedAt),
+		UserId:     wallet.UserId,
+		Account:    wallet.Account,
+		QrCode:     wallet.QrCode,
+		Id:         wallet.Id,
+		WalletType: wallet.WalletType,
+		CreatedAt:  timestamppb.New(wallet.CreatedAt),
 	}, nil
 }
 
@@ -82,11 +85,12 @@ func (s *WalletService) ListWallet(ctx context.Context, req *pb.ListWalletReques
 	reply := pb.ListWalletReply{}
 	for _, wallet := range wallets {
 		reply.Wallets = append(reply.Wallets, &pb.GetWalletReply{
-			UserId:    wallet.UserId,
-			Account:   wallet.Account,
-			QrCode:    wallet.QrCode,
-			Id:        wallet.Id,
-			CreatedAt: timestamppb.New(wallet.CreatedAt),
+			UserId:     wallet.UserId,
+			Account:    wallet.Account,
+			QrCode:     wallet.QrCode,
+			Id:         wallet.Id,
+			WalletType: wallet.WalletType,
+			CreatedAt:  timestamppb.New(wallet.CreatedAt),
 		})
 	}
 	return &reply, nil
@@ -101,11 +105,12 @@ func (s *WalletService) ListWalletByUser(ctx context.Context, req *pb.ListWallet
 	reply := pb.ListWalletReply{}
 	for _, wallet := range wallets {
 		reply.Wallets = append(reply.Wallets, &pb.GetWalletReply{
-			UserId:    wallet.UserId,
-			Account:   wallet.Account,
-			QrCode:    wallet.QrCode,
-			Id:        wallet.Id,
-			CreatedAt: timestamppb.New(wallet.CreatedAt),
+			UserId:     wallet.UserId,
+			Account:    wallet.Account,
+			QrCode:     wallet.QrCode,
+			Id:         wallet.Id,
+			WalletType: wallet.WalletType,
+			CreatedAt:  timestamppb.New(wallet.CreatedAt),
 		})
 	}
 	return &reply, nil
