@@ -4,40 +4,74 @@ import {
   LaptopOutlined,
   NotificationOutlined,
   UserOutlined,
+  DashboardOutlined,
+  UsergroupAddOutlined,
+  GlobalOutlined,
+  DollarOutlined,
 } from "@ant-design/icons";
-import { Breadcrumb, Layout, Menu, theme } from "antd";
+import { Breadcrumb, Dropdown, Layout, Menu, theme } from "antd";
 import { useRouter } from "next/navigation";
 import { usePathname } from "next/navigation";
+import { Avatar, Space } from "antd";
+import { logOut, useUser } from "@/lib/session";
+
+function UserMenu({ children }) {
+  const items = [
+    {
+      label: "退出登录",
+      key: "logout",
+    },
+  ];
+
+  const onClick = ({ key }) => {
+    console.log(key);
+    if (key == "logout") {
+      logOut();
+    }
+  };
+
+  return (
+    <Dropdown menu={{ items, onClick }} trigger={"click"}>
+      {children}
+    </Dropdown>
+  );
+}
 
 const { Header, Content, Sider } = Layout;
-const items1 = [
-  {
-    key: 1,
-    label: "主页",
-  },
-];
+
 const items2 = [
   {
     key: "/dashboard",
     label: "仪表盘",
+    icon: <DashboardOutlined />,
   },
   {
     key: "/promotion",
     label: "推广明细",
+    icon: <DollarOutlined />,
   },
   {
     key: "/domains",
     label: "域名管理",
+    icon: <GlobalOutlined />,
   },
   {
     key: "/team",
     label: "团队信息",
+    icon: <UsergroupAddOutlined />,
+  },
+  {
+    key: "/me",
+    label: "个人中心",
+    icon: <UserOutlined />,
   },
 ];
 
 export default function DashboardLayout({ children }) {
   const router = useRouter();
   const path = usePathname(); // 获取当前路由路径，如 "/login"
+
+  const { user, error, isLoading } = useUser();
 
   function handleSelected({ item, key, keyPath, selectedKeys, domEvent }) {
     console.log({ item, key, keyPath, selectedKeys, domEvent });
@@ -47,17 +81,29 @@ export default function DashboardLayout({ children }) {
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
+
+  if (isLoading) {
+    return;
+  }
+  if (error) {
+    console.log(error);
+    router.push("/login"); // temp
+    return;
+  }
+
   return (
     <Layout style={{ height: "100vh" }}>
       <Header style={{ display: "flex", alignItems: "center" }}>
         <div className="demo-logo" />
-        <Menu
-          theme="dark"
-          mode="horizontal"
-          defaultSelectedKeys={["1"]}
-          items={items1}
-          style={{ flex: 1, minWidth: 0 }}
-        />
+        <UserMenu>
+          {user ? (
+            <Avatar style={{ marginLeft: "auto", backgroundColor: "#87d068" }}>
+              {user.username}
+            </Avatar>
+          ) : (
+            <Avatar icon={<UserOutlined />} style={{ marginLeft: "auto" }} />
+          )}
+        </UserMenu>
       </Header>
       <Layout>
         <Sider width={200} style={{ background: colorBgContainer }}>

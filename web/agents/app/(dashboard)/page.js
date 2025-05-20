@@ -1,6 +1,9 @@
 "use client";
+import { useRouter } from "next/navigation";
 import React from "react";
 
 export default function Main() {
-  return "你好";
+  const router = useRouter();
+  router.push("/dashboard");
+  return;
 }
