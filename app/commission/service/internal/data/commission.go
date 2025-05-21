@@ -3,19 +3,24 @@ package data
 import (
 	"agents/app/commission/service/internal/biz"
 	"context"
+	"fmt"
 
+	"github.com/go-kratos/kratos/v2/log"
 	"github.com/google/uuid"
+	"github.com/jmoiron/sqlx"
 )
 
 var _ biz.CommissionRepo = (*commissionRepo)(nil)
 
 type commissionRepo struct {
 	data *Data
+	log  *log.Helper
 }
 
-func NewCommissionRepo(data *Data) biz.CommissionRepo {
+func NewCommissionRepo(data *Data, logger log.Logger) biz.CommissionRepo {
 	return &commissionRepo{
 		data: data,
+		log:  log.NewHelper(logger),
 	}
 }
 
@@ -100,4 +105,75 @@ func (c *commissionRepo) IncUserRegistrationCount(ctx context.Context, userId st
 	`
 	_, err := c.data.db.ExecContext(ctx, query, userId)
 	return err
+}
+
+// incUserTotalCommission 增加用户总佣金（累计佣金）
+func (c *commissionRepo) incUserTotalCommission(ctx context.Context, tx *sqlx.Tx, userId string, amount int64) error {
+	query := `
+		INSERT INTO user_commissions (
+			id,
+			user_id,
+			total_commission
+		) VALUES (
+		 	?,
+			?,
+			? 
+		) ON DUPLICATE KEY
+		 	UPDATE total_commission = total_commission + ?;
+	`
+	_, err := tx.ExecContext(ctx, query, uuid.NewString(), userId, amount, amount)
+	return err
+}
+
+func (c *commissionRepo) incUserCommission(ctx context.Context, userId string, amount int64, commType string) (err error) {
+	var tx *sqlx.Tx
+	tx, err = c.data.db.Beginx()
+	if err != nil {
+		return err
+	}
+	defer func() {
+		if err != nil {
+			if err := tx.Rollback(); err != nil {
+				c.log.Errorf("rollback failed: %v", err)
+			}
+		} else {
+			if err := tx.Commit(); err != nil {
+				c.log.Errorf("commit failed: %v", err)
+			}
+		}
+	}()
+
+	if commType != biz.CommissionTypeDirect && commType != biz.CommissionTypeIndirect {
+		return fmt.Errorf("invalid commission type: %s", commType)
+	}
+
+	query := `
+		INSERT INTO daily_user_commissions (
+			date,	
+			user_id,
+			%s_recharge_amount
+		) VALUES (
+			CURRENT_DATE,
+			?,
+			? 
+		) ON DUPLICATE KEY
+		 	UPDATE %s_recharge_amount = %s_recharge_amount + ?;
+	`
+	query = fmt.Sprintf(query, commType, commType, commType)
+
+	_, err = tx.ExecContext(ctx, query, userId, amount, amount)
+	if err != nil {
+		return err
+	}
+
+	err = c.incUserTotalCommission(ctx, tx, userId, amount)
+	return err
+}
+
+func (c *commissionRepo) IncUserDirectCommission(ctx context.Context, userId string, amount int64) (err error) {
+	return c.incUserCommission(ctx, userId, amount, biz.CommissionTypeDirect)
+}
+
+func (c *commissionRepo) IncUserIndirectCommission(ctx context.Context, userId string, amount int64) error {
+	return c.incUserCommission(ctx, userId, amount, biz.CommissionTypeIndirect)
 }

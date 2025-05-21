@@ -8,6 +8,11 @@ import (
 	commissionv1 "agents/api/commission/service/v1"
 )
 
+const (
+	CommissionTypeDirect   = "direct"
+	CommissionTypeIndirect = "indirect"
+)
+
 type Commission struct {
 	Id                     string `db:"id"`
 	UserId                 string `db:"user_id"`
@@ -27,6 +32,10 @@ type CommissionRepo interface {
 	// ListCommissionByParent 列出直接子用户的佣金
 	ListCommissionByParent(ctx context.Context, parentId string) ([]*Commission, error)
 	IncUserRegistrationCount(ctx context.Context, userId string) error
+
+	// ----------- daily -------------------
+	IncUserDirectCommission(ctx context.Context, userId string, amount int64) error
+	IncUserIndirectCommission(ctx context.Context, userId string, amount int64) error
 }
 
 type CommissionUseCase struct {
@@ -75,13 +84,25 @@ func (uc *CommissionUseCase) CalcOrderCommission(ctx context.Context, req *commi
 	// 子代理的分成比例来自其父代理
 	n := len(stk)
 	for i := range n {
+		direct := false
+
 		user := stk[n-1-i]
 		amount := int32(commissions[user.Level])
 		if int(user.Level+1) < len(commissions) {
 			amount -= int32(commissions[user.Level+1])
+		} else {
+			direct = true
 		}
+
 		uc.log.Debugf("user: %+v, amount: %d", user, amount)
-		if err := uc.commission.IncUserCommission(ctx, user.Id, amount); err != nil {
+
+		var err error
+		if direct {
+			err = uc.commission.IncUserDirectCommission(ctx, user.Id, int64(amount))
+		} else {
+			err = uc.commission.IncUserIndirectCommission(ctx, user.Id, int64(amount))
+		}
+		if err != nil {
 			return err
 		}
 	}
