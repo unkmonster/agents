@@ -36,6 +36,8 @@ type CommissionRepo interface {
 	// ----------- daily -------------------
 	IncUserDirectCommission(ctx context.Context, userId string, amount int64) error
 	IncUserIndirectCommission(ctx context.Context, userId string, amount int64) error
+	IncUserDirectRegistrationCount(ctx context.Context, userId string) error
+	IncUserIndirectRegistrationCount(ctx context.Context, userId string) error
 }
 
 type CommissionUseCase struct {
@@ -125,6 +127,34 @@ func (uc *CommissionUseCase) ListCommissionByParent(ctx context.Context, parentI
 	return uc.commission.ListCommissionByParent(ctx, parentId)
 }
 
-func (uc *CommissionUseCase) IncUserRegistrationCount(ctx context.Context, userId string) error {
-	return uc.commission.IncUserRegistrationCount(ctx, userId)
+// IncRegistrationChainCount 增加从 user_id 到他的顶级代理每个代理的注册量
+func (uc *CommissionUseCase) IncRegistrationChainCount(ctx context.Context, userId string) error {
+	user, err := uc.user.GetUser(ctx, userId)
+	if err != nil {
+		return err
+	}
+
+	users := []*User{user}
+
+	for user.Level > 1 {
+		var err error
+		user, err = uc.user.GetUser(ctx, *user.ParentId)
+		if err != nil {
+			return err
+		}
+		users = append(users, user)
+	}
+
+	for i, user := range users {
+		if i == 0 {
+			err = uc.commission.IncUserDirectRegistrationCount(ctx, user.Id)
+		} else {
+			err = uc.commission.IncUserIndirectRegistrationCount(ctx, user.Id)
+		}
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
 }

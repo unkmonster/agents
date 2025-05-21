@@ -91,6 +91,6 @@ func (s *CommissionService) InitUserCommission(ctx context.Context, req *pb.Init
 }
 
 func (s *CommissionService) IncUserRegistrationCount(ctx context.Context, req *pb.IncUserRegistrationCountReq) (*pb.IncUserRegistrationCountReply, error) {
-	err := s.comm.IncUserRegistrationCount(ctx, req.UserId)
+	err := s.comm.IncRegistrationChainCount(ctx, req.UserId)
 	return nil, err
 }

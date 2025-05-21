@@ -10,6 +10,11 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
+const (
+	regTypeDirect   = "direct"
+	regTypeIndirect = "indirect"
+)
+
 var _ biz.CommissionRepo = (*commissionRepo)(nil)
 
 type commissionRepo struct {
@@ -125,6 +130,23 @@ func (c *commissionRepo) incUserTotalCommission(ctx context.Context, tx *sqlx.Tx
 	return err
 }
 
+func (c *commissionRepo) incUserTotalRegistrationCount(ctx context.Context, tx *sqlx.Tx, userId string) error {
+	query := `
+		INSERT INTO user_commissions (
+			id,
+			user_id,
+			total_registration_count
+		) VALUES (
+			?,
+			?,
+			?
+		) ON DUPLICATE KEY
+		 	UPDATE total_registration_count = total_registration_count + 1;
+	`
+	_, err := tx.ExecContext(ctx, query, uuid.NewString(), userId, 1)
+	return err
+}
+
 func (c *commissionRepo) incUserCommission(ctx context.Context, userId string, amount int64, commType string) (err error) {
 	var tx *sqlx.Tx
 	tx, err = c.data.db.Beginx()
@@ -176,4 +198,55 @@ func (c *commissionRepo) IncUserDirectCommission(ctx context.Context, userId str
 
 func (c *commissionRepo) IncUserIndirectCommission(ctx context.Context, userId string, amount int64) error {
 	return c.incUserCommission(ctx, userId, amount, biz.CommissionTypeIndirect)
+}
+
+func (c *commissionRepo) incUserRegistrationCount(ctx context.Context, userId string, regType string) (err error) {
+	if regType != regTypeDirect && regType != regTypeIndirect {
+		return fmt.Errorf("invalid registration type: %s", regType)
+	}
+
+	var tx *sqlx.Tx
+	tx, err = c.data.db.Beginx()
+	if err != nil {
+		return err
+	}
+	defer func() {
+		if err != nil {
+			if err := tx.Rollback(); err != nil {
+				c.log.Errorf("rollback failed: %v", err)
+			}
+		} else {
+			if err := tx.Commit(); err != nil {
+				c.log.Errorf("commit failed: %v", err)
+			}
+		}
+	}()
+
+	query := `
+		INSERT INTO daily_user_commissions (
+			date,
+			user_id,
+			%s_registration_count
+		) VALUES (
+			CURRENT_DATE,
+			?,
+			1
+		) ON DUPLICATE KEY
+		 	UPDATE %s_registration_count = %s_registration_count + 1;
+	`
+	query = fmt.Sprintf(query, regType, regType, regType)
+	_, err = tx.ExecContext(ctx, query, userId)
+	if err != nil {
+		return err
+	}
+
+	return c.incUserTotalRegistrationCount(ctx, tx, userId)
+}
+
+func (c *commissionRepo) IncUserDirectRegistrationCount(ctx context.Context, userId string) error {
+	return c.incUserRegistrationCount(ctx, userId, regTypeDirect)
+}
+
+func (c *commissionRepo) IncUserIndirectRegistrationCount(ctx context.Context, userId string) error {
+	return c.incUserRegistrationCount(ctx, userId, regTypeIndirect)
 }
