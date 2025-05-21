@@ -25,11 +25,11 @@ func NewUserRepo(data *Data, logger log.Logger) biz.UserRepo {
 // Create implements biz.UserRepo.
 func (u *userRepo) Create(ctx context.Context, user *biz.User) (*biz.User, error) {
 	reply, err := u.data.uc.CreateUser(ctx, &userv1.CreateUserRequest{
-		Username:     &user.Username,
+		Username:     user.Username,
 		Nickname:     user.Nickname,
 		ParentId:     user.ParentId,
-		Level:        &user.Level,
-		SharePercent: &user.SharePercent,
+		Level:        user.Level,
+		SharePercent: user.SharePercent,
 	})
 
 	if err != nil {
@@ -37,19 +37,19 @@ func (u *userRepo) Create(ctx context.Context, user *biz.User) (*biz.User, error
 	}
 
 	return &biz.User{
-		Id:           *reply.Id,
-		Username:     *reply.Username,
+		Id:           reply.Id,
+		Username:     reply.Username,
 		Nickname:     reply.Nickname,
 		ParentId:     reply.ParentId,
-		Level:        *reply.Level,
-		SharePercent: *reply.SharePercent,
+		Level:        reply.Level,
+		SharePercent: reply.SharePercent,
 	}, nil
 }
 
 // GetByUsername implements biz.UserRepo.
 func (u *userRepo) GetByUsername(ctx context.Context, username string) (*biz.User, error) {
 	reply, err := u.data.uc.GetUserByUsername(ctx, &userv1.GetUserByUsernameRequest{
-		Username: &username,
+		Username: username,
 	})
 
 	if err != nil {
@@ -57,19 +57,19 @@ func (u *userRepo) GetByUsername(ctx context.Context, username string) (*biz.Use
 	}
 
 	return &biz.User{
-		Id:           *reply.Id,
-		Username:     *reply.Username,
+		Id:           reply.Id,
+		Username:     reply.Username,
 		Nickname:     reply.Nickname,
 		ParentId:     reply.ParentId,
-		Level:        *reply.Level,
-		SharePercent: *reply.SharePercent,
+		Level:        reply.Level,
+		SharePercent: reply.SharePercent,
 	}, nil
 }
 
 // Delete implements biz.UserRepo.
 func (u *userRepo) Delete(ctx context.Context, userId string) error {
 	_, err := u.data.uc.DeleteUser(ctx, &userv1.DeleteUserRequest{
-		Id: &userId,
+		Id: userId,
 	})
 	return err
 }

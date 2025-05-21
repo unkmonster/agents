@@ -9,11 +9,13 @@ import (
 )
 
 type Commission struct {
-	Id                string `db:"id"`
-	UserId            string `db:"user_id"`
-	TodayCommission   int32  `db:"today_commission"`
-	TotalCommission   int32  `db:"total_commission"`
-	SettledCommission int32  `db:"settled_commission"`
+	Id                     string `db:"id"`
+	UserId                 string `db:"user_id"`
+	TodayCommission        int32  `db:"today_commission"`
+	TotalCommission        int32  `db:"total_commission"`
+	SettledCommission      int32  `db:"settled_commission"`
+	TodayRegistrationCount int64  `db:"today_registration_count"`
+	TotalRegistrationCount int64  `db:"total_registration_count"`
 }
 
 type CommissionRepo interface {
@@ -24,6 +26,7 @@ type CommissionRepo interface {
 	ListCommission(ctx context.Context) ([]*Commission, error)
 	// ListCommissionByParent 列出直接子用户的佣金
 	ListCommissionByParent(ctx context.Context, parentId string) ([]*Commission, error)
+	IncUserRegistrationCount(ctx context.Context, userId string) error
 }
 
 type CommissionUseCase struct {
@@ -57,33 +60,31 @@ func (uc *CommissionUseCase) CalcOrderCommission(ctx context.Context, req *commi
 		stk = append(stk, user)
 	}
 
-	// 计算佣金
-	commissions := []float32{}
-
-	for i := len(stk) - 1; i >= 0; i-- {
-		if len(commissions) == 0 {
-			commissions = append(commissions, float32(req.Amount)*stk[i].SharePercent)
-		} else {
-			commissions = append(commissions, float32(commissions[len(commissions)-1])*stk[i].SharePercent)
-		}
+	for _, u := range stk {
+		uc.log.Debugf("user: %+v", u)
 	}
 
+	// 计算佣金，未扣除子代理的分成
+	commissions := []float32{float32(req.Amount)} // index equal to agent level
+
+	for i := len(stk) - 1; i >= 0; i-- {
+		commissions = append(commissions, commissions[len(commissions)-1]*stk[i].SharePercent)
+	}
+	uc.log.Debugf("commissions: %+v", commissions)
+
+	// 子代理的分成比例来自其父代理
 	n := len(stk)
 	for i := range n {
-		user := stk[n-i-1]
-		amount := int32(0)
-
-		if i+1 < n {
-			amount = int32(commissions[i]) - int32(commissions[i+1])
-		} else {
-			amount = int32(commissions[i])
+		user := stk[n-1-i]
+		amount := int32(commissions[user.Level])
+		if int(user.Level+1) < len(commissions) {
+			amount -= int32(commissions[user.Level+1])
 		}
-
+		uc.log.Debugf("user: %+v, amount: %d", user, amount)
 		if err := uc.commission.IncUserCommission(ctx, user.Id, amount); err != nil {
 			return err
 		}
 	}
-
 	return nil
 }
 
@@ -101,4 +102,8 @@ func (uc *CommissionUseCase) ListCommission(ctx context.Context) ([]*Commission,
 
 func (uc *CommissionUseCase) ListCommissionByParent(ctx context.Context, parentId string) ([]*Commission, error) {
 	return uc.commission.ListCommissionByParent(ctx, parentId)
+}
+
+func (uc *CommissionUseCase) IncUserRegistrationCount(ctx context.Context, userId string) error {
+	return uc.commission.IncUserRegistrationCount(ctx, userId)
 }

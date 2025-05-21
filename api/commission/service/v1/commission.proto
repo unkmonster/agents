@@ -27,6 +27,15 @@ service Commission {
 		};
 	};
 	rpc InitUserCommission(InitUserCommissionReq) returns (InitUserCommissionReply);
+	rpc IncUserRegistrationCount(IncUserRegistrationCountReq) returns (IncUserRegistrationCountReply);
+}
+
+message IncUserRegistrationCountReq {
+	string user_id = 1 [(validate.rules).string = {min_len: 1}];
+}
+
+message IncUserRegistrationCountReply {
+	
 }
 
 message InitUserCommissionReq {
@@ -50,6 +59,8 @@ message GetUserCommissionReply {
 	int32 total_commission = 3;
 	int32 today_commission = 4;
 	int32 settled_commission = 5;
+	int32 total_registration_count = 6;
+	int32 today_registration_count = 7;
 }
 
 message ListCommissionRequest {}

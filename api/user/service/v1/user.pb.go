@@ -71,10 +71,10 @@ type GetUserByDomainReply struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
 	Username      string                 `protobuf:"bytes,2,opt,name=username,proto3" json:"username,omitempty"`
-	Nickname      string                 `protobuf:"bytes,3,opt,name=nickname,proto3" json:"nickname,omitempty"`
-	ParentId      string                 `protobuf:"bytes,4,opt,name=parent_id,json=parentId,proto3" json:"parent_id,omitempty"`
 	Level         int32                  `protobuf:"varint,5,opt,name=level,proto3" json:"level,omitempty"`
 	SharePercent  float32                `protobuf:"fixed32,6,opt,name=share_percent,json=sharePercent,proto3" json:"share_percent,omitempty"`
+	Nickname      *string                `protobuf:"bytes,7,opt,name=nickname,proto3,oneof" json:"nickname,omitempty"`
+	ParentId      *string                `protobuf:"bytes,8,opt,name=parent_id,json=parentId,proto3,oneof" json:"parent_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -123,20 +123,6 @@ func (x *GetUserByDomainReply) GetUsername() string {
 	return ""
 }
 
-func (x *GetUserByDomainReply) GetNickname() string {
-	if x != nil {
-		return x.Nickname
-	}
-	return ""
-}
-
-func (x *GetUserByDomainReply) GetParentId() string {
-	if x != nil {
-		return x.ParentId
-	}
-	return ""
-}
-
 func (x *GetUserByDomainReply) GetLevel() int32 {
 	if x != nil {
 		return x.Level
@@ -151,9 +137,23 @@ func (x *GetUserByDomainReply) GetSharePercent() float32 {
 	return 0
 }
 
+func (x *GetUserByDomainReply) GetNickname() string {
+	if x != nil && x.Nickname != nil {
+		return *x.Nickname
+	}
+	return ""
+}
+
+func (x *GetUserByDomainReply) GetParentId() string {
+	if x != nil && x.ParentId != nil {
+		return *x.ParentId
+	}
+	return ""
+}
+
 type GetUserByUsernameRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Username      *string                `protobuf:"bytes,1,opt,name=username,proto3,oneof" json:"username,omitempty"`
+	Username      string                 `protobuf:"bytes,1,opt,name=username,proto3" json:"username,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -189,15 +189,15 @@ func (*GetUserByUsernameRequest) Descriptor() ([]byte, []int) {
 }
 
 func (x *GetUserByUsernameRequest) GetUsername() string {
-	if x != nil && x.Username != nil {
-		return *x.Username
+	if x != nil {
+		return x.Username
 	}
 	return ""
 }
 
 type DeleteDomainRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            *string                `protobuf:"bytes,1,opt,name=id,proto3,oneof" json:"id,omitempty"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -233,8 +233,8 @@ func (*DeleteDomainRequest) Descriptor() ([]byte, []int) {
 }
 
 func (x *DeleteDomainRequest) GetId() string {
-	if x != nil && x.Id != nil {
-		return *x.Id
+	if x != nil {
+		return x.Id
 	}
 	return ""
 }
@@ -277,7 +277,7 @@ func (*DeleteDomainReply) Descriptor() ([]byte, []int) {
 
 type ListUserDomainsByUserIdRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	UserId        *string                `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3,oneof" json:"user_id,omitempty"`
+	UserId        string                 `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -313,8 +313,8 @@ func (*ListUserDomainsByUserIdRequest) Descriptor() ([]byte, []int) {
 }
 
 func (x *ListUserDomainsByUserIdRequest) GetUserId() string {
-	if x != nil && x.UserId != nil {
-		return *x.UserId
+	if x != nil {
+		return x.UserId
 	}
 	return ""
 }
@@ -445,7 +445,7 @@ func (x *ListUserDomainsReply) GetDomains() []*ListUserDomainsReply_Domain {
 
 type GetUserDomainRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            *string                `protobuf:"bytes,1,opt,name=id,proto3,oneof" json:"id,omitempty"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -481,17 +481,17 @@ func (*GetUserDomainRequest) Descriptor() ([]byte, []int) {
 }
 
 func (x *GetUserDomainRequest) GetId() string {
-	if x != nil && x.Id != nil {
-		return *x.Id
+	if x != nil {
+		return x.Id
 	}
 	return ""
 }
 
 type GetUserDomainReply struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            *string                `protobuf:"bytes,1,opt,name=id,proto3,oneof" json:"id,omitempty"`
-	UserId        *string                `protobuf:"bytes,2,opt,name=user_id,json=userId,proto3,oneof" json:"user_id,omitempty"`
-	Domain        *string                `protobuf:"bytes,3,opt,name=domain,proto3,oneof" json:"domain,omitempty"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	UserId        string                 `protobuf:"bytes,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	Domain        string                 `protobuf:"bytes,3,opt,name=domain,proto3" json:"domain,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -527,30 +527,30 @@ func (*GetUserDomainReply) Descriptor() ([]byte, []int) {
 }
 
 func (x *GetUserDomainReply) GetId() string {
-	if x != nil && x.Id != nil {
-		return *x.Id
+	if x != nil {
+		return x.Id
 	}
 	return ""
 }
 
 func (x *GetUserDomainReply) GetUserId() string {
-	if x != nil && x.UserId != nil {
-		return *x.UserId
+	if x != nil {
+		return x.UserId
 	}
 	return ""
 }
 
 func (x *GetUserDomainReply) GetDomain() string {
-	if x != nil && x.Domain != nil {
-		return *x.Domain
+	if x != nil {
+		return x.Domain
 	}
 	return ""
 }
 
 type CreateUserDomainRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	UserId        *string                `protobuf:"bytes,2,opt,name=user_id,json=userId,proto3,oneof" json:"user_id,omitempty"`
-	Domain        *string                `protobuf:"bytes,3,opt,name=domain,proto3,oneof" json:"domain,omitempty"`
+	UserId        string                 `protobuf:"bytes,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	Domain        string                 `protobuf:"bytes,3,opt,name=domain,proto3" json:"domain,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -586,24 +586,24 @@ func (*CreateUserDomainRequest) Descriptor() ([]byte, []int) {
 }
 
 func (x *CreateUserDomainRequest) GetUserId() string {
-	if x != nil && x.UserId != nil {
-		return *x.UserId
+	if x != nil {
+		return x.UserId
 	}
 	return ""
 }
 
 func (x *CreateUserDomainRequest) GetDomain() string {
-	if x != nil && x.Domain != nil {
-		return *x.Domain
+	if x != nil {
+		return x.Domain
 	}
 	return ""
 }
 
 type CreateUserDomainReply struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            *string                `protobuf:"bytes,1,opt,name=id,proto3,oneof" json:"id,omitempty"`
-	UserId        *string                `protobuf:"bytes,2,opt,name=user_id,json=userId,proto3,oneof" json:"user_id,omitempty"`
-	Domain        *string                `protobuf:"bytes,3,opt,name=domain,proto3,oneof" json:"domain,omitempty"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	UserId        string                 `protobuf:"bytes,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	Domain        string                 `protobuf:"bytes,3,opt,name=domain,proto3" json:"domain,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -639,33 +639,33 @@ func (*CreateUserDomainReply) Descriptor() ([]byte, []int) {
 }
 
 func (x *CreateUserDomainReply) GetId() string {
-	if x != nil && x.Id != nil {
-		return *x.Id
+	if x != nil {
+		return x.Id
 	}
 	return ""
 }
 
 func (x *CreateUserDomainReply) GetUserId() string {
-	if x != nil && x.UserId != nil {
-		return *x.UserId
+	if x != nil {
+		return x.UserId
 	}
 	return ""
 }
 
 func (x *CreateUserDomainReply) GetDomain() string {
-	if x != nil && x.Domain != nil {
-		return *x.Domain
+	if x != nil {
+		return x.Domain
 	}
 	return ""
 }
 
 type CreateUserRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Username      *string                `protobuf:"bytes,2,opt,name=username,proto3,oneof" json:"username,omitempty"`
+	Username      string                 `protobuf:"bytes,2,opt,name=username,proto3" json:"username,omitempty"`
 	Nickname      *string                `protobuf:"bytes,4,opt,name=nickname,proto3,oneof" json:"nickname,omitempty"`
 	ParentId      *string                `protobuf:"bytes,5,opt,name=parent_id,json=parentId,proto3,oneof" json:"parent_id,omitempty"`
-	Level         *int32                 `protobuf:"varint,6,opt,name=level,proto3,oneof" json:"level,omitempty"`
-	SharePercent  *float32               `protobuf:"fixed32,7,opt,name=share_percent,json=sharePercent,proto3,oneof" json:"share_percent,omitempty"`
+	Level         int32                  `protobuf:"varint,6,opt,name=level,proto3" json:"level,omitempty"`
+	SharePercent  float32                `protobuf:"fixed32,7,opt,name=share_percent,json=sharePercent,proto3" json:"share_percent,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -701,8 +701,8 @@ func (*CreateUserRequest) Descriptor() ([]byte, []int) {
 }
 
 func (x *CreateUserRequest) GetUsername() string {
-	if x != nil && x.Username != nil {
-		return *x.Username
+	if x != nil {
+		return x.Username
 	}
 	return ""
 }
@@ -722,27 +722,27 @@ func (x *CreateUserRequest) GetParentId() string {
 }
 
 func (x *CreateUserRequest) GetLevel() int32 {
-	if x != nil && x.Level != nil {
-		return *x.Level
+	if x != nil {
+		return x.Level
 	}
 	return 0
 }
 
 func (x *CreateUserRequest) GetSharePercent() float32 {
-	if x != nil && x.SharePercent != nil {
-		return *x.SharePercent
+	if x != nil {
+		return x.SharePercent
 	}
 	return 0
 }
 
 type CreateUserReply struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            *string                `protobuf:"bytes,1,opt,name=id,proto3,oneof" json:"id,omitempty"`
-	Username      *string                `protobuf:"bytes,2,opt,name=username,proto3,oneof" json:"username,omitempty"`
-	Nickname      *string                `protobuf:"bytes,3,opt,name=nickname,proto3,oneof" json:"nickname,omitempty"`
-	ParentId      *string                `protobuf:"bytes,4,opt,name=parent_id,json=parentId,proto3,oneof" json:"parent_id,omitempty"`
-	Level         *int32                 `protobuf:"varint,5,opt,name=level,proto3,oneof" json:"level,omitempty"`
-	SharePercent  *float32               `protobuf:"fixed32,6,opt,name=share_percent,json=sharePercent,proto3,oneof" json:"share_percent,omitempty"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Username      string                 `protobuf:"bytes,2,opt,name=username,proto3" json:"username,omitempty"`
+	Level         int32                  `protobuf:"varint,5,opt,name=level,proto3" json:"level,omitempty"`
+	SharePercent  float32                `protobuf:"fixed32,6,opt,name=share_percent,json=sharePercent,proto3" json:"share_percent,omitempty"`
+	Nickname      *string                `protobuf:"bytes,7,opt,name=nickname,proto3,oneof" json:"nickname,omitempty"`
+	ParentId      *string                `protobuf:"bytes,8,opt,name=parent_id,json=parentId,proto3,oneof" json:"parent_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -778,17 +778,31 @@ func (*CreateUserReply) Descriptor() ([]byte, []int) {
 }
 
 func (x *CreateUserReply) GetId() string {
-	if x != nil && x.Id != nil {
-		return *x.Id
+	if x != nil {
+		return x.Id
 	}
 	return ""
 }
 
 func (x *CreateUserReply) GetUsername() string {
-	if x != nil && x.Username != nil {
-		return *x.Username
+	if x != nil {
+		return x.Username
 	}
 	return ""
+}
+
+func (x *CreateUserReply) GetLevel() int32 {
+	if x != nil {
+		return x.Level
+	}
+	return 0
+}
+
+func (x *CreateUserReply) GetSharePercent() float32 {
+	if x != nil {
+		return x.SharePercent
+	}
+	return 0
 }
 
 func (x *CreateUserReply) GetNickname() string {
@@ -805,23 +819,9 @@ func (x *CreateUserReply) GetParentId() string {
 	return ""
 }
 
-func (x *CreateUserReply) GetLevel() int32 {
-	if x != nil && x.Level != nil {
-		return *x.Level
-	}
-	return 0
-}
-
-func (x *CreateUserReply) GetSharePercent() float32 {
-	if x != nil && x.SharePercent != nil {
-		return *x.SharePercent
-	}
-	return 0
-}
-
 type UpdateUserRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            *string                `protobuf:"bytes,1,opt,name=id,proto3,oneof" json:"id,omitempty"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
 	Password      *string                `protobuf:"bytes,3,opt,name=password,proto3,oneof" json:"password,omitempty"`
 	Nickname      *string                `protobuf:"bytes,4,opt,name=nickname,proto3,oneof" json:"nickname,omitempty"`
 	SharePercent  *float32               `protobuf:"fixed32,5,opt,name=share_percent,json=sharePercent,proto3,oneof" json:"share_percent,omitempty"`
@@ -860,8 +860,8 @@ func (*UpdateUserRequest) Descriptor() ([]byte, []int) {
 }
 
 func (x *UpdateUserRequest) GetId() string {
-	if x != nil && x.Id != nil {
-		return *x.Id
+	if x != nil {
+		return x.Id
 	}
 	return ""
 }
@@ -889,12 +889,12 @@ func (x *UpdateUserRequest) GetSharePercent() float32 {
 
 type UpdateUserReply struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            *string                `protobuf:"bytes,1,opt,name=id,proto3,oneof" json:"id,omitempty"`
-	Username      *string                `protobuf:"bytes,2,opt,name=username,proto3,oneof" json:"username,omitempty"`
-	Nickname      *string                `protobuf:"bytes,3,opt,name=nickname,proto3,oneof" json:"nickname,omitempty"`
-	ParentId      *string                `protobuf:"bytes,4,opt,name=parent_id,json=parentId,proto3,oneof" json:"parent_id,omitempty"`
-	Level         *int32                 `protobuf:"varint,5,opt,name=level,proto3,oneof" json:"level,omitempty"`
-	SharePercent  *float32               `protobuf:"fixed32,6,opt,name=share_percent,json=sharePercent,proto3,oneof" json:"share_percent,omitempty"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Username      string                 `protobuf:"bytes,2,opt,name=username,proto3" json:"username,omitempty"`
+	Level         int32                  `protobuf:"varint,5,opt,name=level,proto3" json:"level,omitempty"`
+	SharePercent  float32                `protobuf:"fixed32,6,opt,name=share_percent,json=sharePercent,proto3" json:"share_percent,omitempty"`
+	Nickname      *string                `protobuf:"bytes,7,opt,name=nickname,proto3,oneof" json:"nickname,omitempty"`
+	ParentId      *string                `protobuf:"bytes,8,opt,name=parent_id,json=parentId,proto3,oneof" json:"parent_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -930,17 +930,31 @@ func (*UpdateUserReply) Descriptor() ([]byte, []int) {
 }
 
 func (x *UpdateUserReply) GetId() string {
-	if x != nil && x.Id != nil {
-		return *x.Id
+	if x != nil {
+		return x.Id
 	}
 	return ""
 }
 
 func (x *UpdateUserReply) GetUsername() string {
-	if x != nil && x.Username != nil {
-		return *x.Username
+	if x != nil {
+		return x.Username
 	}
 	return ""
+}
+
+func (x *UpdateUserReply) GetLevel() int32 {
+	if x != nil {
+		return x.Level
+	}
+	return 0
+}
+
+func (x *UpdateUserReply) GetSharePercent() float32 {
+	if x != nil {
+		return x.SharePercent
+	}
+	return 0
 }
 
 func (x *UpdateUserReply) GetNickname() string {
@@ -957,23 +971,9 @@ func (x *UpdateUserReply) GetParentId() string {
 	return ""
 }
 
-func (x *UpdateUserReply) GetLevel() int32 {
-	if x != nil && x.Level != nil {
-		return *x.Level
-	}
-	return 0
-}
-
-func (x *UpdateUserReply) GetSharePercent() float32 {
-	if x != nil && x.SharePercent != nil {
-		return *x.SharePercent
-	}
-	return 0
-}
-
 type DeleteUserRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            *string                `protobuf:"bytes,1,opt,name=id,proto3,oneof" json:"id,omitempty"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1009,8 +1009,8 @@ func (*DeleteUserRequest) Descriptor() ([]byte, []int) {
 }
 
 func (x *DeleteUserRequest) GetId() string {
-	if x != nil && x.Id != nil {
-		return *x.Id
+	if x != nil {
+		return x.Id
 	}
 	return ""
 }
@@ -1053,7 +1053,7 @@ func (*DeleteUserReply) Descriptor() ([]byte, []int) {
 
 type GetUserRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            *string                `protobuf:"bytes,1,opt,name=id,proto3,oneof" json:"id,omitempty"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1089,20 +1089,20 @@ func (*GetUserRequest) Descriptor() ([]byte, []int) {
 }
 
 func (x *GetUserRequest) GetId() string {
-	if x != nil && x.Id != nil {
-		return *x.Id
+	if x != nil {
+		return x.Id
 	}
 	return ""
 }
 
 type GetUserReply struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            *string                `protobuf:"bytes,1,opt,name=id,proto3,oneof" json:"id,omitempty"`
-	Username      *string                `protobuf:"bytes,2,opt,name=username,proto3,oneof" json:"username,omitempty"`
-	Nickname      *string                `protobuf:"bytes,3,opt,name=nickname,proto3,oneof" json:"nickname,omitempty"`
-	ParentId      *string                `protobuf:"bytes,4,opt,name=parent_id,json=parentId,proto3,oneof" json:"parent_id,omitempty"`
-	Level         *int32                 `protobuf:"varint,5,opt,name=level,proto3,oneof" json:"level,omitempty"`
-	SharePercent  *float32               `protobuf:"fixed32,6,opt,name=share_percent,json=sharePercent,proto3,oneof" json:"share_percent,omitempty"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Username      string                 `protobuf:"bytes,2,opt,name=username,proto3" json:"username,omitempty"`
+	Level         int32                  `protobuf:"varint,5,opt,name=level,proto3" json:"level,omitempty"`
+	SharePercent  float32                `protobuf:"fixed32,6,opt,name=share_percent,json=sharePercent,proto3" json:"share_percent,omitempty"`
+	Nickname      *string                `protobuf:"bytes,7,opt,name=nickname,proto3,oneof" json:"nickname,omitempty"`
+	ParentId      *string                `protobuf:"bytes,8,opt,name=parent_id,json=parentId,proto3,oneof" json:"parent_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1138,17 +1138,31 @@ func (*GetUserReply) Descriptor() ([]byte, []int) {
 }
 
 func (x *GetUserReply) GetId() string {
-	if x != nil && x.Id != nil {
-		return *x.Id
+	if x != nil {
+		return x.Id
 	}
 	return ""
 }
 
 func (x *GetUserReply) GetUsername() string {
-	if x != nil && x.Username != nil {
-		return *x.Username
+	if x != nil {
+		return x.Username
 	}
 	return ""
+}
+
+func (x *GetUserReply) GetLevel() int32 {
+	if x != nil {
+		return x.Level
+	}
+	return 0
+}
+
+func (x *GetUserReply) GetSharePercent() float32 {
+	if x != nil {
+		return x.SharePercent
+	}
+	return 0
 }
 
 func (x *GetUserReply) GetNickname() string {
@@ -1163,20 +1177,6 @@ func (x *GetUserReply) GetParentId() string {
 		return *x.ParentId
 	}
 	return ""
-}
-
-func (x *GetUserReply) GetLevel() int32 {
-	if x != nil && x.Level != nil {
-		return *x.Level
-	}
-	return 0
-}
-
-func (x *GetUserReply) GetSharePercent() float32 {
-	if x != nil && x.SharePercent != nil {
-		return *x.SharePercent
-	}
-	return 0
 }
 
 type ListUserRequest struct {
@@ -1261,9 +1261,9 @@ func (x *ListUserReply) GetUsers() []*ListUserReply_User {
 
 type ListUserDomainsByUserIdReply_Domain struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            *string                `protobuf:"bytes,1,opt,name=id,proto3,oneof" json:"id,omitempty"`
-	UserId        *string                `protobuf:"bytes,2,opt,name=user_id,json=userId,proto3,oneof" json:"user_id,omitempty"`
-	Domain        *string                `protobuf:"bytes,3,opt,name=domain,proto3,oneof" json:"domain,omitempty"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	UserId        string                 `protobuf:"bytes,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	Domain        string                 `protobuf:"bytes,3,opt,name=domain,proto3" json:"domain,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1299,31 +1299,31 @@ func (*ListUserDomainsByUserIdReply_Domain) Descriptor() ([]byte, []int) {
 }
 
 func (x *ListUserDomainsByUserIdReply_Domain) GetId() string {
-	if x != nil && x.Id != nil {
-		return *x.Id
+	if x != nil {
+		return x.Id
 	}
 	return ""
 }
 
 func (x *ListUserDomainsByUserIdReply_Domain) GetUserId() string {
-	if x != nil && x.UserId != nil {
-		return *x.UserId
+	if x != nil {
+		return x.UserId
 	}
 	return ""
 }
 
 func (x *ListUserDomainsByUserIdReply_Domain) GetDomain() string {
-	if x != nil && x.Domain != nil {
-		return *x.Domain
+	if x != nil {
+		return x.Domain
 	}
 	return ""
 }
 
 type ListUserDomainsReply_Domain struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            *string                `protobuf:"bytes,1,opt,name=id,proto3,oneof" json:"id,omitempty"`
-	UserId        *string                `protobuf:"bytes,2,opt,name=user_id,json=userId,proto3,oneof" json:"user_id,omitempty"`
-	Domain        *string                `protobuf:"bytes,3,opt,name=domain,proto3,oneof" json:"domain,omitempty"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	UserId        string                 `protobuf:"bytes,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	Domain        string                 `protobuf:"bytes,3,opt,name=domain,proto3" json:"domain,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1359,34 +1359,34 @@ func (*ListUserDomainsReply_Domain) Descriptor() ([]byte, []int) {
 }
 
 func (x *ListUserDomainsReply_Domain) GetId() string {
-	if x != nil && x.Id != nil {
-		return *x.Id
+	if x != nil {
+		return x.Id
 	}
 	return ""
 }
 
 func (x *ListUserDomainsReply_Domain) GetUserId() string {
-	if x != nil && x.UserId != nil {
-		return *x.UserId
+	if x != nil {
+		return x.UserId
 	}
 	return ""
 }
 
 func (x *ListUserDomainsReply_Domain) GetDomain() string {
-	if x != nil && x.Domain != nil {
-		return *x.Domain
+	if x != nil {
+		return x.Domain
 	}
 	return ""
 }
 
 type ListUserReply_User struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            *string                `protobuf:"bytes,1,opt,name=id,proto3,oneof" json:"id,omitempty"`
-	Username      *string                `protobuf:"bytes,2,opt,name=username,proto3,oneof" json:"username,omitempty"`
-	Nickname      *string                `protobuf:"bytes,3,opt,name=nickname,proto3,oneof" json:"nickname,omitempty"`
-	ParentId      *string                `protobuf:"bytes,4,opt,name=parent_id,json=parentId,proto3,oneof" json:"parent_id,omitempty"`
-	Level         *int32                 `protobuf:"varint,5,opt,name=level,proto3,oneof" json:"level,omitempty"`
-	SharePercent  *float32               `protobuf:"fixed32,6,opt,name=share_percent,json=sharePercent,proto3,oneof" json:"share_percent,omitempty"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Username      string                 `protobuf:"bytes,2,opt,name=username,proto3" json:"username,omitempty"`
+	Nickname      string                 `protobuf:"bytes,3,opt,name=nickname,proto3" json:"nickname,omitempty"`
+	ParentId      string                 `protobuf:"bytes,4,opt,name=parent_id,json=parentId,proto3" json:"parent_id,omitempty"`
+	Level         int32                  `protobuf:"varint,5,opt,name=level,proto3" json:"level,omitempty"`
+	SharePercent  float32                `protobuf:"fixed32,6,opt,name=share_percent,json=sharePercent,proto3" json:"share_percent,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1422,43 +1422,43 @@ func (*ListUserReply_User) Descriptor() ([]byte, []int) {
 }
 
 func (x *ListUserReply_User) GetId() string {
-	if x != nil && x.Id != nil {
-		return *x.Id
+	if x != nil {
+		return x.Id
 	}
 	return ""
 }
 
 func (x *ListUserReply_User) GetUsername() string {
-	if x != nil && x.Username != nil {
-		return *x.Username
+	if x != nil {
+		return x.Username
 	}
 	return ""
 }
 
 func (x *ListUserReply_User) GetNickname() string {
-	if x != nil && x.Nickname != nil {
-		return *x.Nickname
+	if x != nil {
+		return x.Nickname
 	}
 	return ""
 }
 
 func (x *ListUserReply_User) GetParentId() string {
-	if x != nil && x.ParentId != nil {
-		return *x.ParentId
+	if x != nil {
+		return x.ParentId
 	}
 	return ""
 }
 
 func (x *ListUserReply_User) GetLevel() int32 {
-	if x != nil && x.Level != nil {
-		return *x.Level
+	if x != nil {
+		return x.Level
 	}
 	return 0
 }
 
 func (x *ListUserReply_User) GetSharePercent() float32 {
-	if x != nil && x.SharePercent != nil {
-		return *x.SharePercent
+	if x != nil {
+		return x.SharePercent
 	}
 	return 0
 }
@@ -1469,158 +1469,112 @@ const file_api_user_service_v1_user_proto_rawDesc = "" +
 	"\n" +
 	"\x1eapi/user/service/v1/user.proto\x12\x13api.user.service.v1\x1a\x1cgoogle/api/annotations.proto\x1a\x17validate/validate.proto\"9\n" +
 	"\x16GetUserByDomainRequest\x12\x1f\n" +
-	"\x06domain\x18\x01 \x01(\tB\a\xfaB\x04r\x02\x10\x01R\x06domain\"\xb6\x01\n" +
+	"\x06domain\x18\x01 \x01(\tB\a\xfaB\x04r\x02\x10\x01R\x06domain\"\xe7\x01\n" +
 	"\x14GetUserByDomainReply\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12\x1a\n" +
+	"\busername\x18\x02 \x01(\tR\busername\x12\x14\n" +
+	"\x05level\x18\x05 \x01(\x05R\x05level\x12#\n" +
+	"\rshare_percent\x18\x06 \x01(\x02R\fsharePercent\x12\x1f\n" +
+	"\bnickname\x18\a \x01(\tH\x00R\bnickname\x88\x01\x01\x12 \n" +
+	"\tparent_id\x18\b \x01(\tH\x01R\bparentId\x88\x01\x01B\v\n" +
+	"\t_nicknameB\f\n" +
+	"\n" +
+	"_parent_idJ\x04\b\x03\x10\x04J\x04\b\x04\x10\x05\"6\n" +
+	"\x18GetUserByUsernameRequest\x12\x1a\n" +
+	"\busername\x18\x01 \x01(\tR\busername\"%\n" +
+	"\x13DeleteDomainRequest\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\"\x13\n" +
+	"\x11DeleteDomainReply\"9\n" +
+	"\x1eListUserDomainsByUserIdRequest\x12\x17\n" +
+	"\auser_id\x18\x01 \x01(\tR\x06userId\"\xbd\x01\n" +
+	"\x1cListUserDomainsByUserIdReply\x12R\n" +
+	"\adomains\x18\x01 \x03(\v28.api.user.service.v1.ListUserDomainsByUserIdReply.DomainR\adomains\x1aI\n" +
+	"\x06Domain\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12\x17\n" +
+	"\auser_id\x18\x02 \x01(\tR\x06userId\x12\x16\n" +
+	"\x06domain\x18\x03 \x01(\tR\x06domain\"\x18\n" +
+	"\x16ListUserDomainsRequest\"\xad\x01\n" +
+	"\x14ListUserDomainsReply\x12J\n" +
+	"\adomains\x18\x01 \x03(\v20.api.user.service.v1.ListUserDomainsReply.DomainR\adomains\x1aI\n" +
+	"\x06Domain\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12\x17\n" +
+	"\auser_id\x18\x02 \x01(\tR\x06userId\x12\x16\n" +
+	"\x06domain\x18\x03 \x01(\tR\x06domain\"&\n" +
+	"\x14GetUserDomainRequest\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\"U\n" +
+	"\x12GetUserDomainReply\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12\x17\n" +
+	"\auser_id\x18\x02 \x01(\tR\x06userId\x12\x16\n" +
+	"\x06domain\x18\x03 \x01(\tR\x06domain\"J\n" +
+	"\x17CreateUserDomainRequest\x12\x17\n" +
+	"\auser_id\x18\x02 \x01(\tR\x06userId\x12\x16\n" +
+	"\x06domain\x18\x03 \x01(\tR\x06domain\"X\n" +
+	"\x15CreateUserDomainReply\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12\x17\n" +
+	"\auser_id\x18\x02 \x01(\tR\x06userId\x12\x16\n" +
+	"\x06domain\x18\x03 \x01(\tR\x06domain\"\xc8\x01\n" +
+	"\x11CreateUserRequest\x12\x1a\n" +
+	"\busername\x18\x02 \x01(\tR\busername\x12\x1f\n" +
+	"\bnickname\x18\x04 \x01(\tH\x00R\bnickname\x88\x01\x01\x12 \n" +
+	"\tparent_id\x18\x05 \x01(\tH\x01R\bparentId\x88\x01\x01\x12\x14\n" +
+	"\x05level\x18\x06 \x01(\x05R\x05level\x12#\n" +
+	"\rshare_percent\x18\a \x01(\x02R\fsharePercentB\v\n" +
+	"\t_nicknameB\f\n" +
+	"\n" +
+	"_parent_id\"\xe2\x01\n" +
+	"\x0fCreateUserReply\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12\x1a\n" +
+	"\busername\x18\x02 \x01(\tR\busername\x12\x14\n" +
+	"\x05level\x18\x05 \x01(\x05R\x05level\x12#\n" +
+	"\rshare_percent\x18\x06 \x01(\x02R\fsharePercent\x12\x1f\n" +
+	"\bnickname\x18\a \x01(\tH\x00R\bnickname\x88\x01\x01\x12 \n" +
+	"\tparent_id\x18\b \x01(\tH\x01R\bparentId\x88\x01\x01B\v\n" +
+	"\t_nicknameB\f\n" +
+	"\n" +
+	"_parent_idJ\x04\b\x03\x10\x04J\x04\b\x04\x10\x05\"\xcf\x01\n" +
+	"\x11UpdateUserRequest\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12*\n" +
+	"\bpassword\x18\x03 \x01(\tB\t\xfaB\x06r\x04\x10\b\x18\x14H\x00R\bpassword\x88\x01\x01\x12(\n" +
+	"\bnickname\x18\x04 \x01(\tB\a\xfaB\x04r\x02\x18\x14H\x01R\bnickname\x88\x01\x01\x12(\n" +
+	"\rshare_percent\x18\x05 \x01(\x02H\x02R\fsharePercent\x88\x01\x01B\v\n" +
+	"\t_passwordB\v\n" +
+	"\t_nicknameB\x10\n" +
+	"\x0e_share_percent\"\xe2\x01\n" +
+	"\x0fUpdateUserReply\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12\x1a\n" +
+	"\busername\x18\x02 \x01(\tR\busername\x12\x14\n" +
+	"\x05level\x18\x05 \x01(\x05R\x05level\x12#\n" +
+	"\rshare_percent\x18\x06 \x01(\x02R\fsharePercent\x12\x1f\n" +
+	"\bnickname\x18\a \x01(\tH\x00R\bnickname\x88\x01\x01\x12 \n" +
+	"\tparent_id\x18\b \x01(\tH\x01R\bparentId\x88\x01\x01B\v\n" +
+	"\t_nicknameB\f\n" +
+	"\n" +
+	"_parent_idJ\x04\b\x03\x10\x04J\x04\b\x04\x10\x05\"#\n" +
+	"\x11DeleteUserRequest\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\"\x11\n" +
+	"\x0fDeleteUserReply\" \n" +
+	"\x0eGetUserRequest\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\"\xdf\x01\n" +
+	"\fGetUserReply\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12\x1a\n" +
+	"\busername\x18\x02 \x01(\tR\busername\x12\x14\n" +
+	"\x05level\x18\x05 \x01(\x05R\x05level\x12#\n" +
+	"\rshare_percent\x18\x06 \x01(\x02R\fsharePercent\x12\x1f\n" +
+	"\bnickname\x18\a \x01(\tH\x00R\bnickname\x88\x01\x01\x12 \n" +
+	"\tparent_id\x18\b \x01(\tH\x01R\bparentId\x88\x01\x01B\v\n" +
+	"\t_nicknameB\f\n" +
+	"\n" +
+	"_parent_idJ\x04\b\x03\x10\x04J\x04\b\x04\x10\x05\"\x11\n" +
+	"\x0fListUserRequest\"\xf7\x01\n" +
+	"\rListUserReply\x12=\n" +
+	"\x05users\x18\x01 \x03(\v2'.api.user.service.v1.ListUserReply.UserR\x05users\x1a\xa6\x01\n" +
+	"\x04User\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x1a\n" +
 	"\busername\x18\x02 \x01(\tR\busername\x12\x1a\n" +
 	"\bnickname\x18\x03 \x01(\tR\bnickname\x12\x1b\n" +
 	"\tparent_id\x18\x04 \x01(\tR\bparentId\x12\x14\n" +
 	"\x05level\x18\x05 \x01(\x05R\x05level\x12#\n" +
-	"\rshare_percent\x18\x06 \x01(\x02R\fsharePercent\"H\n" +
-	"\x18GetUserByUsernameRequest\x12\x1f\n" +
-	"\busername\x18\x01 \x01(\tH\x00R\busername\x88\x01\x01B\v\n" +
-	"\t_username\"1\n" +
-	"\x13DeleteDomainRequest\x12\x13\n" +
-	"\x02id\x18\x01 \x01(\tH\x00R\x02id\x88\x01\x01B\x05\n" +
-	"\x03_id\"\x13\n" +
-	"\x11DeleteDomainReply\"J\n" +
-	"\x1eListUserDomainsByUserIdRequest\x12\x1c\n" +
-	"\auser_id\x18\x01 \x01(\tH\x00R\x06userId\x88\x01\x01B\n" +
-	"\n" +
-	"\b_user_id\"\xea\x01\n" +
-	"\x1cListUserDomainsByUserIdReply\x12R\n" +
-	"\adomains\x18\x01 \x03(\v28.api.user.service.v1.ListUserDomainsByUserIdReply.DomainR\adomains\x1av\n" +
-	"\x06Domain\x12\x13\n" +
-	"\x02id\x18\x01 \x01(\tH\x00R\x02id\x88\x01\x01\x12\x1c\n" +
-	"\auser_id\x18\x02 \x01(\tH\x01R\x06userId\x88\x01\x01\x12\x1b\n" +
-	"\x06domain\x18\x03 \x01(\tH\x02R\x06domain\x88\x01\x01B\x05\n" +
-	"\x03_idB\n" +
-	"\n" +
-	"\b_user_idB\t\n" +
-	"\a_domain\"\x18\n" +
-	"\x16ListUserDomainsRequest\"\xda\x01\n" +
-	"\x14ListUserDomainsReply\x12J\n" +
-	"\adomains\x18\x01 \x03(\v20.api.user.service.v1.ListUserDomainsReply.DomainR\adomains\x1av\n" +
-	"\x06Domain\x12\x13\n" +
-	"\x02id\x18\x01 \x01(\tH\x00R\x02id\x88\x01\x01\x12\x1c\n" +
-	"\auser_id\x18\x02 \x01(\tH\x01R\x06userId\x88\x01\x01\x12\x1b\n" +
-	"\x06domain\x18\x03 \x01(\tH\x02R\x06domain\x88\x01\x01B\x05\n" +
-	"\x03_idB\n" +
-	"\n" +
-	"\b_user_idB\t\n" +
-	"\a_domain\"2\n" +
-	"\x14GetUserDomainRequest\x12\x13\n" +
-	"\x02id\x18\x01 \x01(\tH\x00R\x02id\x88\x01\x01B\x05\n" +
-	"\x03_id\"\x82\x01\n" +
-	"\x12GetUserDomainReply\x12\x13\n" +
-	"\x02id\x18\x01 \x01(\tH\x00R\x02id\x88\x01\x01\x12\x1c\n" +
-	"\auser_id\x18\x02 \x01(\tH\x01R\x06userId\x88\x01\x01\x12\x1b\n" +
-	"\x06domain\x18\x03 \x01(\tH\x02R\x06domain\x88\x01\x01B\x05\n" +
-	"\x03_idB\n" +
-	"\n" +
-	"\b_user_idB\t\n" +
-	"\a_domain\"k\n" +
-	"\x17CreateUserDomainRequest\x12\x1c\n" +
-	"\auser_id\x18\x02 \x01(\tH\x00R\x06userId\x88\x01\x01\x12\x1b\n" +
-	"\x06domain\x18\x03 \x01(\tH\x01R\x06domain\x88\x01\x01B\n" +
-	"\n" +
-	"\b_user_idB\t\n" +
-	"\a_domain\"\x85\x01\n" +
-	"\x15CreateUserDomainReply\x12\x13\n" +
-	"\x02id\x18\x01 \x01(\tH\x00R\x02id\x88\x01\x01\x12\x1c\n" +
-	"\auser_id\x18\x02 \x01(\tH\x01R\x06userId\x88\x01\x01\x12\x1b\n" +
-	"\x06domain\x18\x03 \x01(\tH\x02R\x06domain\x88\x01\x01B\x05\n" +
-	"\x03_idB\n" +
-	"\n" +
-	"\b_user_idB\t\n" +
-	"\a_domain\"\x80\x02\n" +
-	"\x11CreateUserRequest\x12\x1f\n" +
-	"\busername\x18\x02 \x01(\tH\x00R\busername\x88\x01\x01\x12\x1f\n" +
-	"\bnickname\x18\x04 \x01(\tH\x01R\bnickname\x88\x01\x01\x12 \n" +
-	"\tparent_id\x18\x05 \x01(\tH\x02R\bparentId\x88\x01\x01\x12\x19\n" +
-	"\x05level\x18\x06 \x01(\x05H\x03R\x05level\x88\x01\x01\x12(\n" +
-	"\rshare_percent\x18\a \x01(\x02H\x04R\fsharePercent\x88\x01\x01B\v\n" +
-	"\t_usernameB\v\n" +
-	"\t_nicknameB\f\n" +
-	"\n" +
-	"_parent_idB\b\n" +
-	"\x06_levelB\x10\n" +
-	"\x0e_share_percent\"\x9a\x02\n" +
-	"\x0fCreateUserReply\x12\x13\n" +
-	"\x02id\x18\x01 \x01(\tH\x00R\x02id\x88\x01\x01\x12\x1f\n" +
-	"\busername\x18\x02 \x01(\tH\x01R\busername\x88\x01\x01\x12\x1f\n" +
-	"\bnickname\x18\x03 \x01(\tH\x02R\bnickname\x88\x01\x01\x12 \n" +
-	"\tparent_id\x18\x04 \x01(\tH\x03R\bparentId\x88\x01\x01\x12\x19\n" +
-	"\x05level\x18\x05 \x01(\x05H\x04R\x05level\x88\x01\x01\x12(\n" +
-	"\rshare_percent\x18\x06 \x01(\x02H\x05R\fsharePercent\x88\x01\x01B\x05\n" +
-	"\x03_idB\v\n" +
-	"\t_usernameB\v\n" +
-	"\t_nicknameB\f\n" +
-	"\n" +
-	"_parent_idB\b\n" +
-	"\x06_levelB\x10\n" +
-	"\x0e_share_percent\"\xdb\x01\n" +
-	"\x11UpdateUserRequest\x12\x13\n" +
-	"\x02id\x18\x01 \x01(\tH\x00R\x02id\x88\x01\x01\x12*\n" +
-	"\bpassword\x18\x03 \x01(\tB\t\xfaB\x06r\x04\x10\b\x18\x14H\x01R\bpassword\x88\x01\x01\x12(\n" +
-	"\bnickname\x18\x04 \x01(\tB\a\xfaB\x04r\x02\x18\x14H\x02R\bnickname\x88\x01\x01\x12(\n" +
-	"\rshare_percent\x18\x05 \x01(\x02H\x03R\fsharePercent\x88\x01\x01B\x05\n" +
-	"\x03_idB\v\n" +
-	"\t_passwordB\v\n" +
-	"\t_nicknameB\x10\n" +
-	"\x0e_share_percent\"\x9a\x02\n" +
-	"\x0fUpdateUserReply\x12\x13\n" +
-	"\x02id\x18\x01 \x01(\tH\x00R\x02id\x88\x01\x01\x12\x1f\n" +
-	"\busername\x18\x02 \x01(\tH\x01R\busername\x88\x01\x01\x12\x1f\n" +
-	"\bnickname\x18\x03 \x01(\tH\x02R\bnickname\x88\x01\x01\x12 \n" +
-	"\tparent_id\x18\x04 \x01(\tH\x03R\bparentId\x88\x01\x01\x12\x19\n" +
-	"\x05level\x18\x05 \x01(\x05H\x04R\x05level\x88\x01\x01\x12(\n" +
-	"\rshare_percent\x18\x06 \x01(\x02H\x05R\fsharePercent\x88\x01\x01B\x05\n" +
-	"\x03_idB\v\n" +
-	"\t_usernameB\v\n" +
-	"\t_nicknameB\f\n" +
-	"\n" +
-	"_parent_idB\b\n" +
-	"\x06_levelB\x10\n" +
-	"\x0e_share_percent\"/\n" +
-	"\x11DeleteUserRequest\x12\x13\n" +
-	"\x02id\x18\x01 \x01(\tH\x00R\x02id\x88\x01\x01B\x05\n" +
-	"\x03_id\"\x11\n" +
-	"\x0fDeleteUserReply\",\n" +
-	"\x0eGetUserRequest\x12\x13\n" +
-	"\x02id\x18\x01 \x01(\tH\x00R\x02id\x88\x01\x01B\x05\n" +
-	"\x03_id\"\x97\x02\n" +
-	"\fGetUserReply\x12\x13\n" +
-	"\x02id\x18\x01 \x01(\tH\x00R\x02id\x88\x01\x01\x12\x1f\n" +
-	"\busername\x18\x02 \x01(\tH\x01R\busername\x88\x01\x01\x12\x1f\n" +
-	"\bnickname\x18\x03 \x01(\tH\x02R\bnickname\x88\x01\x01\x12 \n" +
-	"\tparent_id\x18\x04 \x01(\tH\x03R\bparentId\x88\x01\x01\x12\x19\n" +
-	"\x05level\x18\x05 \x01(\x05H\x04R\x05level\x88\x01\x01\x12(\n" +
-	"\rshare_percent\x18\x06 \x01(\x02H\x05R\fsharePercent\x88\x01\x01B\x05\n" +
-	"\x03_idB\v\n" +
-	"\t_usernameB\v\n" +
-	"\t_nicknameB\f\n" +
-	"\n" +
-	"_parent_idB\b\n" +
-	"\x06_levelB\x10\n" +
-	"\x0e_share_percent\"\x11\n" +
-	"\x0fListUserRequest\"\xe0\x02\n" +
-	"\rListUserReply\x12=\n" +
-	"\x05users\x18\x01 \x03(\v2'.api.user.service.v1.ListUserReply.UserR\x05users\x1a\x8f\x02\n" +
-	"\x04User\x12\x13\n" +
-	"\x02id\x18\x01 \x01(\tH\x00R\x02id\x88\x01\x01\x12\x1f\n" +
-	"\busername\x18\x02 \x01(\tH\x01R\busername\x88\x01\x01\x12\x1f\n" +
-	"\bnickname\x18\x03 \x01(\tH\x02R\bnickname\x88\x01\x01\x12 \n" +
-	"\tparent_id\x18\x04 \x01(\tH\x03R\bparentId\x88\x01\x01\x12\x19\n" +
-	"\x05level\x18\x05 \x01(\x05H\x04R\x05level\x88\x01\x01\x12(\n" +
-	"\rshare_percent\x18\x06 \x01(\x02H\x05R\fsharePercent\x88\x01\x01B\x05\n" +
-	"\x03_idB\v\n" +
-	"\t_usernameB\v\n" +
-	"\t_nicknameB\f\n" +
-	"\n" +
-	"_parent_idB\b\n" +
-	"\x06_levelB\x10\n" +
-	"\x0e_share_percent2\xc4\v\n" +
+	"\rshare_percent\x18\x06 \x01(\x02R\fsharePercent2\xc4\v\n" +
 	"\x04User\x12p\n" +
 	"\n" +
 	"CreateUser\x12&.api.user.service.v1.CreateUserRequest\x1a$.api.user.service.v1.CreateUserReply\"\x14\x82\xd3\xe4\x93\x02\x0e:\x01*\"\t/v1/users\x12u\n" +
@@ -1720,23 +1674,12 @@ func file_api_user_service_v1_user_proto_init() {
 	if File_api_user_service_v1_user_proto != nil {
 		return
 	}
-	file_api_user_service_v1_user_proto_msgTypes[2].OneofWrappers = []any{}
-	file_api_user_service_v1_user_proto_msgTypes[3].OneofWrappers = []any{}
-	file_api_user_service_v1_user_proto_msgTypes[5].OneofWrappers = []any{}
-	file_api_user_service_v1_user_proto_msgTypes[9].OneofWrappers = []any{}
-	file_api_user_service_v1_user_proto_msgTypes[10].OneofWrappers = []any{}
-	file_api_user_service_v1_user_proto_msgTypes[11].OneofWrappers = []any{}
-	file_api_user_service_v1_user_proto_msgTypes[12].OneofWrappers = []any{}
+	file_api_user_service_v1_user_proto_msgTypes[1].OneofWrappers = []any{}
 	file_api_user_service_v1_user_proto_msgTypes[13].OneofWrappers = []any{}
 	file_api_user_service_v1_user_proto_msgTypes[14].OneofWrappers = []any{}
 	file_api_user_service_v1_user_proto_msgTypes[15].OneofWrappers = []any{}
 	file_api_user_service_v1_user_proto_msgTypes[16].OneofWrappers = []any{}
-	file_api_user_service_v1_user_proto_msgTypes[17].OneofWrappers = []any{}
-	file_api_user_service_v1_user_proto_msgTypes[19].OneofWrappers = []any{}
 	file_api_user_service_v1_user_proto_msgTypes[20].OneofWrappers = []any{}
-	file_api_user_service_v1_user_proto_msgTypes[23].OneofWrappers = []any{}
-	file_api_user_service_v1_user_proto_msgTypes[24].OneofWrappers = []any{}
-	file_api_user_service_v1_user_proto_msgTypes[25].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

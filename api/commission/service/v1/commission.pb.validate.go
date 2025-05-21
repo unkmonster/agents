@@ -35,6 +35,223 @@ var (
 	_ = sort.Sort
 )
 
+// Validate checks the field values on IncUserRegistrationCountReq with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *IncUserRegistrationCountReq) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on IncUserRegistrationCountReq with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// IncUserRegistrationCountReqMultiError, or nil if none found.
+func (m *IncUserRegistrationCountReq) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *IncUserRegistrationCountReq) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if utf8.RuneCountInString(m.GetUserId()) < 1 {
+		err := IncUserRegistrationCountReqValidationError{
+			field:  "UserId",
+			reason: "value length must be at least 1 runes",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if len(errors) > 0 {
+		return IncUserRegistrationCountReqMultiError(errors)
+	}
+
+	return nil
+}
+
+// IncUserRegistrationCountReqMultiError is an error wrapping multiple
+// validation errors returned by IncUserRegistrationCountReq.ValidateAll() if
+// the designated constraints aren't met.
+type IncUserRegistrationCountReqMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m IncUserRegistrationCountReqMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m IncUserRegistrationCountReqMultiError) AllErrors() []error { return m }
+
+// IncUserRegistrationCountReqValidationError is the validation error returned
+// by IncUserRegistrationCountReq.Validate if the designated constraints
+// aren't met.
+type IncUserRegistrationCountReqValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e IncUserRegistrationCountReqValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e IncUserRegistrationCountReqValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e IncUserRegistrationCountReqValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e IncUserRegistrationCountReqValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e IncUserRegistrationCountReqValidationError) ErrorName() string {
+	return "IncUserRegistrationCountReqValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e IncUserRegistrationCountReqValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sIncUserRegistrationCountReq.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = IncUserRegistrationCountReqValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = IncUserRegistrationCountReqValidationError{}
+
+// Validate checks the field values on IncUserRegistrationCountReply with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *IncUserRegistrationCountReply) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on IncUserRegistrationCountReply with
+// the rules defined in the proto definition for this message. If any rules
+// are violated, the result is a list of violation errors wrapped in
+// IncUserRegistrationCountReplyMultiError, or nil if none found.
+func (m *IncUserRegistrationCountReply) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *IncUserRegistrationCountReply) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if len(errors) > 0 {
+		return IncUserRegistrationCountReplyMultiError(errors)
+	}
+
+	return nil
+}
+
+// IncUserRegistrationCountReplyMultiError is an error wrapping multiple
+// validation errors returned by IncUserRegistrationCountReply.ValidateAll()
+// if the designated constraints aren't met.
+type IncUserRegistrationCountReplyMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m IncUserRegistrationCountReplyMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m IncUserRegistrationCountReplyMultiError) AllErrors() []error { return m }
+
+// IncUserRegistrationCountReplyValidationError is the validation error
+// returned by IncUserRegistrationCountReply.Validate if the designated
+// constraints aren't met.
+type IncUserRegistrationCountReplyValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e IncUserRegistrationCountReplyValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e IncUserRegistrationCountReplyValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e IncUserRegistrationCountReplyValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e IncUserRegistrationCountReplyValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e IncUserRegistrationCountReplyValidationError) ErrorName() string {
+	return "IncUserRegistrationCountReplyValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e IncUserRegistrationCountReplyValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sIncUserRegistrationCountReply.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = IncUserRegistrationCountReplyValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = IncUserRegistrationCountReplyValidationError{}
+
 // Validate checks the field values on InitUserCommissionReq with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
@@ -621,6 +838,10 @@ func (m *GetUserCommissionReply) validate(all bool) error {
 	// no validation rules for TodayCommission
 
 	// no validation rules for SettledCommission
+
+	// no validation rules for TotalRegistrationCount
+
+	// no validation rules for TodayRegistrationCount
 
 	if len(errors) > 0 {
 		return GetUserCommissionReplyMultiError(errors)
