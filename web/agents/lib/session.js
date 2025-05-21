@@ -41,6 +41,18 @@ export function useUser() {
   return { user: data, isLoading, error };
 }
 
+export function useTotalCommission() {
+  const userId = useUserId();
+  const { data, isLoading, error } = useSWR(
+    `/v1/users/${userId}/total_commission`,
+    myfetch
+  );
+  return {
+    commission: data,
+    error,
+    isLoading,
+  };
+}
 export function logOut() {
   if (typeof window == "undefined") {
     return;

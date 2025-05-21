@@ -14,6 +14,9 @@ import { useRouter } from "next/navigation";
 import { usePathname } from "next/navigation";
 import { Avatar, Space } from "antd";
 import { logOut, useUser } from "@/lib/session";
+import { Typography } from "antd";
+
+const { Title } = Typography;
 
 function UserMenu({ children }) {
   const items = [
@@ -95,6 +98,17 @@ export default function DashboardLayout({ children }) {
     <Layout style={{ height: "100vh" }}>
       <Header style={{ display: "flex", alignItems: "center" }}>
         <div className="demo-logo" />
+        {/* <Title
+          level={3}
+          style={{
+            margin: 0,
+            color: "white",
+            lineHeight: "inherit", // 继承 Header 的高度
+            paddingLeft: 16,
+          }}
+        >
+          代理系统后台
+        </Title> */}
         <UserMenu>
           {user ? (
             <Avatar style={{ marginLeft: "auto", backgroundColor: "#87d068" }}>
@@ -106,7 +120,12 @@ export default function DashboardLayout({ children }) {
         </UserMenu>
       </Header>
       <Layout>
-        <Sider width={200} style={{ background: colorBgContainer }}>
+        <Sider
+          width={200}
+          style={{ background: colorBgContainer }}
+          breakpoint="lg"
+          collapsedWidth="0"
+        >
           <Menu
             mode="inline"
             defaultSelectedKeys={["/dashboard"]}
