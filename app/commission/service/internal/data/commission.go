@@ -64,27 +64,6 @@ func (c *commissionRepo) IncUserSettledCommission(ctx context.Context, userId st
 	return err
 }
 
-// InitUserCommission implements biz.CommissionRepo.
-func (c *commissionRepo) InitUserCommission(ctx context.Context, userId string) error {
-	query := `
-		INSERT INTO user_commissions (
-			id,
-			user_id,
-			today_commission,
-			total_commission,
-			settled_commission
-		) VALUES (
-			?,
-			?,
-			?,
-			?,
-			?
-		);
-	`
-	_, err := c.data.db.ExecContext(ctx, query, uuid.NewString(), userId, 0, 0, 0)
-	return err
-}
-
 // ListCommission implements biz.CommissionRepo.
 func (c *commissionRepo) ListCommission(ctx context.Context) ([]*biz.Commission, error) {
 	query := `
@@ -96,8 +75,8 @@ func (c *commissionRepo) ListCommission(ctx context.Context) ([]*biz.Commission,
 	return dst, err
 }
 
-// ListCommissionByParent implements biz.CommissionRepo.
-func (c *commissionRepo) ListCommissionByParent(ctx context.Context, parentId string) ([]*biz.Commission, error) {
+// ListTotalCommissionByParent implements biz.CommissionRepo.
+func (c *commissionRepo) ListTotalCommissionByParent(ctx context.Context, parentId string) ([]*biz.Commission, error) {
 	panic("unimplemented")
 }
 

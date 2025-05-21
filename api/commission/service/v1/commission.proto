@@ -11,38 +11,35 @@ option java_package = "api.commission.service.v1";
 
 service Commission {
 	rpc HandleOrderCommission (HandleOrderCommissionRequest) returns (HandleOrderCommissionReply);
-	rpc GetUserCommission (GetUserCommissionRequest) returns (GetUserCommissionReply) {
+	// 增加链上每个用户的注册量，通过最下游的代理 ID
+	rpc IncChainRegistrationCountByDirectUser(IncChainRegistrationCountByDirectUserReq) returns (IncChainRegistrationCountByDirectUserReply);
+	// 获取指定用户的累计佣金
+	rpc GetUserTotalCommission (GetUserTotalCommissionRequest) returns (GetUserTotalCommissionReply) {
 		option (google.api.http) = {
-			get: "/v1/users/{user_id}/commission"
+			get: "/v1/users/{user_id}/total_commission"
 		};
 	};
-	rpc ListCommission (ListCommissionRequest) returns (ListCommissionReply) {
+	// 列出每个用户的累计佣金
+	rpc ListTotalCommission (ListTotalCommissionRequest) returns (ListTotalCommissionReply) {
 		option (google.api.http) = {
-			get: "/v1/commissions"
+			get: "/v1/total_commissions"
 		};
 	};
-	rpc ListCommissionByParent(ListCommissionByParentReq) returns (ListCommissionByParentReply) {
+	// 列出每个下游代理的累计佣金
+	rpc ListTotalCommissionByParent(ListTotalCommissionByParentReq) returns (ListTotalCommissionByParentReply) {
 		option (google.api.http) = {
-			get: "/v1/users/{parent_id}/users/commissions"
+			get: "/v1/users/{parent_id}/children/total_commissions"
 		};
 	};
-	rpc InitUserCommission(InitUserCommissionReq) returns (InitUserCommissionReply);
-	rpc IncUserRegistrationCount(IncUserRegistrationCountReq) returns (IncUserRegistrationCountReply);
 }
 
-message IncUserRegistrationCountReq {
+message IncChainRegistrationCountByDirectUserReq {
 	string user_id = 1 [(validate.rules).string = {min_len: 1}];
 }
 
-message IncUserRegistrationCountReply {
+message IncChainRegistrationCountByDirectUserReply {
 	
 }
-
-message InitUserCommissionReq {
-	string user_id = 1 [(validate.rules).string = {min_len: 1}];
-}
-
-message InitUserCommissionReply{}
 
 message HandleOrderCommissionRequest {
 	string domain = 1 [(validate.rules).string = {min_len: 1}];
@@ -50,10 +47,10 @@ message HandleOrderCommissionRequest {
 }
 message HandleOrderCommissionReply {}
 
-message GetUserCommissionRequest {
+message GetUserTotalCommissionRequest {
 	string user_id = 1 [(validate.rules).string = {min_len: 1}];
 }
-message GetUserCommissionReply {
+message GetUserTotalCommissionReply {
 	string id = 1;
 	string user_id = 2;
 	int32 total_commission = 3;
@@ -63,14 +60,14 @@ message GetUserCommissionReply {
 	int32 today_registration_count = 7;
 }
 
-message ListCommissionRequest {}
-message ListCommissionReply {
-	repeated GetUserCommissionReply commissions = 1;
+message ListTotalCommissionRequest {}
+message ListTotalCommissionReply {
+	repeated GetUserTotalCommissionReply commissions = 1;
 }
 
-message ListCommissionByParentReq{
+message ListTotalCommissionByParentReq{
 	string parent_id = 1 [(validate.rules).string = {min_len: 1}];
 }
-message ListCommissionByParentReply{
-	repeated GetUserCommissionReply commissions = 1;
+message ListTotalCommissionByParentReply{
+	repeated GetUserTotalCommissionReply commissions = 1;
 }

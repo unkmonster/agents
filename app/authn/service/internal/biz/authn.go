@@ -43,22 +43,20 @@ type UserCredentialRepo interface {
 }
 
 type AuthUserCase struct {
-	cr   UserCredentialRepo
-	ur   UserRepo
-	log  *log.Helper
-	comm CommissionRepo
+	cr  UserCredentialRepo
+	ur  UserRepo
+	log *log.Helper
 
 	tokenDuration time.Duration
 
 	gateway GatewayRepo
 }
 
-func NewAuthUserCase(repo UserCredentialRepo, logger log.Logger, ur UserRepo, auth *conf.Auth, comm CommissionRepo, gateway GatewayRepo) *AuthUserCase {
+func NewAuthUserCase(repo UserCredentialRepo, logger log.Logger, ur UserRepo, auth *conf.Auth, gateway GatewayRepo) *AuthUserCase {
 	return &AuthUserCase{
-		cr:   repo,
-		log:  log.NewHelper(logger),
-		ur:   ur,
-		comm: comm,
+		cr:  repo,
+		log: log.NewHelper(logger),
+		ur:  ur,
 
 		tokenDuration: auth.TokenDuration.AsDuration(),
 		gateway:       gateway,
@@ -104,11 +102,6 @@ func (uc *AuthUserCase) Register(ctx context.Context, req *pb.RegisterRequest) (
 		Level:        *req.Level,
 		SharePercent: req.SharePercent,
 	})
-	if err != nil {
-		return nil, err
-	}
-
-	err = uc.comm.InitUserCommission(ctx, user.Id)
 	if err != nil {
 		return nil, err
 	}

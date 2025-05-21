@@ -19,90 +19,93 @@ var _ = binding.EncodeURL
 
 const _ = http.SupportPackageIsVersion1
 
-const OperationCommissionGetUserCommission = "/api.commission.service.v1.Commission/GetUserCommission"
-const OperationCommissionListCommission = "/api.commission.service.v1.Commission/ListCommission"
-const OperationCommissionListCommissionByParent = "/api.commission.service.v1.Commission/ListCommissionByParent"
+const OperationCommissionGetUserTotalCommission = "/api.commission.service.v1.Commission/GetUserTotalCommission"
+const OperationCommissionListTotalCommission = "/api.commission.service.v1.Commission/ListTotalCommission"
+const OperationCommissionListTotalCommissionByParent = "/api.commission.service.v1.Commission/ListTotalCommissionByParent"
 
 type CommissionHTTPServer interface {
-	GetUserCommission(context.Context, *GetUserCommissionRequest) (*GetUserCommissionReply, error)
-	ListCommission(context.Context, *ListCommissionRequest) (*ListCommissionReply, error)
-	ListCommissionByParent(context.Context, *ListCommissionByParentReq) (*ListCommissionByParentReply, error)
+	// GetUserTotalCommission 获取指定用户的累计佣金
+	GetUserTotalCommission(context.Context, *GetUserTotalCommissionRequest) (*GetUserTotalCommissionReply, error)
+	// ListTotalCommission 列出每个用户的累计佣金
+	ListTotalCommission(context.Context, *ListTotalCommissionRequest) (*ListTotalCommissionReply, error)
+	// ListTotalCommissionByParent 列出每个下游代理的累计佣金
+	ListTotalCommissionByParent(context.Context, *ListTotalCommissionByParentReq) (*ListTotalCommissionByParentReply, error)
 }
 
 func RegisterCommissionHTTPServer(s *http.Server, srv CommissionHTTPServer) {
 	r := s.Route("/")
-	r.GET("/v1/users/{user_id}/commission", _Commission_GetUserCommission0_HTTP_Handler(srv))
-	r.GET("/v1/commissions", _Commission_ListCommission0_HTTP_Handler(srv))
-	r.GET("/v1/users/{parent_id}/users/commissions", _Commission_ListCommissionByParent0_HTTP_Handler(srv))
+	r.GET("/v1/users/{user_id}/total_commission", _Commission_GetUserTotalCommission0_HTTP_Handler(srv))
+	r.GET("/v1/total_commissions", _Commission_ListTotalCommission0_HTTP_Handler(srv))
+	r.GET("/v1/users/{parent_id}/children/total_commissions", _Commission_ListTotalCommissionByParent0_HTTP_Handler(srv))
 }
 
-func _Commission_GetUserCommission0_HTTP_Handler(srv CommissionHTTPServer) func(ctx http.Context) error {
+func _Commission_GetUserTotalCommission0_HTTP_Handler(srv CommissionHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in GetUserCommissionRequest
+		var in GetUserTotalCommissionRequest
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
 		if err := ctx.BindVars(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationCommissionGetUserCommission)
+		http.SetOperation(ctx, OperationCommissionGetUserTotalCommission)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.GetUserCommission(ctx, req.(*GetUserCommissionRequest))
+			return srv.GetUserTotalCommission(ctx, req.(*GetUserTotalCommissionRequest))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		reply := out.(*GetUserCommissionReply)
+		reply := out.(*GetUserTotalCommissionReply)
 		return ctx.Result(200, reply)
 	}
 }
 
-func _Commission_ListCommission0_HTTP_Handler(srv CommissionHTTPServer) func(ctx http.Context) error {
+func _Commission_ListTotalCommission0_HTTP_Handler(srv CommissionHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in ListCommissionRequest
+		var in ListTotalCommissionRequest
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationCommissionListCommission)
+		http.SetOperation(ctx, OperationCommissionListTotalCommission)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.ListCommission(ctx, req.(*ListCommissionRequest))
+			return srv.ListTotalCommission(ctx, req.(*ListTotalCommissionRequest))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		reply := out.(*ListCommissionReply)
+		reply := out.(*ListTotalCommissionReply)
 		return ctx.Result(200, reply)
 	}
 }
 
-func _Commission_ListCommissionByParent0_HTTP_Handler(srv CommissionHTTPServer) func(ctx http.Context) error {
+func _Commission_ListTotalCommissionByParent0_HTTP_Handler(srv CommissionHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in ListCommissionByParentReq
+		var in ListTotalCommissionByParentReq
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
 		if err := ctx.BindVars(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationCommissionListCommissionByParent)
+		http.SetOperation(ctx, OperationCommissionListTotalCommissionByParent)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.ListCommissionByParent(ctx, req.(*ListCommissionByParentReq))
+			return srv.ListTotalCommissionByParent(ctx, req.(*ListTotalCommissionByParentReq))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		reply := out.(*ListCommissionByParentReply)
+		reply := out.(*ListTotalCommissionByParentReply)
 		return ctx.Result(200, reply)
 	}
 }
 
 type CommissionHTTPClient interface {
-	GetUserCommission(ctx context.Context, req *GetUserCommissionRequest, opts ...http.CallOption) (rsp *GetUserCommissionReply, err error)
-	ListCommission(ctx context.Context, req *ListCommissionRequest, opts ...http.CallOption) (rsp *ListCommissionReply, err error)
-	ListCommissionByParent(ctx context.Context, req *ListCommissionByParentReq, opts ...http.CallOption) (rsp *ListCommissionByParentReply, err error)
+	GetUserTotalCommission(ctx context.Context, req *GetUserTotalCommissionRequest, opts ...http.CallOption) (rsp *GetUserTotalCommissionReply, err error)
+	ListTotalCommission(ctx context.Context, req *ListTotalCommissionRequest, opts ...http.CallOption) (rsp *ListTotalCommissionReply, err error)
+	ListTotalCommissionByParent(ctx context.Context, req *ListTotalCommissionByParentReq, opts ...http.CallOption) (rsp *ListTotalCommissionByParentReply, err error)
 }
 
 type CommissionHTTPClientImpl struct {
@@ -113,11 +116,11 @@ func NewCommissionHTTPClient(client *http.Client) CommissionHTTPClient {
 	return &CommissionHTTPClientImpl{client}
 }
 
-func (c *CommissionHTTPClientImpl) GetUserCommission(ctx context.Context, in *GetUserCommissionRequest, opts ...http.CallOption) (*GetUserCommissionReply, error) {
-	var out GetUserCommissionReply
-	pattern := "/v1/users/{user_id}/commission"
+func (c *CommissionHTTPClientImpl) GetUserTotalCommission(ctx context.Context, in *GetUserTotalCommissionRequest, opts ...http.CallOption) (*GetUserTotalCommissionReply, error) {
+	var out GetUserTotalCommissionReply
+	pattern := "/v1/users/{user_id}/total_commission"
 	path := binding.EncodeURL(pattern, in, true)
-	opts = append(opts, http.Operation(OperationCommissionGetUserCommission))
+	opts = append(opts, http.Operation(OperationCommissionGetUserTotalCommission))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {
@@ -126,11 +129,11 @@ func (c *CommissionHTTPClientImpl) GetUserCommission(ctx context.Context, in *Ge
 	return &out, nil
 }
 
-func (c *CommissionHTTPClientImpl) ListCommission(ctx context.Context, in *ListCommissionRequest, opts ...http.CallOption) (*ListCommissionReply, error) {
-	var out ListCommissionReply
-	pattern := "/v1/commissions"
+func (c *CommissionHTTPClientImpl) ListTotalCommission(ctx context.Context, in *ListTotalCommissionRequest, opts ...http.CallOption) (*ListTotalCommissionReply, error) {
+	var out ListTotalCommissionReply
+	pattern := "/v1/total_commissions"
 	path := binding.EncodeURL(pattern, in, true)
-	opts = append(opts, http.Operation(OperationCommissionListCommission))
+	opts = append(opts, http.Operation(OperationCommissionListTotalCommission))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {
@@ -139,11 +142,11 @@ func (c *CommissionHTTPClientImpl) ListCommission(ctx context.Context, in *ListC
 	return &out, nil
 }
 
-func (c *CommissionHTTPClientImpl) ListCommissionByParent(ctx context.Context, in *ListCommissionByParentReq, opts ...http.CallOption) (*ListCommissionByParentReply, error) {
-	var out ListCommissionByParentReply
-	pattern := "/v1/users/{parent_id}/users/commissions"
+func (c *CommissionHTTPClientImpl) ListTotalCommissionByParent(ctx context.Context, in *ListTotalCommissionByParentReq, opts ...http.CallOption) (*ListTotalCommissionByParentReply, error) {
+	var out ListTotalCommissionByParentReply
+	pattern := "/v1/users/{parent_id}/children/total_commissions"
 	path := binding.EncodeURL(pattern, in, true)
-	opts = append(opts, http.Operation(OperationCommissionListCommissionByParent))
+	opts = append(opts, http.Operation(OperationCommissionListTotalCommissionByParent))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {

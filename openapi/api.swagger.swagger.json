@@ -127,28 +127,6 @@
         ]
       }
     },
-    "/v1/commissions": {
-      "get": {
-        "operationId": "Commission_ListCommission",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/v1ListCommissionReply"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "tags": [
-          "Commission"
-        ]
-      }
-    },
     "/v1/domains": {
       "get": {
         "operationId": "User_ListUserDomains",
@@ -374,6 +352,29 @@
         ]
       }
     },
+    "/v1/total_commissions": {
+      "get": {
+        "summary": "列出每个用户的累计佣金",
+        "operationId": "Commission_ListTotalCommission",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1ListTotalCommissionReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "Commission"
+        ]
+      }
+    },
     "/v1/users": {
       "get": {
         "operationId": "User_ListUser",
@@ -520,14 +521,15 @@
         ]
       }
     },
-    "/v1/users/{parentId}/users/commissions": {
+    "/v1/users/{parentId}/children/total_commissions": {
       "get": {
-        "operationId": "Commission_ListCommissionByParent",
+        "summary": "列出每个下游代理的累计佣金",
+        "operationId": "Commission_ListTotalCommissionByParent",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v1ListCommissionByParentReply"
+              "$ref": "#/definitions/v1ListTotalCommissionByParentReply"
             }
           },
           "default": {
@@ -540,36 +542,6 @@
         "parameters": [
           {
             "name": "parentId",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "tags": [
-          "Commission"
-        ]
-      }
-    },
-    "/v1/users/{userId}/commission": {
-      "get": {
-        "operationId": "Commission_GetUserCommission",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/v1GetUserCommissionReply"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "userId",
             "in": "path",
             "required": true,
             "type": "string"
@@ -673,6 +645,37 @@
         ],
         "tags": [
           "Order"
+        ]
+      }
+    },
+    "/v1/users/{userId}/total_commission": {
+      "get": {
+        "summary": "获取指定用户的累计佣金",
+        "operationId": "Commission_GetUserTotalCommission",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1GetUserTotalCommissionReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Commission"
         ]
       }
     },
@@ -1078,12 +1081,6 @@
         "username": {
           "type": "string"
         },
-        "nickname": {
-          "type": "string"
-        },
-        "parentId": {
-          "type": "string"
-        },
         "level": {
           "type": "integer",
           "format": "int32"
@@ -1091,6 +1088,12 @@
         "sharePercent": {
           "type": "number",
           "format": "float"
+        },
+        "nickname": {
+          "type": "string"
+        },
+        "parentId": {
+          "type": "string"
         }
       }
     },
@@ -1180,12 +1183,6 @@
         "username": {
           "type": "string"
         },
-        "nickname": {
-          "type": "string"
-        },
-        "parentId": {
-          "type": "string"
-        },
         "level": {
           "type": "integer",
           "format": "int32"
@@ -1193,29 +1190,12 @@
         "sharePercent": {
           "type": "number",
           "format": "float"
-        }
-      }
-    },
-    "v1GetUserCommissionReply": {
-      "type": "object",
-      "properties": {
-        "id": {
+        },
+        "nickname": {
           "type": "string"
         },
-        "userId": {
+        "parentId": {
           "type": "string"
-        },
-        "totalCommission": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "todayCommission": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "settledCommission": {
-          "type": "integer",
-          "format": "int32"
         }
       }
     },
@@ -1242,12 +1222,6 @@
         "username": {
           "type": "string"
         },
-        "nickname": {
-          "type": "string"
-        },
-        "parentId": {
-          "type": "string"
-        },
         "level": {
           "type": "integer",
           "format": "int32"
@@ -1255,6 +1229,43 @@
         "sharePercent": {
           "type": "number",
           "format": "float"
+        },
+        "nickname": {
+          "type": "string"
+        },
+        "parentId": {
+          "type": "string"
+        }
+      }
+    },
+    "v1GetUserTotalCommissionReply": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "userId": {
+          "type": "string"
+        },
+        "totalCommission": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "todayCommission": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "settledCommission": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "totalRegistrationCount": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "todayRegistrationCount": {
+          "type": "integer",
+          "format": "int32"
         }
       }
     },
@@ -1285,32 +1296,8 @@
     "v1HandleOrderCommissionReply": {
       "type": "object"
     },
-    "v1InitUserCommissionReply": {
+    "v1IncChainRegistrationCountByDirectUserReply": {
       "type": "object"
-    },
-    "v1ListCommissionByParentReply": {
-      "type": "object",
-      "properties": {
-        "commissions": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "$ref": "#/definitions/v1GetUserCommissionReply"
-          }
-        }
-      }
-    },
-    "v1ListCommissionReply": {
-      "type": "object",
-      "properties": {
-        "commissions": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "$ref": "#/definitions/v1GetUserCommissionReply"
-          }
-        }
-      }
     },
     "v1ListOrderReply": {
       "type": "object",
@@ -1320,6 +1307,30 @@
           "items": {
             "type": "object",
             "$ref": "#/definitions/ListOrderReplyOrder"
+          }
+        }
+      }
+    },
+    "v1ListTotalCommissionByParentReply": {
+      "type": "object",
+      "properties": {
+        "commissions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1GetUserTotalCommissionReply"
+          }
+        }
+      }
+    },
+    "v1ListTotalCommissionReply": {
+      "type": "object",
+      "properties": {
+        "commissions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1GetUserTotalCommissionReply"
           }
         }
       }
@@ -1474,12 +1485,6 @@
         "username": {
           "type": "string"
         },
-        "nickname": {
-          "type": "string"
-        },
-        "parentId": {
-          "type": "string"
-        },
         "level": {
           "type": "integer",
           "format": "int32"
@@ -1487,6 +1492,12 @@
         "sharePercent": {
           "type": "number",
           "format": "float"
+        },
+        "nickname": {
+          "type": "string"
+        },
+        "parentId": {
+          "type": "string"
         }
       }
     },

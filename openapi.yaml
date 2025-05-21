@@ -3,35 +3,36 @@
 
 openapi: 3.0.3
 info:
-    title: User API
+    title: Commission API
     version: 0.0.1
 paths:
-    /v1/domains:
+    /v1/total_commissions:
         get:
             tags:
-                - User
-            operationId: User_ListUserDomains
+                - Commission
+            description: 列出每个用户的累计佣金
+            operationId: Commission_ListTotalCommission
             responses:
                 "200":
                     description: OK
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/ListUserDomainsReply'
+                                $ref: '#/components/schemas/ListTotalCommissionReply'
                 default:
                     description: Default error response
                     content:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/Status'
-    /v1/domains/{id}:
+    /v1/users/{parentId}/children/total_commissions:
         get:
             tags:
-                - User
-            description: 获取域名
-            operationId: User_GetUserDomain
+                - Commission
+            description: 列出每个下游代理的累计佣金
+            operationId: Commission_ListTotalCommissionByParent
             parameters:
-                - name: id
+                - name: parentId
                   in: path
                   required: true
                   schema:
@@ -42,158 +43,19 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/GetUserDomainReply'
+                                $ref: '#/components/schemas/ListTotalCommissionByParentReply'
                 default:
                     description: Default error response
                     content:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/Status'
-        delete:
-            tags:
-                - User
-            operationId: User_DeleteDomain
-            parameters:
-                - name: id
-                  in: path
-                  required: true
-                  schema:
-                    type: string
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/DeleteDomainReply'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/Status'
-    /v1/users:
+    /v1/users/{userId}/total_commission:
         get:
             tags:
-                - User
-            operationId: User_ListUser
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/ListUserReply'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/Status'
-        post:
-            tags:
-                - User
-            operationId: User_CreateUser
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/CreateUserRequest'
-                required: true
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/CreateUserReply'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/Status'
-    /v1/users/{id}:
-        get:
-            tags:
-                - User
-            operationId: User_GetUser
-            parameters:
-                - name: id
-                  in: path
-                  required: true
-                  schema:
-                    type: string
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/GetUserReply'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/Status'
-        delete:
-            tags:
-                - User
-            operationId: User_DeleteUser
-            parameters:
-                - name: id
-                  in: path
-                  required: true
-                  schema:
-                    type: string
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/DeleteUserReply'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/Status'
-        patch:
-            tags:
-                - User
-            operationId: User_UpdateUser
-            parameters:
-                - name: id
-                  in: path
-                  required: true
-                  schema:
-                    type: string
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/UpdateUserRequest'
-                required: true
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/UpdateUserReply'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/Status'
-    /v1/users/{userId}/domains:
-        get:
-            tags:
-                - User
-            operationId: User_ListUserDomainsByUserId
+                - Commission
+            description: 获取指定用户的累计佣金
+            operationId: Commission_GetUserTotalCommission
             parameters:
                 - name: userId
                   in: path
@@ -206,36 +68,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/ListUserDomainsByUserIdReply'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/Status'
-        post:
-            tags:
-                - User
-            operationId: User_CreateUserDomain
-            parameters:
-                - name: userId
-                  in: path
-                  required: true
-                  schema:
-                    type: string
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/CreateUserDomainRequest'
-                required: true
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/CreateUserDomainReply'
+                                $ref: '#/components/schemas/GetUserTotalCommissionReply'
                 default:
                     description: Default error response
                     content:
@@ -244,86 +77,28 @@ paths:
                                 $ref: '#/components/schemas/Status'
 components:
     schemas:
-        CreateUserDomainReply:
+        GetUserTotalCommissionReply:
             type: object
             properties:
                 id:
                     type: string
                 userId:
                     type: string
-                domain:
-                    type: string
-        CreateUserDomainRequest:
-            type: object
-            properties:
-                userId:
-                    type: string
-                domain:
-                    type: string
-        CreateUserReply:
-            type: object
-            properties:
-                id:
-                    type: string
-                username:
-                    type: string
-                level:
+                totalCommission:
                     type: integer
                     format: int32
-                sharePercent:
-                    type: number
-                    format: float
-                nickname:
-                    type: string
-                parentId:
-                    type: string
-        CreateUserRequest:
-            type: object
-            properties:
-                username:
-                    type: string
-                nickname:
-                    type: string
-                parentId:
-                    type: string
-                level:
+                todayCommission:
                     type: integer
                     format: int32
-                sharePercent:
-                    type: number
-                    format: float
-        DeleteDomainReply:
-            type: object
-            properties: {}
-        DeleteUserReply:
-            type: object
-            properties: {}
-        GetUserDomainReply:
-            type: object
-            properties:
-                id:
-                    type: string
-                userId:
-                    type: string
-                domain:
-                    type: string
-        GetUserReply:
-            type: object
-            properties:
-                id:
-                    type: string
-                username:
-                    type: string
-                level:
+                settledCommission:
                     type: integer
                     format: int32
-                sharePercent:
-                    type: number
-                    format: float
-                nickname:
-                    type: string
-                parentId:
-                    type: string
+                totalRegistrationCount:
+                    type: integer
+                    format: int32
+                todayRegistrationCount:
+                    type: integer
+                    format: int32
         GoogleProtobufAny:
             type: object
             properties:
@@ -332,62 +107,20 @@ components:
                     description: The type of the serialized message.
             additionalProperties: true
             description: Contains an arbitrary serialized message along with a @type that describes the type of the serialized message.
-        ListUserDomainsByUserIdReply:
+        ListTotalCommissionByParentReply:
             type: object
             properties:
-                domains:
+                commissions:
                     type: array
                     items:
-                        $ref: '#/components/schemas/ListUserDomainsByUserIdReply_Domain'
-        ListUserDomainsByUserIdReply_Domain:
+                        $ref: '#/components/schemas/GetUserTotalCommissionReply'
+        ListTotalCommissionReply:
             type: object
             properties:
-                id:
-                    type: string
-                userId:
-                    type: string
-                domain:
-                    type: string
-        ListUserDomainsReply:
-            type: object
-            properties:
-                domains:
+                commissions:
                     type: array
                     items:
-                        $ref: '#/components/schemas/ListUserDomainsReply_Domain'
-        ListUserDomainsReply_Domain:
-            type: object
-            properties:
-                id:
-                    type: string
-                userId:
-                    type: string
-                domain:
-                    type: string
-        ListUserReply:
-            type: object
-            properties:
-                users:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/ListUserReply_User'
-        ListUserReply_User:
-            type: object
-            properties:
-                id:
-                    type: string
-                username:
-                    type: string
-                nickname:
-                    type: string
-                parentId:
-                    type: string
-                level:
-                    type: integer
-                    format: int32
-                sharePercent:
-                    type: number
-                    format: float
+                        $ref: '#/components/schemas/GetUserTotalCommissionReply'
         Status:
             type: object
             properties:
@@ -404,34 +137,5 @@ components:
                         $ref: '#/components/schemas/GoogleProtobufAny'
                     description: A list of messages that carry the error details.  There is a common set of message types for APIs to use.
             description: 'The `Status` type defines a logical error model that is suitable for different programming environments, including REST APIs and RPC APIs. It is used by [gRPC](https://github.com/grpc). Each `Status` message contains three pieces of data: error code, error message, and error details. You can find out more about this error model and how to work with it in the [API Design Guide](https://cloud.google.com/apis/design/errors).'
-        UpdateUserReply:
-            type: object
-            properties:
-                id:
-                    type: string
-                username:
-                    type: string
-                level:
-                    type: integer
-                    format: int32
-                sharePercent:
-                    type: number
-                    format: float
-                nickname:
-                    type: string
-                parentId:
-                    type: string
-        UpdateUserRequest:
-            type: object
-            properties:
-                id:
-                    type: string
-                password:
-                    type: string
-                nickname:
-                    type: string
-                sharePercent:
-                    type: number
-                    format: float
 tags:
-    - name: User
+    - name: Commission

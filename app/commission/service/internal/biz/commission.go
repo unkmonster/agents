@@ -24,13 +24,13 @@ type Commission struct {
 }
 
 type CommissionRepo interface {
-	InitUserCommission(ctx context.Context, userId string) error
 	IncUserCommission(ctx context.Context, userId string, amount int32) error
 	IncUserSettledCommission(ctx context.Context, userId string, amount int32) error
 	GetUserCommission(ctx context.Context, userId string) (*Commission, error)
+	// ListCommission 列出系统内所有用户的累计佣金
 	ListCommission(ctx context.Context) ([]*Commission, error)
-	// ListCommissionByParent 列出直接子用户的佣金
-	ListCommissionByParent(ctx context.Context, parentId string) ([]*Commission, error)
+	// ListTotalCommissionByParent 列出直接子用户的佣金
+	ListTotalCommissionByParent(ctx context.Context, parentId string) ([]*Commission, error)
 	IncUserRegistrationCount(ctx context.Context, userId string) error
 
 	// ----------- daily -------------------
@@ -111,24 +111,20 @@ func (uc *CommissionUseCase) CalcOrderCommission(ctx context.Context, req *commi
 	return nil
 }
 
-func (uc *CommissionUseCase) InitUserCommission(ctx context.Context, userId string) error {
-	return uc.commission.InitUserCommission(ctx, userId)
-}
-
-func (uc *CommissionUseCase) GetUserCommission(ctx context.Context, userId string) (*Commission, error) {
+func (uc *CommissionUseCase) GetUserTotalCommission(ctx context.Context, userId string) (*Commission, error) {
 	return uc.commission.GetUserCommission(ctx, userId)
 }
 
-func (uc *CommissionUseCase) ListCommission(ctx context.Context) ([]*Commission, error) {
+func (uc *CommissionUseCase) ListTotalCommission(ctx context.Context) ([]*Commission, error) {
 	return uc.commission.ListCommission(ctx)
 }
 
-func (uc *CommissionUseCase) ListCommissionByParent(ctx context.Context, parentId string) ([]*Commission, error) {
-	return uc.commission.ListCommissionByParent(ctx, parentId)
+func (uc *CommissionUseCase) ListTotalCommissionByParent(ctx context.Context, parentId string) ([]*Commission, error) {
+	return uc.commission.ListTotalCommissionByParent(ctx, parentId)
 }
 
-// IncRegistrationChainCount 增加从 user_id 到他的顶级代理每个代理的注册量
-func (uc *CommissionUseCase) IncRegistrationChainCount(ctx context.Context, userId string) error {
+// IncChainRegistrationCountByDirectUser 增加从 user_id 到他的顶级代理每个代理的注册量
+func (uc *CommissionUseCase) IncChainRegistrationCountByDirectUser(ctx context.Context, userId string) error {
 	user, err := uc.user.GetUser(ctx, userId)
 	if err != nil {
 		return err
