@@ -1,0 +1,1 @@
+DROP TABLE IF EXISTS daily_user_commissions;
