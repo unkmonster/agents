@@ -8,6 +8,7 @@ import (
 	"github.com/go-kratos/kratos/v2/log"
 
 	commissionv1 "agents/api/commission/service/v1"
+	"agents/pkg/paging"
 )
 
 const (
@@ -51,6 +52,7 @@ type CommissionRepo interface {
 	IncUserIndirectRegistrationCount(ctx context.Context, userId string) error
 
 	GetUserCommissionByDate(ctx context.Context, userId string, date time.Time) (*DailyCommission, error)
+	ListCommissionByUser(ctx context.Context, userId string, paging *paging.Paging) ([]*DailyCommission, error)
 }
 
 type CommissionUseCase struct {
@@ -186,5 +188,10 @@ func (uc *CommissionUseCase) ListCommissionByUser(ctx context.Context, req *comm
 		return []*DailyCommission{comm}, nil
 	}
 
-	panic("unimplemented query params")
+	return uc.commission.ListCommissionByUser(ctx, req.UserId, &paging.Paging{
+		Offset:  int64(req.Offset),
+		Limit:   int64(req.Limit),
+		OrderBy: req.OrderBy,
+		Sort:    req.Sort,
+	})
 }

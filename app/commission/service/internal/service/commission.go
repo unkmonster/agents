@@ -93,6 +93,16 @@ func (s *CommissionService) ListTotalCommissionByParent(ctx context.Context, req
 }
 
 func (s *CommissionService) ListCommissionByUser(ctx context.Context, req *pb.ListCommissionByUserReq) (*pb.ListCommissionByUserReply, error) {
+	if req.OrderBy == "" {
+		req.OrderBy = "date"
+	}
+	if req.Limit == 0 {
+		req.Limit = 20
+	}
+	if req.Sort == "" {
+		req.Sort = "desc"
+	}
+
 	commissions, err := s.comm.ListCommissionByUser(ctx, req)
 	if err != nil {
 		return nil, err

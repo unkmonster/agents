@@ -72,13 +72,33 @@ func (m *ListCommissionByUserReq) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	// no validation rules for OrderBy
+	if _, ok := _ListCommissionByUserReq_OrderBy_InLookup[m.GetOrderBy()]; !ok {
+		err := ListCommissionByUserReqValidationError{
+			field:  "OrderBy",
+			reason: "value must be in list [ date recharge_amount registration_count indirect_recharge_amount direct_recharge_amount indirect_registration_count direct_registration_count]",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
 
 	// no validation rules for Date
 
 	// no validation rules for Limit
 
 	// no validation rules for Offset
+
+	if _, ok := _ListCommissionByUserReq_Sort_InLookup[m.GetSort()]; !ok {
+		err := ListCommissionByUserReqValidationError{
+			field:  "Sort",
+			reason: "value must be in list [ asc desc]",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
 
 	if len(errors) > 0 {
 		return ListCommissionByUserReqMultiError(errors)
@@ -167,6 +187,23 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = ListCommissionByUserReqValidationError{}
+
+var _ListCommissionByUserReq_OrderBy_InLookup = map[string]struct{}{
+	"":                            {},
+	"date":                        {},
+	"recharge_amount":             {},
+	"registration_count":          {},
+	"indirect_recharge_amount":    {},
+	"direct_recharge_amount":      {},
+	"indirect_registration_count": {},
+	"direct_registration_count":   {},
+}
+
+var _ListCommissionByUserReq_Sort_InLookup = map[string]struct{}{
+	"":     {},
+	"asc":  {},
+	"desc": {},
+}
 
 // Validate checks the field values on ListCommissionByUserReply with the rules
 // defined in the proto definition for this message. If any rules are

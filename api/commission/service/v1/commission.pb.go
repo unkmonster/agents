@@ -32,6 +32,7 @@ type ListCommissionByUserReq struct {
 	Date          string `protobuf:"bytes,4,opt,name=date,proto3" json:"date,omitempty"` // 如果 date 被指定将忽略 order_by 相关的参数
 	Limit         int32  `protobuf:"varint,5,opt,name=limit,proto3" json:"limit,omitempty"`
 	Offset        int32  `protobuf:"varint,6,opt,name=offset,proto3" json:"offset,omitempty"`
+	Sort          string `protobuf:"bytes,7,opt,name=sort,proto3" json:"sort,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -99,6 +100,13 @@ func (x *ListCommissionByUserReq) GetOffset() int32 {
 		return x.Offset
 	}
 	return 0
+}
+
+func (x *ListCommissionByUserReq) GetSort() string {
+	if x != nil {
+		return x.Sort
+	}
+	return ""
 }
 
 type ListCommissionByUserReply struct {
@@ -705,13 +713,14 @@ var File_api_commission_service_v1_commission_proto protoreflect.FileDescriptor
 
 const file_api_commission_service_v1_commission_proto_rawDesc = "" +
 	"\n" +
-	"*api/commission/service/v1/commission.proto\x12\x19api.commission.service.v1\x1a\x1cgoogle/api/annotations.proto\x1a\x17validate/validate.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"\x99\x01\n" +
+	"*api/commission/service/v1/commission.proto\x12\x19api.commission.service.v1\x1a\x1cgoogle/api/annotations.proto\x1a\x17validate/validate.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"\xe3\x02\n" +
 	"\x17ListCommissionByUserReq\x12!\n" +
-	"\auser_id\x18\x01 \x01(\tB\b\xfaB\x05r\x03\xb0\x01\x01R\x06userId\x12\x19\n" +
-	"\border_by\x18\x03 \x01(\tR\aorderBy\x12\x12\n" +
+	"\auser_id\x18\x01 \x01(\tB\b\xfaB\x05r\x03\xb0\x01\x01R\x06userId\x12\xba\x01\n" +
+	"\border_by\x18\x03 \x01(\tB\x9e\x01\xfaB\x9a\x01r\x97\x01R\x00R\x04dateR\x0frecharge_amountR\x12registration_countR\x18indirect_recharge_amountR\x16direct_recharge_amountR\x1bindirect_registration_countR\x19direct_registration_countR\aorderBy\x12\x12\n" +
 	"\x04date\x18\x04 \x01(\tR\x04date\x12\x14\n" +
 	"\x05limit\x18\x05 \x01(\x05R\x05limit\x12\x16\n" +
-	"\x06offset\x18\x06 \x01(\x05R\x06offset\"\xc2\x03\n" +
+	"\x06offset\x18\x06 \x01(\x05R\x06offset\x12&\n" +
+	"\x04sort\x18\a \x01(\tB\x12\xfaB\x0fr\rR\x00R\x03ascR\x04descR\x04sort\"\xc2\x03\n" +
 	"\x19ListCommissionByUserReply\x12\x17\n" +
 	"\auser_id\x18\x01 \x01(\tR\x06userId\x12a\n" +
 	"\vcommissions\x18\x02 \x03(\v2?.api.commission.service.v1.ListCommissionByUserReply.CommissionR\vcommissions\x1a\xa8\x02\n" +

@@ -2,10 +2,12 @@ package data
 
 import (
 	"agents/app/commission/service/internal/biz"
+	"agents/pkg/paging"
 	"context"
 	"fmt"
 	"time"
 
+	sq "github.com/Masterminds/squirrel"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
@@ -241,4 +243,15 @@ func (c *commissionRepo) GetUserCommissionByDate(ctx context.Context, userId str
 	dst := biz.DailyCommission{}
 	err := c.data.db.GetContext(ctx, &dst, query, userId, date)
 	return &dst, err
+}
+
+func (c *commissionRepo) ListCommissionByUser(ctx context.Context, userId string, paging *paging.Paging) ([]*biz.DailyCommission, error) {
+	builder := sq.Select("*").
+		From("daily_user_commissions").
+		Where(sq.Eq{"user_id": userId})
+	query, args := paging.Make(builder).MustSql()
+
+	dst := []*biz.DailyCommission{}
+	err := c.data.db.SelectContext(ctx, &dst, query, args...)
+	return dst, err
 }

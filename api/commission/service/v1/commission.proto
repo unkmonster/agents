@@ -43,10 +43,11 @@ service Commission {
 message ListCommissionByUserReq{
 	string user_id = 1 [(validate.rules).string = {uuid: true}];
 	// query params
-	string order_by = 3;
+	string order_by = 3 [(validate.rules).string = {in: ["", "date", "recharge_amount", "registration_count", "indirect_recharge_amount", "direct_recharge_amount", "indirect_registration_count", "direct_registration_count"]}];
 	string date = 4;	// 如果 date 被指定将忽略 order_by 相关的参数
 	int32 limit = 5;
 	int32 offset = 6;
+	string sort = 7 [(validate.rules).string = {in: ["", "asc", "desc"]}];
 }
 message ListCommissionByUserReply{
 	message Commission {
