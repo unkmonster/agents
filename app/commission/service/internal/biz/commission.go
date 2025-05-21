@@ -24,6 +24,7 @@ type CommissionRepo interface {
 	ListCommission(ctx context.Context) ([]*Commission, error)
 	// ListCommissionByParent 列出直接子用户的佣金
 	ListCommissionByParent(ctx context.Context, parentId string) ([]*Commission, error)
+	IncUserRegistrationCount(ctx context.Context, userId string) error
 }
 
 type CommissionUseCase struct {
@@ -101,4 +102,8 @@ func (uc *CommissionUseCase) ListCommission(ctx context.Context) ([]*Commission,
 
 func (uc *CommissionUseCase) ListCommissionByParent(ctx context.Context, parentId string) ([]*Commission, error) {
 	return uc.commission.ListCommissionByParent(ctx, parentId)
+}
+
+func (uc *CommissionUseCase) IncUserRegistrationCount(ctx context.Context, userId string) error {
+	return uc.commission.IncUserRegistrationCount(ctx, userId)
 }

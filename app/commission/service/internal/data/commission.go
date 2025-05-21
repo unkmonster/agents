@@ -90,3 +90,14 @@ func (c *commissionRepo) ListCommission(ctx context.Context) ([]*biz.Commission,
 func (c *commissionRepo) ListCommissionByParent(ctx context.Context, parentId string) ([]*biz.Commission, error) {
 	panic("unimplemented")
 }
+
+func (c *commissionRepo) IncUserRegistrationCount(ctx context.Context, userId string) error {
+	query := `
+		UPDATE user_commissions
+		SET today_registration_count = today_registration_count + 1,
+			total_registration_count = total_registration_count + 1
+		WHERE user_id = ?;
+	`
+	_, err := c.data.db.ExecContext(ctx, query, userId)
+	return err
+}

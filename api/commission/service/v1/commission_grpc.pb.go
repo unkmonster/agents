@@ -19,11 +19,12 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Commission_HandleOrderCommission_FullMethodName  = "/api.commission.service.v1.Commission/HandleOrderCommission"
-	Commission_GetUserCommission_FullMethodName      = "/api.commission.service.v1.Commission/GetUserCommission"
-	Commission_ListCommission_FullMethodName         = "/api.commission.service.v1.Commission/ListCommission"
-	Commission_ListCommissionByParent_FullMethodName = "/api.commission.service.v1.Commission/ListCommissionByParent"
-	Commission_InitUserCommission_FullMethodName     = "/api.commission.service.v1.Commission/InitUserCommission"
+	Commission_HandleOrderCommission_FullMethodName    = "/api.commission.service.v1.Commission/HandleOrderCommission"
+	Commission_GetUserCommission_FullMethodName        = "/api.commission.service.v1.Commission/GetUserCommission"
+	Commission_ListCommission_FullMethodName           = "/api.commission.service.v1.Commission/ListCommission"
+	Commission_ListCommissionByParent_FullMethodName   = "/api.commission.service.v1.Commission/ListCommissionByParent"
+	Commission_InitUserCommission_FullMethodName       = "/api.commission.service.v1.Commission/InitUserCommission"
+	Commission_IncUserRegistrationCount_FullMethodName = "/api.commission.service.v1.Commission/IncUserRegistrationCount"
 )
 
 // CommissionClient is the client API for Commission service.
@@ -35,6 +36,7 @@ type CommissionClient interface {
 	ListCommission(ctx context.Context, in *ListCommissionRequest, opts ...grpc.CallOption) (*ListCommissionReply, error)
 	ListCommissionByParent(ctx context.Context, in *ListCommissionByParentReq, opts ...grpc.CallOption) (*ListCommissionByParentReply, error)
 	InitUserCommission(ctx context.Context, in *InitUserCommissionReq, opts ...grpc.CallOption) (*InitUserCommissionReply, error)
+	IncUserRegistrationCount(ctx context.Context, in *IncUserRegistrationCountReq, opts ...grpc.CallOption) (*IncUserRegistrationCountReply, error)
 }
 
 type commissionClient struct {
@@ -95,6 +97,16 @@ func (c *commissionClient) InitUserCommission(ctx context.Context, in *InitUserC
 	return out, nil
 }
 
+func (c *commissionClient) IncUserRegistrationCount(ctx context.Context, in *IncUserRegistrationCountReq, opts ...grpc.CallOption) (*IncUserRegistrationCountReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(IncUserRegistrationCountReply)
+	err := c.cc.Invoke(ctx, Commission_IncUserRegistrationCount_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // CommissionServer is the server API for Commission service.
 // All implementations must embed UnimplementedCommissionServer
 // for forward compatibility.
@@ -104,6 +116,7 @@ type CommissionServer interface {
 	ListCommission(context.Context, *ListCommissionRequest) (*ListCommissionReply, error)
 	ListCommissionByParent(context.Context, *ListCommissionByParentReq) (*ListCommissionByParentReply, error)
 	InitUserCommission(context.Context, *InitUserCommissionReq) (*InitUserCommissionReply, error)
+	IncUserRegistrationCount(context.Context, *IncUserRegistrationCountReq) (*IncUserRegistrationCountReply, error)
 	mustEmbedUnimplementedCommissionServer()
 }
 
@@ -128,6 +141,9 @@ func (UnimplementedCommissionServer) ListCommissionByParent(context.Context, *Li
 }
 func (UnimplementedCommissionServer) InitUserCommission(context.Context, *InitUserCommissionReq) (*InitUserCommissionReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method InitUserCommission not implemented")
+}
+func (UnimplementedCommissionServer) IncUserRegistrationCount(context.Context, *IncUserRegistrationCountReq) (*IncUserRegistrationCountReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method IncUserRegistrationCount not implemented")
 }
 func (UnimplementedCommissionServer) mustEmbedUnimplementedCommissionServer() {}
 func (UnimplementedCommissionServer) testEmbeddedByValue()                    {}
@@ -240,6 +256,24 @@ func _Commission_InitUserCommission_Handler(srv interface{}, ctx context.Context
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Commission_IncUserRegistrationCount_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(IncUserRegistrationCountReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CommissionServer).IncUserRegistrationCount(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Commission_IncUserRegistrationCount_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CommissionServer).IncUserRegistrationCount(ctx, req.(*IncUserRegistrationCountReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Commission_ServiceDesc is the grpc.ServiceDesc for Commission service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -266,6 +300,10 @@ var Commission_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "InitUserCommission",
 			Handler:    _Commission_InitUserCommission_Handler,
+		},
+		{
+			MethodName: "IncUserRegistrationCount",
+			Handler:    _Commission_IncUserRegistrationCount_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

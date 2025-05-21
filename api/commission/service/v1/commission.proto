@@ -27,6 +27,15 @@ service Commission {
 		};
 	};
 	rpc InitUserCommission(InitUserCommissionReq) returns (InitUserCommissionReply);
+	rpc IncUserRegistrationCount(IncUserRegistrationCountReq) returns (IncUserRegistrationCountReply);
+}
+
+message IncUserRegistrationCountReq {
+	string user_id = 1 [(validate.rules).string = {min_len: 1}];
+}
+
+message IncUserRegistrationCountReply {
+	
 }
 
 message InitUserCommissionReq {

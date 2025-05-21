@@ -83,3 +83,8 @@ func (s *CommissionService) InitUserCommission(ctx context.Context, req *pb.Init
 	err := s.comm.InitUserCommission(ctx, req.UserId)
 	return nil, err
 }
+
+func (s *CommissionService) IncUserRegistrationCount(ctx context.Context, req *pb.IncUserRegistrationCountReq) (*pb.IncUserRegistrationCountReply, error) {
+	err := s.comm.IncUserRegistrationCount(ctx, req.UserId)
+	return nil, err
+}
