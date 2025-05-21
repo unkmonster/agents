@@ -31,11 +31,13 @@ func (s *CommissionService) GetUserCommission(ctx context.Context, req *pb.GetUs
 	}
 
 	return &pb.GetUserCommissionReply{
-		Id:                comm.Id,
-		UserId:            comm.UserId,
-		TotalCommission:   comm.TotalCommission,
-		TodayCommission:   comm.TodayCommission,
-		SettledCommission: comm.SettledCommission,
+		Id:                     comm.Id,
+		UserId:                 comm.UserId,
+		TotalCommission:        comm.TotalCommission,
+		TodayCommission:        comm.TodayCommission,
+		SettledCommission:      comm.SettledCommission,
+		TodayRegistrationCount: int32(comm.TodayRegistrationCount),
+		TotalRegistrationCount: int32(comm.TotalRegistrationCount),
 	}, nil
 }
 
@@ -49,11 +51,13 @@ func (s *CommissionService) ListCommission(ctx context.Context, req *pb.ListComm
 	reply := pb.ListCommissionReply{}
 	for _, comm := range comms {
 		reply.Commissions = append(reply.Commissions, &pb.GetUserCommissionReply{
-			Id:                comm.Id,
-			UserId:            comm.UserId,
-			TotalCommission:   comm.TotalCommission,
-			TodayCommission:   comm.TodayCommission,
-			SettledCommission: comm.SettledCommission,
+			Id:                     comm.Id,
+			UserId:                 comm.UserId,
+			TotalCommission:        comm.TotalCommission,
+			TodayCommission:        comm.TodayCommission,
+			SettledCommission:      comm.SettledCommission,
+			TodayRegistrationCount: int32(comm.TodayRegistrationCount),
+			TotalRegistrationCount: int32(comm.TotalRegistrationCount),
 		})
 	}
 	return &reply, nil
@@ -69,11 +73,13 @@ func (s *CommissionService) ListCommissionByParent(ctx context.Context, req *pb.
 	reply := pb.ListCommissionByParentReply{}
 	for _, comm := range comms {
 		reply.Commissions = append(reply.Commissions, &pb.GetUserCommissionReply{
-			Id:                comm.Id,
-			UserId:            comm.UserId,
-			TotalCommission:   comm.TotalCommission,
-			TodayCommission:   comm.TodayCommission,
-			SettledCommission: comm.SettledCommission,
+			Id:                     comm.Id,
+			UserId:                 comm.UserId,
+			TotalCommission:        comm.TotalCommission,
+			TodayCommission:        comm.TodayCommission,
+			SettledCommission:      comm.SettledCommission,
+			TodayRegistrationCount: int32(comm.TodayRegistrationCount),
+			TotalRegistrationCount: int32(comm.TotalRegistrationCount),
 		})
 	}
 	return &reply, nil

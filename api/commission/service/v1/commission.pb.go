@@ -316,14 +316,16 @@ func (x *GetUserCommissionRequest) GetUserId() string {
 }
 
 type GetUserCommissionReply struct {
-	state             protoimpl.MessageState `protogen:"open.v1"`
-	Id                string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	UserId            string                 `protobuf:"bytes,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
-	TotalCommission   int32                  `protobuf:"varint,3,opt,name=total_commission,json=totalCommission,proto3" json:"total_commission,omitempty"`
-	TodayCommission   int32                  `protobuf:"varint,4,opt,name=today_commission,json=todayCommission,proto3" json:"today_commission,omitempty"`
-	SettledCommission int32                  `protobuf:"varint,5,opt,name=settled_commission,json=settledCommission,proto3" json:"settled_commission,omitempty"`
-	unknownFields     protoimpl.UnknownFields
-	sizeCache         protoimpl.SizeCache
+	state                  protoimpl.MessageState `protogen:"open.v1"`
+	Id                     string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	UserId                 string                 `protobuf:"bytes,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	TotalCommission        int32                  `protobuf:"varint,3,opt,name=total_commission,json=totalCommission,proto3" json:"total_commission,omitempty"`
+	TodayCommission        int32                  `protobuf:"varint,4,opt,name=today_commission,json=todayCommission,proto3" json:"today_commission,omitempty"`
+	SettledCommission      int32                  `protobuf:"varint,5,opt,name=settled_commission,json=settledCommission,proto3" json:"settled_commission,omitempty"`
+	TotalRegistrationCount int32                  `protobuf:"varint,6,opt,name=total_registration_count,json=totalRegistrationCount,proto3" json:"total_registration_count,omitempty"`
+	TodayRegistrationCount int32                  `protobuf:"varint,7,opt,name=today_registration_count,json=todayRegistrationCount,proto3" json:"today_registration_count,omitempty"`
+	unknownFields          protoimpl.UnknownFields
+	sizeCache              protoimpl.SizeCache
 }
 
 func (x *GetUserCommissionReply) Reset() {
@@ -387,6 +389,20 @@ func (x *GetUserCommissionReply) GetTodayCommission() int32 {
 func (x *GetUserCommissionReply) GetSettledCommission() int32 {
 	if x != nil {
 		return x.SettledCommission
+	}
+	return 0
+}
+
+func (x *GetUserCommissionReply) GetTotalRegistrationCount() int32 {
+	if x != nil {
+		return x.TotalRegistrationCount
+	}
+	return 0
+}
+
+func (x *GetUserCommissionReply) GetTodayRegistrationCount() int32 {
+	if x != nil {
+		return x.TodayRegistrationCount
 	}
 	return 0
 }
@@ -575,13 +591,15 @@ const file_api_commission_service_v1_commission_proto_rawDesc = "" +
 	"\x06amount\x18\x02 \x01(\x05B\a\xfaB\x04\x1a\x02 \x00R\x06amount\"\x1c\n" +
 	"\x1aHandleOrderCommissionReply\"<\n" +
 	"\x18GetUserCommissionRequest\x12 \n" +
-	"\auser_id\x18\x01 \x01(\tB\a\xfaB\x04r\x02\x10\x01R\x06userId\"\xc6\x01\n" +
+	"\auser_id\x18\x01 \x01(\tB\a\xfaB\x04r\x02\x10\x01R\x06userId\"\xba\x02\n" +
 	"\x16GetUserCommissionReply\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x17\n" +
 	"\auser_id\x18\x02 \x01(\tR\x06userId\x12)\n" +
 	"\x10total_commission\x18\x03 \x01(\x05R\x0ftotalCommission\x12)\n" +
 	"\x10today_commission\x18\x04 \x01(\x05R\x0ftodayCommission\x12-\n" +
-	"\x12settled_commission\x18\x05 \x01(\x05R\x11settledCommission\"\x17\n" +
+	"\x12settled_commission\x18\x05 \x01(\x05R\x11settledCommission\x128\n" +
+	"\x18total_registration_count\x18\x06 \x01(\x05R\x16totalRegistrationCount\x128\n" +
+	"\x18today_registration_count\x18\a \x01(\x05R\x16todayRegistrationCount\"\x17\n" +
 	"\x15ListCommissionRequest\"j\n" +
 	"\x13ListCommissionReply\x12S\n" +
 	"\vcommissions\x18\x01 \x03(\v21.api.commission.service.v1.GetUserCommissionReplyR\vcommissions\"A\n" +

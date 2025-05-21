@@ -9,11 +9,13 @@ import (
 )
 
 type Commission struct {
-	Id                string `db:"id"`
-	UserId            string `db:"user_id"`
-	TodayCommission   int32  `db:"today_commission"`
-	TotalCommission   int32  `db:"total_commission"`
-	SettledCommission int32  `db:"settled_commission"`
+	Id                     string `db:"id"`
+	UserId                 string `db:"user_id"`
+	TodayCommission        int32  `db:"today_commission"`
+	TotalCommission        int32  `db:"total_commission"`
+	SettledCommission      int32  `db:"settled_commission"`
+	TodayRegistrationCount int64  `db:"today_registration_count"`
+	TotalRegistrationCount int64  `db:"total_registration_count"`
 }
 
 type CommissionRepo interface {

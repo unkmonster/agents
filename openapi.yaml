@@ -90,6 +90,12 @@ components:
                 settledCommission:
                     type: integer
                     format: int32
+                totalRegistrationCount:
+                    type: integer
+                    format: int32
+                todayRegistrationCount:
+                    type: integer
+                    format: int32
         GoogleProtobufAny:
             type: object
             properties:

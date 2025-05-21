@@ -839,6 +839,10 @@ func (m *GetUserCommissionReply) validate(all bool) error {
 
 	// no validation rules for SettledCommission
 
+	// no validation rules for TotalRegistrationCount
+
+	// no validation rules for TodayRegistrationCount
+
 	if len(errors) > 0 {
 		return GetUserCommissionReplyMultiError(errors)
 	}
