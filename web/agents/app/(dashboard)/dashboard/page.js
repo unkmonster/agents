@@ -1,5 +1,11 @@
 "use client";
-import { useTodayCommission, useTotalCommission, useUser } from "@/lib/session";
+import {
+  myfetch,
+  useTodayCommission,
+  useTotalCommission,
+  useUser,
+  useUserId,
+} from "@/lib/session";
 import {
   Card,
   Button,
@@ -10,53 +16,118 @@ import {
   Typography,
   Flex,
   Spin,
+  Space,
+  Dropdown,
 } from "antd";
+import { DownOutlined, SmileOutlined } from "@ant-design/icons";
+
 import Meta from "antd/es/card/Meta";
 import Title from "antd/es/typography/Title";
+import { Column, Line } from "@ant-design/plots";
+import useSWR from "swr";
+import { useEffect, useState } from "react";
 
-function StatCard({ title, value, prefix }) {
+function SevenDaysRechargeChart() {
+  const userId = useUserId();
+  const [dataSource, setDataSource] = useState([]);
+  const [days, setDays] = useState(7);
+  const { data, error, isLoading } = useSWR(
+    `/v1/users/${userId}/commissions?limit=${days}`,
+    myfetch
+  );
+
+  useEffect(() => {
+    if (!data) {
+      return;
+    }
+
+    const rechargeDs = data.commissions.map((com) => ({
+      date: new Date(com.date),
+      amount:
+        (parseInt(com.indirectRechargeAmount) +
+          parseInt(com.directRechargeAmount)) /
+        100,
+      type: "充值量",
+    }));
+
+    const registerDs = data.commissions.map((com) => ({
+      date: new Date(com.date),
+      amount:
+        parseInt(com.indirectRegistrationCount) +
+        parseInt(com.directRegistrationCount),
+      type: "注册量",
+    }));
+
+    setDataSource([...registerDs, ...rechargeDs]);
+  }, [data]);
+  if (error) {
+    return error.toString();
+  }
+
+  const config = {
+    data: dataSource,
+    xField: "date",
+    yField: "amount",
+    point: {
+      shapeField: "square",
+      sizeField: 2,
+    },
+    interaction: {
+      tooltip: {
+        marker: false,
+      },
+    },
+    style: {
+      lineWidth: 2,
+    },
+    smooth: true,
+    colorField: "type",
+    //title: "推广趋势",
+    itemLabelText: "你好",
+  };
+
+  const items = [
+    {
+      key: "7",
+      label: "7 日趋势",
+    },
+    {
+      key: "30",
+      label: "30 日趋势",
+    },
+  ];
+
   return (
-    <Card variant="">
-      <Statistic value={value} title={title} prefix={prefix} />
+    <Card
+      title="推广趋势"
+      loading={isLoading}
+      extra={
+        <Dropdown
+          menu={{
+            items,
+            selectable: true,
+            defaultSelectedKeys: [String(days)],
+            onClick: ({ _, key }) => setDays(key),
+          }}
+          trigger={["click"]}
+        >
+          <Typography.Link>
+            <Space>
+              {`${days} 日趋势`} <DownOutlined />
+            </Space>
+          </Typography.Link>
+        </Dropdown>
+      }
+    >
+      <Line {...config} />
     </Card>
   );
 }
 
-function CommissionCard() {
-  const { commission, isLoading, error } = useTotalCommission();
-  if (isLoading) {
-    return <Spin />;
-  }
-  if (error) {
-    return error;
-  }
-
+function StatCard({ title, value, prefix, actions }) {
   return (
-    <Card title="充值数据">
-      <Flex gap={"middle"} vertical>
-        <Statistic
-          title="今日充值"
-          value={commission.todayCommission / 100}
-          prefix={"￥"}
-        />
-        <Statistic
-          title="全部充值"
-          value={commission.totalCommission / 100}
-          prefix={"￥"}
-        />
-        <Statistic
-          title="已提现金额"
-          value={commission.settledCommission / 100}
-          prefix={"￥"}
-        />
-        <Statistic
-          title="账户余额"
-          value={
-            (commission.totalCommission - commission.settledCommission) / 100
-          }
-          prefix={"￥"}
-        />
-      </Flex>
+    <Card variant="" actions={actions}>
+      <Statistic value={value} title={title} prefix={prefix} />
     </Card>
   );
 }
@@ -70,8 +141,14 @@ export default function Main() {
   }
 
   return (
-    <>
-      <Row gutter={[32, 32]}>
+    <Space direction="vertical" size={"middle"} style={{ width: "100%" }}>
+      <Title level={3}>总览</Title>
+      <Row
+        gutter={[
+          { xs: 8, sm: 16, md: 24, lg: 32 },
+          { xs: 8, sm: 16, md: 24, lg: 32 },
+        ]}
+      >
         <Col xs={24} sm={12} md={8} xl={6}>
           <Spin spinning={tcRes.isLoading}>
             <StatCard
@@ -127,10 +204,22 @@ export default function Main() {
               }
               prefix={"￥"}
               loading={commRes.isLoading}
+              actions={[<Button>提现</Button>]}
             />
           </Spin>
         </Col>
       </Row>
-    </>
+
+      <Row
+        gutter={[
+          { xs: 8, sm: 16, md: 24, lg: 32 },
+          { xs: 8, sm: 16, md: 24, lg: 32 },
+        ]}
+      >
+        <Col xs={24} sm={12}>
+          <SevenDaysRechargeChart />
+        </Col>
+      </Row>
+    </Space>
   );
 }
