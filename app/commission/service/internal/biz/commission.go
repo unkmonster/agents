@@ -60,33 +60,31 @@ func (uc *CommissionUseCase) CalcOrderCommission(ctx context.Context, req *commi
 		stk = append(stk, user)
 	}
 
-	// 计算佣金
-	commissions := []float32{}
-
-	for i := len(stk) - 1; i >= 0; i-- {
-		if len(commissions) == 0 {
-			commissions = append(commissions, float32(req.Amount)*stk[i].SharePercent)
-		} else {
-			commissions = append(commissions, float32(commissions[len(commissions)-1])*stk[i].SharePercent)
-		}
+	for _, u := range stk {
+		uc.log.Debugf("user: %+v", u)
 	}
 
+	// 计算佣金，未扣除子代理的分成
+	commissions := []float32{float32(req.Amount)} // index equal to agent level
+
+	for i := len(stk) - 1; i >= 0; i-- {
+		commissions = append(commissions, commissions[len(commissions)-1]*stk[i].SharePercent)
+	}
+	uc.log.Debugf("commissions: %+v", commissions)
+
+	// 子代理的分成比例来自其父代理
 	n := len(stk)
 	for i := range n {
-		user := stk[n-i-1]
-		amount := int32(0)
-
-		if i+1 < n {
-			amount = int32(commissions[i]) - int32(commissions[i+1])
-		} else {
-			amount = int32(commissions[i])
+		user := stk[n-1-i]
+		amount := int32(commissions[user.Level])
+		if int(user.Level+1) < len(commissions) {
+			amount -= int32(commissions[user.Level+1])
 		}
-
+		uc.log.Debugf("user: %+v, amount: %d", user, amount)
 		if err := uc.commission.IncUserCommission(ctx, user.Id, amount); err != nil {
 			return err
 		}
 	}
-
 	return nil
 }
 
