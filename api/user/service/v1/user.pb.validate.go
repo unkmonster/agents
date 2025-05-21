@@ -174,13 +174,17 @@ func (m *GetUserByDomainReply) validate(all bool) error {
 
 	// no validation rules for Username
 
-	// no validation rules for Nickname
-
-	// no validation rules for ParentId
-
 	// no validation rules for Level
 
 	// no validation rules for SharePercent
+
+	if m.Nickname != nil {
+		// no validation rules for Nickname
+	}
+
+	if m.ParentId != nil {
+		// no validation rules for ParentId
+	}
 
 	if len(errors) > 0 {
 		return GetUserByDomainReplyMultiError(errors)
@@ -284,9 +288,7 @@ func (m *GetUserByUsernameRequest) validate(all bool) error {
 
 	var errors []error
 
-	if m.Username != nil {
-		// no validation rules for Username
-	}
+	// no validation rules for Username
 
 	if len(errors) > 0 {
 		return GetUserByUsernameRequestMultiError(errors)
@@ -390,9 +392,7 @@ func (m *DeleteDomainRequest) validate(all bool) error {
 
 	var errors []error
 
-	if m.Id != nil {
-		// no validation rules for Id
-	}
+	// no validation rules for Id
 
 	if len(errors) > 0 {
 		return DeleteDomainRequestMultiError(errors)
@@ -598,9 +598,7 @@ func (m *ListUserDomainsByUserIdRequest) validate(all bool) error {
 
 	var errors []error
 
-	if m.UserId != nil {
-		// no validation rules for UserId
-	}
+	// no validation rules for UserId
 
 	if len(errors) > 0 {
 		return ListUserDomainsByUserIdRequestMultiError(errors)
@@ -1080,9 +1078,7 @@ func (m *GetUserDomainRequest) validate(all bool) error {
 
 	var errors []error
 
-	if m.Id != nil {
-		// no validation rules for Id
-	}
+	// no validation rules for Id
 
 	if len(errors) > 0 {
 		return GetUserDomainRequestMultiError(errors)
@@ -1186,17 +1182,11 @@ func (m *GetUserDomainReply) validate(all bool) error {
 
 	var errors []error
 
-	if m.Id != nil {
-		// no validation rules for Id
-	}
+	// no validation rules for Id
 
-	if m.UserId != nil {
-		// no validation rules for UserId
-	}
+	// no validation rules for UserId
 
-	if m.Domain != nil {
-		// no validation rules for Domain
-	}
+	// no validation rules for Domain
 
 	if len(errors) > 0 {
 		return GetUserDomainReplyMultiError(errors)
@@ -1300,13 +1290,9 @@ func (m *CreateUserDomainRequest) validate(all bool) error {
 
 	var errors []error
 
-	if m.UserId != nil {
-		// no validation rules for UserId
-	}
+	// no validation rules for UserId
 
-	if m.Domain != nil {
-		// no validation rules for Domain
-	}
+	// no validation rules for Domain
 
 	if len(errors) > 0 {
 		return CreateUserDomainRequestMultiError(errors)
@@ -1410,17 +1396,11 @@ func (m *CreateUserDomainReply) validate(all bool) error {
 
 	var errors []error
 
-	if m.Id != nil {
-		// no validation rules for Id
-	}
+	// no validation rules for Id
 
-	if m.UserId != nil {
-		// no validation rules for UserId
-	}
+	// no validation rules for UserId
 
-	if m.Domain != nil {
-		// no validation rules for Domain
-	}
+	// no validation rules for Domain
 
 	if len(errors) > 0 {
 		return CreateUserDomainReplyMultiError(errors)
@@ -1524,9 +1504,11 @@ func (m *CreateUserRequest) validate(all bool) error {
 
 	var errors []error
 
-	if m.Username != nil {
-		// no validation rules for Username
-	}
+	// no validation rules for Username
+
+	// no validation rules for Level
+
+	// no validation rules for SharePercent
 
 	if m.Nickname != nil {
 		// no validation rules for Nickname
@@ -1534,14 +1516,6 @@ func (m *CreateUserRequest) validate(all bool) error {
 
 	if m.ParentId != nil {
 		// no validation rules for ParentId
-	}
-
-	if m.Level != nil {
-		// no validation rules for Level
-	}
-
-	if m.SharePercent != nil {
-		// no validation rules for SharePercent
 	}
 
 	if len(errors) > 0 {
@@ -1646,13 +1620,13 @@ func (m *CreateUserReply) validate(all bool) error {
 
 	var errors []error
 
-	if m.Id != nil {
-		// no validation rules for Id
-	}
+	// no validation rules for Id
 
-	if m.Username != nil {
-		// no validation rules for Username
-	}
+	// no validation rules for Username
+
+	// no validation rules for Level
+
+	// no validation rules for SharePercent
 
 	if m.Nickname != nil {
 		// no validation rules for Nickname
@@ -1660,14 +1634,6 @@ func (m *CreateUserReply) validate(all bool) error {
 
 	if m.ParentId != nil {
 		// no validation rules for ParentId
-	}
-
-	if m.Level != nil {
-		// no validation rules for Level
-	}
-
-	if m.SharePercent != nil {
-		// no validation rules for SharePercent
 	}
 
 	if len(errors) > 0 {
@@ -1770,9 +1736,7 @@ func (m *UpdateUserRequest) validate(all bool) error {
 
 	var errors []error
 
-	if m.Id != nil {
-		// no validation rules for Id
-	}
+	// no validation rules for Id
 
 	if m.Password != nil {
 
@@ -1910,13 +1874,13 @@ func (m *UpdateUserReply) validate(all bool) error {
 
 	var errors []error
 
-	if m.Id != nil {
-		// no validation rules for Id
-	}
+	// no validation rules for Id
 
-	if m.Username != nil {
-		// no validation rules for Username
-	}
+	// no validation rules for Username
+
+	// no validation rules for Level
+
+	// no validation rules for SharePercent
 
 	if m.Nickname != nil {
 		// no validation rules for Nickname
@@ -1924,14 +1888,6 @@ func (m *UpdateUserReply) validate(all bool) error {
 
 	if m.ParentId != nil {
 		// no validation rules for ParentId
-	}
-
-	if m.Level != nil {
-		// no validation rules for Level
-	}
-
-	if m.SharePercent != nil {
-		// no validation rules for SharePercent
 	}
 
 	if len(errors) > 0 {
@@ -2034,9 +1990,7 @@ func (m *DeleteUserRequest) validate(all bool) error {
 
 	var errors []error
 
-	if m.Id != nil {
-		// no validation rules for Id
-	}
+	// no validation rules for Id
 
 	if len(errors) > 0 {
 		return DeleteUserRequestMultiError(errors)
@@ -2240,9 +2194,7 @@ func (m *GetUserRequest) validate(all bool) error {
 
 	var errors []error
 
-	if m.Id != nil {
-		// no validation rules for Id
-	}
+	// no validation rules for Id
 
 	if len(errors) > 0 {
 		return GetUserRequestMultiError(errors)
@@ -2344,13 +2296,13 @@ func (m *GetUserReply) validate(all bool) error {
 
 	var errors []error
 
-	if m.Id != nil {
-		// no validation rules for Id
-	}
+	// no validation rules for Id
 
-	if m.Username != nil {
-		// no validation rules for Username
-	}
+	// no validation rules for Username
+
+	// no validation rules for Level
+
+	// no validation rules for SharePercent
 
 	if m.Nickname != nil {
 		// no validation rules for Nickname
@@ -2358,14 +2310,6 @@ func (m *GetUserReply) validate(all bool) error {
 
 	if m.ParentId != nil {
 		// no validation rules for ParentId
-	}
-
-	if m.Level != nil {
-		// no validation rules for Level
-	}
-
-	if m.SharePercent != nil {
-		// no validation rules for SharePercent
 	}
 
 	if len(errors) > 0 {
@@ -2702,17 +2646,11 @@ func (m *ListUserDomainsByUserIdReply_Domain) validate(all bool) error {
 
 	var errors []error
 
-	if m.Id != nil {
-		// no validation rules for Id
-	}
+	// no validation rules for Id
 
-	if m.UserId != nil {
-		// no validation rules for UserId
-	}
+	// no validation rules for UserId
 
-	if m.Domain != nil {
-		// no validation rules for Domain
-	}
+	// no validation rules for Domain
 
 	if len(errors) > 0 {
 		return ListUserDomainsByUserIdReply_DomainMultiError(errors)
@@ -2818,17 +2756,11 @@ func (m *ListUserDomainsReply_Domain) validate(all bool) error {
 
 	var errors []error
 
-	if m.Id != nil {
-		// no validation rules for Id
-	}
+	// no validation rules for Id
 
-	if m.UserId != nil {
-		// no validation rules for UserId
-	}
+	// no validation rules for UserId
 
-	if m.Domain != nil {
-		// no validation rules for Domain
-	}
+	// no validation rules for Domain
 
 	if len(errors) > 0 {
 		return ListUserDomainsReply_DomainMultiError(errors)
@@ -2933,29 +2865,17 @@ func (m *ListUserReply_User) validate(all bool) error {
 
 	var errors []error
 
-	if m.Id != nil {
-		// no validation rules for Id
-	}
+	// no validation rules for Id
 
-	if m.Username != nil {
-		// no validation rules for Username
-	}
+	// no validation rules for Username
 
-	if m.Nickname != nil {
-		// no validation rules for Nickname
-	}
+	// no validation rules for Nickname
 
-	if m.ParentId != nil {
-		// no validation rules for ParentId
-	}
+	// no validation rules for ParentId
 
-	if m.Level != nil {
-		// no validation rules for Level
-	}
+	// no validation rules for Level
 
-	if m.SharePercent != nil {
-		// no validation rules for SharePercent
-	}
+	// no validation rules for SharePercent
 
 	if len(errors) > 0 {
 		return ListUserReply_UserMultiError(errors)

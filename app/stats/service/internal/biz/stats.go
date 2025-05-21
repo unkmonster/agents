@@ -37,6 +37,7 @@ type DomainRepo interface {
 type CommissionRepo interface {
 	// IncUserCommission 懒得改了，增加跟这笔订单相关的所有代理的余额
 	IncUserCommission(ctx context.Context, domain string, amount int64) error
+	// TODO: 增加和这次注册有关的所有代理的注册量，目前仅增加直接代理
 	IncUserRegistrationCount(ctx context.Context, userId string) error
 }
 

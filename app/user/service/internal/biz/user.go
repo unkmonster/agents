@@ -41,7 +41,7 @@ func NewUserUseCase(repo UserRepo, logger log.Logger) *UserUseCase {
 
 func (uc *UserUseCase) CreateUser(ctx context.Context, req *pb.CreateUserRequest) (*pb.CreateUserReply, error) {
 	// 仅允许 0 级代理（管理员）没有父级代理
-	if *req.Level != 0 && req.ParentId == nil {
+	if req.Level != 0 && req.ParentId == nil {
 		return nil, errors.New(400, "MISSING_PARENT_ID", "缺少父级代理 ID ")
 	}
 
@@ -49,11 +49,11 @@ func (uc *UserUseCase) CreateUser(ctx context.Context, req *pb.CreateUserRequest
 
 	user := User{
 		Id:           uuid.New().String(),
-		Username:     *req.Username,
+		Username:     req.Username,
 		Nickname:     req.Nickname,
 		ParentId:     req.ParentId,
-		Level:        *req.Level,
-		SharePercent: *req.SharePercent,
+		Level:        req.Level,
+		SharePercent: req.SharePercent,
 	}
 
 	if err := uc.repo.CreateUser(ctx, &user); err != nil {
@@ -61,12 +61,12 @@ func (uc *UserUseCase) CreateUser(ctx context.Context, req *pb.CreateUserRequest
 	}
 
 	return &pb.CreateUserReply{
-		Id:           &user.Id,
-		Username:     &user.Username,
+		Id:           user.Id,
+		Username:     user.Username,
 		Nickname:     user.Nickname,
 		ParentId:     user.ParentId,
-		Level:        &(user.Level),
-		SharePercent: &user.SharePercent,
+		Level:        (user.Level),
+		SharePercent: user.SharePercent,
 	}, nil
 }
 

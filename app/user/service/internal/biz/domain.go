@@ -5,7 +5,6 @@ import (
 	"context"
 	"time"
 
-	"github.com/go-kratos/kratos/v2/errors"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/google/uuid"
 )
@@ -38,18 +37,10 @@ func NewUserDomainUseCase(repo UserDomainRepo, logger log.Logger) *UserDomainUse
 }
 
 func (uc *UserDomainUseCase) CreateUserDomain(ctx context.Context, req *pb.CreateUserDomainRequest) (*UserDomain, error) {
-	if req.UserId == nil {
-		return nil, errors.New(400, "MISSING_USER_ID", "缺少用户 ID")
-	}
-
-	if req.Domain == nil {
-		return nil, errors.New(400, "MISSING_DOMAIN", "缺少域名")
-	}
-
 	userDomain := &UserDomain{
 		Id:     uuid.New().String(),
-		UserId: *req.UserId,
-		Domain: *req.Domain,
+		UserId: req.UserId,
+		Domain: req.Domain,
 	}
 
 	if err := uc.repo.Create(ctx, userDomain); err != nil {
