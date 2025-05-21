@@ -1,5 +1,6 @@
 import useSWR from "swr";
 import { NotLoggedInError } from "./error";
+import dayjs from "dayjs";
 
 export function useUserId() {
   if (typeof window == "undefined") {
@@ -53,6 +54,13 @@ export function useTotalCommission() {
     isLoading,
   };
 }
+
+export function useTodayCommission() {
+  const userId = useUserId();
+  const formatted = dayjs(new Date()).format("YYYY-MM-DD");
+  return useSWR(`/v1/users/${userId}/commissions?date=${formatted}`, myfetch);
+}
+
 export function logOut() {
   if (typeof window == "undefined") {
     return;

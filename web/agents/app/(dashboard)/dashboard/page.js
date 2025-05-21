@@ -1,5 +1,5 @@
 "use client";
-import { useTotalCommission, useUser } from "@/lib/session";
+import { useTodayCommission, useTotalCommission, useUser } from "@/lib/session";
 import {
   Card,
   Button,
@@ -62,51 +62,73 @@ function CommissionCard() {
 }
 
 export default function Main() {
-  const { user, isLoading, error } = useUser();
   const commRes = useTotalCommission();
+  const tcRes = useTodayCommission();
 
-  if (isLoading || commRes.isLoading) {
-    return <Spin />;
-  }
-  if (error || commRes.error) {
-    return (error || commRes.error).toString();
+  if (commRes.error || tcRes.error) {
+    return (commRes.error || tcRes.error).toString();
   }
 
   return (
     <>
       <Row gutter={[32, 32]}>
         <Col xs={24} sm={12} md={8} xl={6}>
-          <StatCard
-            title={"今日注册"}
-            value={commRes.commission.todayRegistrationCount}
-          />
+          <Spin spinning={tcRes.isLoading}>
+            <StatCard
+              title={"今日注册"}
+              value={
+                tcRes.data &&
+                parseInt(tcRes.data.commissions[0].directRegistrationCount) +
+                  parseInt(tcRes.data.commissions[0].indirectRegistrationCount)
+              }
+              loading={tcRes.isLoading}
+            />
+          </Spin>
         </Col>
 
         <Col xs={24} sm={12} md={8} xl={6}>
-          <StatCard
-            title={"今日充值"}
-            value={commRes.commission.todayCommission}
-            prefix={"￥"}
-          />
+          <Spin spinning={tcRes.isLoading}>
+            <StatCard
+              title={"今日充值"}
+              value={
+                tcRes.data &&
+                (parseInt(tcRes.data.commissions[0].directRechargeAmount) +
+                  parseInt(tcRes.data.commissions[0].indirectRechargeAmount)) /
+                  100
+              }
+              prefix={"￥"}
+              loading={tcRes.isLoading}
+            />
+          </Spin>
         </Col>
 
         <Col xs={24} sm={12} md={8} xl={6}>
-          <StatCard
-            title={"累计充值"}
-            value={commRes.commission.totalCommission}
-            prefix={"￥"}
-          />
+          <Spin spinning={commRes.isLoading}>
+            <StatCard
+              title={"累计充值"}
+              value={
+                commRes.commission && commRes.commission.totalCommission / 100
+              }
+              prefix={"￥"}
+              loading={commRes.isLoading}
+            />
+          </Spin>
         </Col>
 
         <Col xs={24} sm={12} md={8} xl={6}>
-          <StatCard
-            title={"账户余额"}
-            value={
-              commRes.commission.totalCommission -
-              commRes.commission.settledCommission
-            }
-            prefix={"￥"}
-          />
+          <Spin spinning={commRes.isLoading}>
+            <StatCard
+              title={"账户余额"}
+              value={
+                commRes.commission &&
+                (commRes.commission.totalCommission -
+                  commRes.commission.settledCommission) /
+                  100
+              }
+              prefix={"￥"}
+              loading={commRes.isLoading}
+            />
+          </Spin>
         </Col>
       </Row>
     </>
