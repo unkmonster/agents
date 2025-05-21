@@ -21,7 +21,7 @@ func (c *commissionRepo) IncUserCommission(ctx context.Context, domain string, a
 
 // IncUserRegistrationCount implements biz.CommissionRepo.
 func (c *commissionRepo) IncUserRegistrationCount(ctx context.Context, userId string) error {
-	_, err := c.data.cc.IncUserRegistrationCount(ctx, &v1.IncUserRegistrationCountReq{
+	_, err := c.data.cc.IncChainRegistrationCountByDirectUser(ctx, &v1.IncChainRegistrationCountByDirectUserReq{
 		UserId: userId,
 	})
 	return err

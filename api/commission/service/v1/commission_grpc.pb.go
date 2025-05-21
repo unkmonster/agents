@@ -19,12 +19,12 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Commission_HandleOrderCommission_FullMethodName    = "/api.commission.service.v1.Commission/HandleOrderCommission"
-	Commission_GetUserCommission_FullMethodName        = "/api.commission.service.v1.Commission/GetUserCommission"
-	Commission_ListCommission_FullMethodName           = "/api.commission.service.v1.Commission/ListCommission"
-	Commission_ListCommissionByParent_FullMethodName   = "/api.commission.service.v1.Commission/ListCommissionByParent"
-	Commission_InitUserCommission_FullMethodName       = "/api.commission.service.v1.Commission/InitUserCommission"
-	Commission_IncUserRegistrationCount_FullMethodName = "/api.commission.service.v1.Commission/IncUserRegistrationCount"
+	Commission_HandleOrderCommission_FullMethodName                 = "/api.commission.service.v1.Commission/HandleOrderCommission"
+	Commission_IncChainRegistrationCountByDirectUser_FullMethodName = "/api.commission.service.v1.Commission/IncChainRegistrationCountByDirectUser"
+	Commission_GetUserTotalCommission_FullMethodName                = "/api.commission.service.v1.Commission/GetUserTotalCommission"
+	Commission_ListTotalCommission_FullMethodName                   = "/api.commission.service.v1.Commission/ListTotalCommission"
+	Commission_ListTotalCommissionByParent_FullMethodName           = "/api.commission.service.v1.Commission/ListTotalCommissionByParent"
+	Commission_ListCommissionByUser_FullMethodName                  = "/api.commission.service.v1.Commission/ListCommissionByUser"
 )
 
 // CommissionClient is the client API for Commission service.
@@ -32,11 +32,15 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type CommissionClient interface {
 	HandleOrderCommission(ctx context.Context, in *HandleOrderCommissionRequest, opts ...grpc.CallOption) (*HandleOrderCommissionReply, error)
-	GetUserCommission(ctx context.Context, in *GetUserCommissionRequest, opts ...grpc.CallOption) (*GetUserCommissionReply, error)
-	ListCommission(ctx context.Context, in *ListCommissionRequest, opts ...grpc.CallOption) (*ListCommissionReply, error)
-	ListCommissionByParent(ctx context.Context, in *ListCommissionByParentReq, opts ...grpc.CallOption) (*ListCommissionByParentReply, error)
-	InitUserCommission(ctx context.Context, in *InitUserCommissionReq, opts ...grpc.CallOption) (*InitUserCommissionReply, error)
-	IncUserRegistrationCount(ctx context.Context, in *IncUserRegistrationCountReq, opts ...grpc.CallOption) (*IncUserRegistrationCountReply, error)
+	// 增加链上每个用户的注册量，通过最下游的代理 ID
+	IncChainRegistrationCountByDirectUser(ctx context.Context, in *IncChainRegistrationCountByDirectUserReq, opts ...grpc.CallOption) (*IncChainRegistrationCountByDirectUserReply, error)
+	// 获取指定用户的累计佣金
+	GetUserTotalCommission(ctx context.Context, in *GetUserTotalCommissionRequest, opts ...grpc.CallOption) (*GetUserTotalCommissionReply, error)
+	// 列出每个用户的累计佣金
+	ListTotalCommission(ctx context.Context, in *ListTotalCommissionRequest, opts ...grpc.CallOption) (*ListTotalCommissionReply, error)
+	// 列出每个下游代理的累计佣金
+	ListTotalCommissionByParent(ctx context.Context, in *ListTotalCommissionByParentReq, opts ...grpc.CallOption) (*ListTotalCommissionByParentReply, error)
+	ListCommissionByUser(ctx context.Context, in *ListCommissionByUserReq, opts ...grpc.CallOption) (*ListCommissionByUserReply, error)
 }
 
 type commissionClient struct {
@@ -57,50 +61,50 @@ func (c *commissionClient) HandleOrderCommission(ctx context.Context, in *Handle
 	return out, nil
 }
 
-func (c *commissionClient) GetUserCommission(ctx context.Context, in *GetUserCommissionRequest, opts ...grpc.CallOption) (*GetUserCommissionReply, error) {
+func (c *commissionClient) IncChainRegistrationCountByDirectUser(ctx context.Context, in *IncChainRegistrationCountByDirectUserReq, opts ...grpc.CallOption) (*IncChainRegistrationCountByDirectUserReply, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetUserCommissionReply)
-	err := c.cc.Invoke(ctx, Commission_GetUserCommission_FullMethodName, in, out, cOpts...)
+	out := new(IncChainRegistrationCountByDirectUserReply)
+	err := c.cc.Invoke(ctx, Commission_IncChainRegistrationCountByDirectUser_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *commissionClient) ListCommission(ctx context.Context, in *ListCommissionRequest, opts ...grpc.CallOption) (*ListCommissionReply, error) {
+func (c *commissionClient) GetUserTotalCommission(ctx context.Context, in *GetUserTotalCommissionRequest, opts ...grpc.CallOption) (*GetUserTotalCommissionReply, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ListCommissionReply)
-	err := c.cc.Invoke(ctx, Commission_ListCommission_FullMethodName, in, out, cOpts...)
+	out := new(GetUserTotalCommissionReply)
+	err := c.cc.Invoke(ctx, Commission_GetUserTotalCommission_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *commissionClient) ListCommissionByParent(ctx context.Context, in *ListCommissionByParentReq, opts ...grpc.CallOption) (*ListCommissionByParentReply, error) {
+func (c *commissionClient) ListTotalCommission(ctx context.Context, in *ListTotalCommissionRequest, opts ...grpc.CallOption) (*ListTotalCommissionReply, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ListCommissionByParentReply)
-	err := c.cc.Invoke(ctx, Commission_ListCommissionByParent_FullMethodName, in, out, cOpts...)
+	out := new(ListTotalCommissionReply)
+	err := c.cc.Invoke(ctx, Commission_ListTotalCommission_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *commissionClient) InitUserCommission(ctx context.Context, in *InitUserCommissionReq, opts ...grpc.CallOption) (*InitUserCommissionReply, error) {
+func (c *commissionClient) ListTotalCommissionByParent(ctx context.Context, in *ListTotalCommissionByParentReq, opts ...grpc.CallOption) (*ListTotalCommissionByParentReply, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(InitUserCommissionReply)
-	err := c.cc.Invoke(ctx, Commission_InitUserCommission_FullMethodName, in, out, cOpts...)
+	out := new(ListTotalCommissionByParentReply)
+	err := c.cc.Invoke(ctx, Commission_ListTotalCommissionByParent_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *commissionClient) IncUserRegistrationCount(ctx context.Context, in *IncUserRegistrationCountReq, opts ...grpc.CallOption) (*IncUserRegistrationCountReply, error) {
+func (c *commissionClient) ListCommissionByUser(ctx context.Context, in *ListCommissionByUserReq, opts ...grpc.CallOption) (*ListCommissionByUserReply, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(IncUserRegistrationCountReply)
-	err := c.cc.Invoke(ctx, Commission_IncUserRegistrationCount_FullMethodName, in, out, cOpts...)
+	out := new(ListCommissionByUserReply)
+	err := c.cc.Invoke(ctx, Commission_ListCommissionByUser_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -112,11 +116,15 @@ func (c *commissionClient) IncUserRegistrationCount(ctx context.Context, in *Inc
 // for forward compatibility.
 type CommissionServer interface {
 	HandleOrderCommission(context.Context, *HandleOrderCommissionRequest) (*HandleOrderCommissionReply, error)
-	GetUserCommission(context.Context, *GetUserCommissionRequest) (*GetUserCommissionReply, error)
-	ListCommission(context.Context, *ListCommissionRequest) (*ListCommissionReply, error)
-	ListCommissionByParent(context.Context, *ListCommissionByParentReq) (*ListCommissionByParentReply, error)
-	InitUserCommission(context.Context, *InitUserCommissionReq) (*InitUserCommissionReply, error)
-	IncUserRegistrationCount(context.Context, *IncUserRegistrationCountReq) (*IncUserRegistrationCountReply, error)
+	// 增加链上每个用户的注册量，通过最下游的代理 ID
+	IncChainRegistrationCountByDirectUser(context.Context, *IncChainRegistrationCountByDirectUserReq) (*IncChainRegistrationCountByDirectUserReply, error)
+	// 获取指定用户的累计佣金
+	GetUserTotalCommission(context.Context, *GetUserTotalCommissionRequest) (*GetUserTotalCommissionReply, error)
+	// 列出每个用户的累计佣金
+	ListTotalCommission(context.Context, *ListTotalCommissionRequest) (*ListTotalCommissionReply, error)
+	// 列出每个下游代理的累计佣金
+	ListTotalCommissionByParent(context.Context, *ListTotalCommissionByParentReq) (*ListTotalCommissionByParentReply, error)
+	ListCommissionByUser(context.Context, *ListCommissionByUserReq) (*ListCommissionByUserReply, error)
 	mustEmbedUnimplementedCommissionServer()
 }
 
@@ -130,20 +138,20 @@ type UnimplementedCommissionServer struct{}
 func (UnimplementedCommissionServer) HandleOrderCommission(context.Context, *HandleOrderCommissionRequest) (*HandleOrderCommissionReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method HandleOrderCommission not implemented")
 }
-func (UnimplementedCommissionServer) GetUserCommission(context.Context, *GetUserCommissionRequest) (*GetUserCommissionReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetUserCommission not implemented")
+func (UnimplementedCommissionServer) IncChainRegistrationCountByDirectUser(context.Context, *IncChainRegistrationCountByDirectUserReq) (*IncChainRegistrationCountByDirectUserReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method IncChainRegistrationCountByDirectUser not implemented")
 }
-func (UnimplementedCommissionServer) ListCommission(context.Context, *ListCommissionRequest) (*ListCommissionReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ListCommission not implemented")
+func (UnimplementedCommissionServer) GetUserTotalCommission(context.Context, *GetUserTotalCommissionRequest) (*GetUserTotalCommissionReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetUserTotalCommission not implemented")
 }
-func (UnimplementedCommissionServer) ListCommissionByParent(context.Context, *ListCommissionByParentReq) (*ListCommissionByParentReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ListCommissionByParent not implemented")
+func (UnimplementedCommissionServer) ListTotalCommission(context.Context, *ListTotalCommissionRequest) (*ListTotalCommissionReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListTotalCommission not implemented")
 }
-func (UnimplementedCommissionServer) InitUserCommission(context.Context, *InitUserCommissionReq) (*InitUserCommissionReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method InitUserCommission not implemented")
+func (UnimplementedCommissionServer) ListTotalCommissionByParent(context.Context, *ListTotalCommissionByParentReq) (*ListTotalCommissionByParentReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListTotalCommissionByParent not implemented")
 }
-func (UnimplementedCommissionServer) IncUserRegistrationCount(context.Context, *IncUserRegistrationCountReq) (*IncUserRegistrationCountReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method IncUserRegistrationCount not implemented")
+func (UnimplementedCommissionServer) ListCommissionByUser(context.Context, *ListCommissionByUserReq) (*ListCommissionByUserReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListCommissionByUser not implemented")
 }
 func (UnimplementedCommissionServer) mustEmbedUnimplementedCommissionServer() {}
 func (UnimplementedCommissionServer) testEmbeddedByValue()                    {}
@@ -184,92 +192,92 @@ func _Commission_HandleOrderCommission_Handler(srv interface{}, ctx context.Cont
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Commission_GetUserCommission_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetUserCommissionRequest)
+func _Commission_IncChainRegistrationCountByDirectUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(IncChainRegistrationCountByDirectUserReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(CommissionServer).GetUserCommission(ctx, in)
+		return srv.(CommissionServer).IncChainRegistrationCountByDirectUser(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Commission_GetUserCommission_FullMethodName,
+		FullMethod: Commission_IncChainRegistrationCountByDirectUser_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(CommissionServer).GetUserCommission(ctx, req.(*GetUserCommissionRequest))
+		return srv.(CommissionServer).IncChainRegistrationCountByDirectUser(ctx, req.(*IncChainRegistrationCountByDirectUserReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Commission_ListCommission_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListCommissionRequest)
+func _Commission_GetUserTotalCommission_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetUserTotalCommissionRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(CommissionServer).ListCommission(ctx, in)
+		return srv.(CommissionServer).GetUserTotalCommission(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Commission_ListCommission_FullMethodName,
+		FullMethod: Commission_GetUserTotalCommission_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(CommissionServer).ListCommission(ctx, req.(*ListCommissionRequest))
+		return srv.(CommissionServer).GetUserTotalCommission(ctx, req.(*GetUserTotalCommissionRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Commission_ListCommissionByParent_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListCommissionByParentReq)
+func _Commission_ListTotalCommission_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListTotalCommissionRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(CommissionServer).ListCommissionByParent(ctx, in)
+		return srv.(CommissionServer).ListTotalCommission(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Commission_ListCommissionByParent_FullMethodName,
+		FullMethod: Commission_ListTotalCommission_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(CommissionServer).ListCommissionByParent(ctx, req.(*ListCommissionByParentReq))
+		return srv.(CommissionServer).ListTotalCommission(ctx, req.(*ListTotalCommissionRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Commission_InitUserCommission_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(InitUserCommissionReq)
+func _Commission_ListTotalCommissionByParent_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListTotalCommissionByParentReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(CommissionServer).InitUserCommission(ctx, in)
+		return srv.(CommissionServer).ListTotalCommissionByParent(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Commission_InitUserCommission_FullMethodName,
+		FullMethod: Commission_ListTotalCommissionByParent_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(CommissionServer).InitUserCommission(ctx, req.(*InitUserCommissionReq))
+		return srv.(CommissionServer).ListTotalCommissionByParent(ctx, req.(*ListTotalCommissionByParentReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Commission_IncUserRegistrationCount_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(IncUserRegistrationCountReq)
+func _Commission_ListCommissionByUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListCommissionByUserReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(CommissionServer).IncUserRegistrationCount(ctx, in)
+		return srv.(CommissionServer).ListCommissionByUser(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Commission_IncUserRegistrationCount_FullMethodName,
+		FullMethod: Commission_ListCommissionByUser_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(CommissionServer).IncUserRegistrationCount(ctx, req.(*IncUserRegistrationCountReq))
+		return srv.(CommissionServer).ListCommissionByUser(ctx, req.(*ListCommissionByUserReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -286,24 +294,24 @@ var Commission_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Commission_HandleOrderCommission_Handler,
 		},
 		{
-			MethodName: "GetUserCommission",
-			Handler:    _Commission_GetUserCommission_Handler,
+			MethodName: "IncChainRegistrationCountByDirectUser",
+			Handler:    _Commission_IncChainRegistrationCountByDirectUser_Handler,
 		},
 		{
-			MethodName: "ListCommission",
-			Handler:    _Commission_ListCommission_Handler,
+			MethodName: "GetUserTotalCommission",
+			Handler:    _Commission_GetUserTotalCommission_Handler,
 		},
 		{
-			MethodName: "ListCommissionByParent",
-			Handler:    _Commission_ListCommissionByParent_Handler,
+			MethodName: "ListTotalCommission",
+			Handler:    _Commission_ListTotalCommission_Handler,
 		},
 		{
-			MethodName: "InitUserCommission",
-			Handler:    _Commission_InitUserCommission_Handler,
+			MethodName: "ListTotalCommissionByParent",
+			Handler:    _Commission_ListTotalCommissionByParent_Handler,
 		},
 		{
-			MethodName: "IncUserRegistrationCount",
-			Handler:    _Commission_IncUserRegistrationCount_Handler,
+			MethodName: "ListCommissionByUser",
+			Handler:    _Commission_ListCommissionByUser_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

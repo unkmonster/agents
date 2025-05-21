@@ -27,16 +27,14 @@ func wireApp(confServer *conf.Server, confData *conf.Data, logger log.Logger, au
 	db := data.NewSqlxClient(confData, logger)
 	discovery := data.NewDiscovery(registry)
 	userClient := data.NewUserServiceClient(discovery)
-	commissionClient := data.NewCommissionServiceClient(discovery)
-	dataData, cleanup, err := data.NewData(confData, logger, db, userClient, commissionClient)
+	dataData, cleanup, err := data.NewData(confData, logger, db, userClient)
 	if err != nil {
 		return nil, nil, err
 	}
 	userCredentialRepo := data.NewUserCredentialRepo(dataData, logger)
 	userRepo := data.NewUserRepo(dataData, logger)
-	commissionRepo := data.NewCommissionRepo(dataData)
 	gatewayRepo := data.NewGatewayRepo(dataData, kong)
-	authUserCase := biz.NewAuthUserCase(userCredentialRepo, logger, userRepo, auth, commissionRepo, gatewayRepo)
+	authUserCase := biz.NewAuthUserCase(userCredentialRepo, logger, userRepo, auth, gatewayRepo)
 	authnService := service.NewAuthnService(authUserCase)
 	grpcServer := server.NewGRPCServer(confServer, authnService, logger, auth)
 	httpServer := server.NewHTTPServer(confServer, logger, authnService, auth)

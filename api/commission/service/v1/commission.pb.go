@@ -11,6 +11,7 @@ import (
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
@@ -23,27 +24,33 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-type IncUserRegistrationCountReq struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	UserId        string                 `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+type ListCommissionByUserReq struct {
+	state  protoimpl.MessageState `protogen:"open.v1"`
+	UserId string                 `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	// query params
+	OrderBy       string `protobuf:"bytes,3,opt,name=order_by,json=orderBy,proto3" json:"order_by,omitempty"`
+	Date          string `protobuf:"bytes,4,opt,name=date,proto3" json:"date,omitempty"` // 如果 date 被指定将忽略 order_by 相关的参数
+	Limit         int32  `protobuf:"varint,5,opt,name=limit,proto3" json:"limit,omitempty"`
+	Offset        int32  `protobuf:"varint,6,opt,name=offset,proto3" json:"offset,omitempty"`
+	Sort          string `protobuf:"bytes,7,opt,name=sort,proto3" json:"sort,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *IncUserRegistrationCountReq) Reset() {
-	*x = IncUserRegistrationCountReq{}
+func (x *ListCommissionByUserReq) Reset() {
+	*x = ListCommissionByUserReq{}
 	mi := &file_api_commission_service_v1_commission_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *IncUserRegistrationCountReq) String() string {
+func (x *ListCommissionByUserReq) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*IncUserRegistrationCountReq) ProtoMessage() {}
+func (*ListCommissionByUserReq) ProtoMessage() {}
 
-func (x *IncUserRegistrationCountReq) ProtoReflect() protoreflect.Message {
+func (x *ListCommissionByUserReq) ProtoReflect() protoreflect.Message {
 	mi := &file_api_commission_service_v1_commission_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -55,38 +62,75 @@ func (x *IncUserRegistrationCountReq) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use IncUserRegistrationCountReq.ProtoReflect.Descriptor instead.
-func (*IncUserRegistrationCountReq) Descriptor() ([]byte, []int) {
+// Deprecated: Use ListCommissionByUserReq.ProtoReflect.Descriptor instead.
+func (*ListCommissionByUserReq) Descriptor() ([]byte, []int) {
 	return file_api_commission_service_v1_commission_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *IncUserRegistrationCountReq) GetUserId() string {
+func (x *ListCommissionByUserReq) GetUserId() string {
 	if x != nil {
 		return x.UserId
 	}
 	return ""
 }
 
-type IncUserRegistrationCountReply struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
+func (x *ListCommissionByUserReq) GetOrderBy() string {
+	if x != nil {
+		return x.OrderBy
+	}
+	return ""
+}
+
+func (x *ListCommissionByUserReq) GetDate() string {
+	if x != nil {
+		return x.Date
+	}
+	return ""
+}
+
+func (x *ListCommissionByUserReq) GetLimit() int32 {
+	if x != nil {
+		return x.Limit
+	}
+	return 0
+}
+
+func (x *ListCommissionByUserReq) GetOffset() int32 {
+	if x != nil {
+		return x.Offset
+	}
+	return 0
+}
+
+func (x *ListCommissionByUserReq) GetSort() string {
+	if x != nil {
+		return x.Sort
+	}
+	return ""
+}
+
+type ListCommissionByUserReply struct {
+	state         protoimpl.MessageState                  `protogen:"open.v1"`
+	UserId        string                                  `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	Commissions   []*ListCommissionByUserReply_Commission `protobuf:"bytes,2,rep,name=commissions,proto3" json:"commissions,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *IncUserRegistrationCountReply) Reset() {
-	*x = IncUserRegistrationCountReply{}
+func (x *ListCommissionByUserReply) Reset() {
+	*x = ListCommissionByUserReply{}
 	mi := &file_api_commission_service_v1_commission_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *IncUserRegistrationCountReply) String() string {
+func (x *ListCommissionByUserReply) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*IncUserRegistrationCountReply) ProtoMessage() {}
+func (*ListCommissionByUserReply) ProtoMessage() {}
 
-func (x *IncUserRegistrationCountReply) ProtoReflect() protoreflect.Message {
+func (x *ListCommissionByUserReply) ProtoReflect() protoreflect.Message {
 	mi := &file_api_commission_service_v1_commission_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -98,32 +142,46 @@ func (x *IncUserRegistrationCountReply) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use IncUserRegistrationCountReply.ProtoReflect.Descriptor instead.
-func (*IncUserRegistrationCountReply) Descriptor() ([]byte, []int) {
+// Deprecated: Use ListCommissionByUserReply.ProtoReflect.Descriptor instead.
+func (*ListCommissionByUserReply) Descriptor() ([]byte, []int) {
 	return file_api_commission_service_v1_commission_proto_rawDescGZIP(), []int{1}
 }
 
-type InitUserCommissionReq struct {
+func (x *ListCommissionByUserReply) GetUserId() string {
+	if x != nil {
+		return x.UserId
+	}
+	return ""
+}
+
+func (x *ListCommissionByUserReply) GetCommissions() []*ListCommissionByUserReply_Commission {
+	if x != nil {
+		return x.Commissions
+	}
+	return nil
+}
+
+type IncChainRegistrationCountByDirectUserReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	UserId        string                 `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *InitUserCommissionReq) Reset() {
-	*x = InitUserCommissionReq{}
+func (x *IncChainRegistrationCountByDirectUserReq) Reset() {
+	*x = IncChainRegistrationCountByDirectUserReq{}
 	mi := &file_api_commission_service_v1_commission_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *InitUserCommissionReq) String() string {
+func (x *IncChainRegistrationCountByDirectUserReq) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*InitUserCommissionReq) ProtoMessage() {}
+func (*IncChainRegistrationCountByDirectUserReq) ProtoMessage() {}
 
-func (x *InitUserCommissionReq) ProtoReflect() protoreflect.Message {
+func (x *IncChainRegistrationCountByDirectUserReq) ProtoReflect() protoreflect.Message {
 	mi := &file_api_commission_service_v1_commission_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -135,38 +193,38 @@ func (x *InitUserCommissionReq) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use InitUserCommissionReq.ProtoReflect.Descriptor instead.
-func (*InitUserCommissionReq) Descriptor() ([]byte, []int) {
+// Deprecated: Use IncChainRegistrationCountByDirectUserReq.ProtoReflect.Descriptor instead.
+func (*IncChainRegistrationCountByDirectUserReq) Descriptor() ([]byte, []int) {
 	return file_api_commission_service_v1_commission_proto_rawDescGZIP(), []int{2}
 }
 
-func (x *InitUserCommissionReq) GetUserId() string {
+func (x *IncChainRegistrationCountByDirectUserReq) GetUserId() string {
 	if x != nil {
 		return x.UserId
 	}
 	return ""
 }
 
-type InitUserCommissionReply struct {
+type IncChainRegistrationCountByDirectUserReply struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *InitUserCommissionReply) Reset() {
-	*x = InitUserCommissionReply{}
+func (x *IncChainRegistrationCountByDirectUserReply) Reset() {
+	*x = IncChainRegistrationCountByDirectUserReply{}
 	mi := &file_api_commission_service_v1_commission_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *InitUserCommissionReply) String() string {
+func (x *IncChainRegistrationCountByDirectUserReply) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*InitUserCommissionReply) ProtoMessage() {}
+func (*IncChainRegistrationCountByDirectUserReply) ProtoMessage() {}
 
-func (x *InitUserCommissionReply) ProtoReflect() protoreflect.Message {
+func (x *IncChainRegistrationCountByDirectUserReply) ProtoReflect() protoreflect.Message {
 	mi := &file_api_commission_service_v1_commission_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -178,8 +236,8 @@ func (x *InitUserCommissionReply) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use InitUserCommissionReply.ProtoReflect.Descriptor instead.
-func (*InitUserCommissionReply) Descriptor() ([]byte, []int) {
+// Deprecated: Use IncChainRegistrationCountByDirectUserReply.ProtoReflect.Descriptor instead.
+func (*IncChainRegistrationCountByDirectUserReply) Descriptor() ([]byte, []int) {
 	return file_api_commission_service_v1_commission_proto_rawDescGZIP(), []int{3}
 }
 
@@ -271,27 +329,27 @@ func (*HandleOrderCommissionReply) Descriptor() ([]byte, []int) {
 	return file_api_commission_service_v1_commission_proto_rawDescGZIP(), []int{5}
 }
 
-type GetUserCommissionRequest struct {
+type GetUserTotalCommissionRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	UserId        string                 `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *GetUserCommissionRequest) Reset() {
-	*x = GetUserCommissionRequest{}
+func (x *GetUserTotalCommissionRequest) Reset() {
+	*x = GetUserTotalCommissionRequest{}
 	mi := &file_api_commission_service_v1_commission_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *GetUserCommissionRequest) String() string {
+func (x *GetUserTotalCommissionRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*GetUserCommissionRequest) ProtoMessage() {}
+func (*GetUserTotalCommissionRequest) ProtoMessage() {}
 
-func (x *GetUserCommissionRequest) ProtoReflect() protoreflect.Message {
+func (x *GetUserTotalCommissionRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_api_commission_service_v1_commission_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -303,19 +361,19 @@ func (x *GetUserCommissionRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use GetUserCommissionRequest.ProtoReflect.Descriptor instead.
-func (*GetUserCommissionRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use GetUserTotalCommissionRequest.ProtoReflect.Descriptor instead.
+func (*GetUserTotalCommissionRequest) Descriptor() ([]byte, []int) {
 	return file_api_commission_service_v1_commission_proto_rawDescGZIP(), []int{6}
 }
 
-func (x *GetUserCommissionRequest) GetUserId() string {
+func (x *GetUserTotalCommissionRequest) GetUserId() string {
 	if x != nil {
 		return x.UserId
 	}
 	return ""
 }
 
-type GetUserCommissionReply struct {
+type GetUserTotalCommissionReply struct {
 	state                  protoimpl.MessageState `protogen:"open.v1"`
 	Id                     string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
 	UserId                 string                 `protobuf:"bytes,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
@@ -328,20 +386,20 @@ type GetUserCommissionReply struct {
 	sizeCache              protoimpl.SizeCache
 }
 
-func (x *GetUserCommissionReply) Reset() {
-	*x = GetUserCommissionReply{}
+func (x *GetUserTotalCommissionReply) Reset() {
+	*x = GetUserTotalCommissionReply{}
 	mi := &file_api_commission_service_v1_commission_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *GetUserCommissionReply) String() string {
+func (x *GetUserTotalCommissionReply) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*GetUserCommissionReply) ProtoMessage() {}
+func (*GetUserTotalCommissionReply) ProtoMessage() {}
 
-func (x *GetUserCommissionReply) ProtoReflect() protoreflect.Message {
+func (x *GetUserTotalCommissionReply) ProtoReflect() protoreflect.Message {
 	mi := &file_api_commission_service_v1_commission_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -353,80 +411,80 @@ func (x *GetUserCommissionReply) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use GetUserCommissionReply.ProtoReflect.Descriptor instead.
-func (*GetUserCommissionReply) Descriptor() ([]byte, []int) {
+// Deprecated: Use GetUserTotalCommissionReply.ProtoReflect.Descriptor instead.
+func (*GetUserTotalCommissionReply) Descriptor() ([]byte, []int) {
 	return file_api_commission_service_v1_commission_proto_rawDescGZIP(), []int{7}
 }
 
-func (x *GetUserCommissionReply) GetId() string {
+func (x *GetUserTotalCommissionReply) GetId() string {
 	if x != nil {
 		return x.Id
 	}
 	return ""
 }
 
-func (x *GetUserCommissionReply) GetUserId() string {
+func (x *GetUserTotalCommissionReply) GetUserId() string {
 	if x != nil {
 		return x.UserId
 	}
 	return ""
 }
 
-func (x *GetUserCommissionReply) GetTotalCommission() int32 {
+func (x *GetUserTotalCommissionReply) GetTotalCommission() int32 {
 	if x != nil {
 		return x.TotalCommission
 	}
 	return 0
 }
 
-func (x *GetUserCommissionReply) GetTodayCommission() int32 {
+func (x *GetUserTotalCommissionReply) GetTodayCommission() int32 {
 	if x != nil {
 		return x.TodayCommission
 	}
 	return 0
 }
 
-func (x *GetUserCommissionReply) GetSettledCommission() int32 {
+func (x *GetUserTotalCommissionReply) GetSettledCommission() int32 {
 	if x != nil {
 		return x.SettledCommission
 	}
 	return 0
 }
 
-func (x *GetUserCommissionReply) GetTotalRegistrationCount() int32 {
+func (x *GetUserTotalCommissionReply) GetTotalRegistrationCount() int32 {
 	if x != nil {
 		return x.TotalRegistrationCount
 	}
 	return 0
 }
 
-func (x *GetUserCommissionReply) GetTodayRegistrationCount() int32 {
+func (x *GetUserTotalCommissionReply) GetTodayRegistrationCount() int32 {
 	if x != nil {
 		return x.TodayRegistrationCount
 	}
 	return 0
 }
 
-type ListCommissionRequest struct {
+type ListTotalCommissionRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *ListCommissionRequest) Reset() {
-	*x = ListCommissionRequest{}
+func (x *ListTotalCommissionRequest) Reset() {
+	*x = ListTotalCommissionRequest{}
 	mi := &file_api_commission_service_v1_commission_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *ListCommissionRequest) String() string {
+func (x *ListTotalCommissionRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*ListCommissionRequest) ProtoMessage() {}
+func (*ListTotalCommissionRequest) ProtoMessage() {}
 
-func (x *ListCommissionRequest) ProtoReflect() protoreflect.Message {
+func (x *ListTotalCommissionRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_api_commission_service_v1_commission_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -438,32 +496,32 @@ func (x *ListCommissionRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use ListCommissionRequest.ProtoReflect.Descriptor instead.
-func (*ListCommissionRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use ListTotalCommissionRequest.ProtoReflect.Descriptor instead.
+func (*ListTotalCommissionRequest) Descriptor() ([]byte, []int) {
 	return file_api_commission_service_v1_commission_proto_rawDescGZIP(), []int{8}
 }
 
-type ListCommissionReply struct {
-	state         protoimpl.MessageState    `protogen:"open.v1"`
-	Commissions   []*GetUserCommissionReply `protobuf:"bytes,1,rep,name=commissions,proto3" json:"commissions,omitempty"`
+type ListTotalCommissionReply struct {
+	state         protoimpl.MessageState         `protogen:"open.v1"`
+	Commissions   []*GetUserTotalCommissionReply `protobuf:"bytes,1,rep,name=commissions,proto3" json:"commissions,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *ListCommissionReply) Reset() {
-	*x = ListCommissionReply{}
+func (x *ListTotalCommissionReply) Reset() {
+	*x = ListTotalCommissionReply{}
 	mi := &file_api_commission_service_v1_commission_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *ListCommissionReply) String() string {
+func (x *ListTotalCommissionReply) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*ListCommissionReply) ProtoMessage() {}
+func (*ListTotalCommissionReply) ProtoMessage() {}
 
-func (x *ListCommissionReply) ProtoReflect() protoreflect.Message {
+func (x *ListTotalCommissionReply) ProtoReflect() protoreflect.Message {
 	mi := &file_api_commission_service_v1_commission_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -475,39 +533,39 @@ func (x *ListCommissionReply) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use ListCommissionReply.ProtoReflect.Descriptor instead.
-func (*ListCommissionReply) Descriptor() ([]byte, []int) {
+// Deprecated: Use ListTotalCommissionReply.ProtoReflect.Descriptor instead.
+func (*ListTotalCommissionReply) Descriptor() ([]byte, []int) {
 	return file_api_commission_service_v1_commission_proto_rawDescGZIP(), []int{9}
 }
 
-func (x *ListCommissionReply) GetCommissions() []*GetUserCommissionReply {
+func (x *ListTotalCommissionReply) GetCommissions() []*GetUserTotalCommissionReply {
 	if x != nil {
 		return x.Commissions
 	}
 	return nil
 }
 
-type ListCommissionByParentReq struct {
+type ListTotalCommissionByParentReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	ParentId      string                 `protobuf:"bytes,1,opt,name=parent_id,json=parentId,proto3" json:"parent_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *ListCommissionByParentReq) Reset() {
-	*x = ListCommissionByParentReq{}
+func (x *ListTotalCommissionByParentReq) Reset() {
+	*x = ListTotalCommissionByParentReq{}
 	mi := &file_api_commission_service_v1_commission_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *ListCommissionByParentReq) String() string {
+func (x *ListTotalCommissionByParentReq) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*ListCommissionByParentReq) ProtoMessage() {}
+func (*ListTotalCommissionByParentReq) ProtoMessage() {}
 
-func (x *ListCommissionByParentReq) ProtoReflect() protoreflect.Message {
+func (x *ListTotalCommissionByParentReq) ProtoReflect() protoreflect.Message {
 	mi := &file_api_commission_service_v1_commission_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -519,39 +577,39 @@ func (x *ListCommissionByParentReq) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use ListCommissionByParentReq.ProtoReflect.Descriptor instead.
-func (*ListCommissionByParentReq) Descriptor() ([]byte, []int) {
+// Deprecated: Use ListTotalCommissionByParentReq.ProtoReflect.Descriptor instead.
+func (*ListTotalCommissionByParentReq) Descriptor() ([]byte, []int) {
 	return file_api_commission_service_v1_commission_proto_rawDescGZIP(), []int{10}
 }
 
-func (x *ListCommissionByParentReq) GetParentId() string {
+func (x *ListTotalCommissionByParentReq) GetParentId() string {
 	if x != nil {
 		return x.ParentId
 	}
 	return ""
 }
 
-type ListCommissionByParentReply struct {
-	state         protoimpl.MessageState    `protogen:"open.v1"`
-	Commissions   []*GetUserCommissionReply `protobuf:"bytes,1,rep,name=commissions,proto3" json:"commissions,omitempty"`
+type ListTotalCommissionByParentReply struct {
+	state         protoimpl.MessageState         `protogen:"open.v1"`
+	Commissions   []*GetUserTotalCommissionReply `protobuf:"bytes,1,rep,name=commissions,proto3" json:"commissions,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *ListCommissionByParentReply) Reset() {
-	*x = ListCommissionByParentReply{}
+func (x *ListTotalCommissionByParentReply) Reset() {
+	*x = ListTotalCommissionByParentReply{}
 	mi := &file_api_commission_service_v1_commission_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *ListCommissionByParentReply) String() string {
+func (x *ListTotalCommissionByParentReply) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*ListCommissionByParentReply) ProtoMessage() {}
+func (*ListTotalCommissionByParentReply) ProtoMessage() {}
 
-func (x *ListCommissionByParentReply) ProtoReflect() protoreflect.Message {
+func (x *ListTotalCommissionByParentReply) ProtoReflect() protoreflect.Message {
 	mi := &file_api_commission_service_v1_commission_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -563,14 +621,90 @@ func (x *ListCommissionByParentReply) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use ListCommissionByParentReply.ProtoReflect.Descriptor instead.
-func (*ListCommissionByParentReply) Descriptor() ([]byte, []int) {
+// Deprecated: Use ListTotalCommissionByParentReply.ProtoReflect.Descriptor instead.
+func (*ListTotalCommissionByParentReply) Descriptor() ([]byte, []int) {
 	return file_api_commission_service_v1_commission_proto_rawDescGZIP(), []int{11}
 }
 
-func (x *ListCommissionByParentReply) GetCommissions() []*GetUserCommissionReply {
+func (x *ListTotalCommissionByParentReply) GetCommissions() []*GetUserTotalCommissionReply {
 	if x != nil {
 		return x.Commissions
+	}
+	return nil
+}
+
+type ListCommissionByUserReply_Commission struct {
+	state                     protoimpl.MessageState `protogen:"open.v1"`
+	IndirectRechargeAmount    int64                  `protobuf:"varint,1,opt,name=indirect_recharge_amount,json=indirectRechargeAmount,proto3" json:"indirect_recharge_amount,omitempty"`
+	DirectRechargeAmount      int64                  `protobuf:"varint,2,opt,name=direct_recharge_amount,json=directRechargeAmount,proto3" json:"direct_recharge_amount,omitempty"`
+	IndirectRegistrationCount int64                  `protobuf:"varint,3,opt,name=indirect_registration_count,json=indirectRegistrationCount,proto3" json:"indirect_registration_count,omitempty"`
+	DirectRegistrationCount   int64                  `protobuf:"varint,4,opt,name=direct_registration_count,json=directRegistrationCount,proto3" json:"direct_registration_count,omitempty"`
+	Date                      *timestamppb.Timestamp `protobuf:"bytes,5,opt,name=date,proto3" json:"date,omitempty"`
+	unknownFields             protoimpl.UnknownFields
+	sizeCache                 protoimpl.SizeCache
+}
+
+func (x *ListCommissionByUserReply_Commission) Reset() {
+	*x = ListCommissionByUserReply_Commission{}
+	mi := &file_api_commission_service_v1_commission_proto_msgTypes[12]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ListCommissionByUserReply_Commission) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListCommissionByUserReply_Commission) ProtoMessage() {}
+
+func (x *ListCommissionByUserReply_Commission) ProtoReflect() protoreflect.Message {
+	mi := &file_api_commission_service_v1_commission_proto_msgTypes[12]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListCommissionByUserReply_Commission.ProtoReflect.Descriptor instead.
+func (*ListCommissionByUserReply_Commission) Descriptor() ([]byte, []int) {
+	return file_api_commission_service_v1_commission_proto_rawDescGZIP(), []int{1, 0}
+}
+
+func (x *ListCommissionByUserReply_Commission) GetIndirectRechargeAmount() int64 {
+	if x != nil {
+		return x.IndirectRechargeAmount
+	}
+	return 0
+}
+
+func (x *ListCommissionByUserReply_Commission) GetDirectRechargeAmount() int64 {
+	if x != nil {
+		return x.DirectRechargeAmount
+	}
+	return 0
+}
+
+func (x *ListCommissionByUserReply_Commission) GetIndirectRegistrationCount() int64 {
+	if x != nil {
+		return x.IndirectRegistrationCount
+	}
+	return 0
+}
+
+func (x *ListCommissionByUserReply_Commission) GetDirectRegistrationCount() int64 {
+	if x != nil {
+		return x.DirectRegistrationCount
+	}
+	return 0
+}
+
+func (x *ListCommissionByUserReply_Commission) GetDate() *timestamppb.Timestamp {
+	if x != nil {
+		return x.Date
 	}
 	return nil
 }
@@ -579,42 +713,56 @@ var File_api_commission_service_v1_commission_proto protoreflect.FileDescriptor
 
 const file_api_commission_service_v1_commission_proto_rawDesc = "" +
 	"\n" +
-	"*api/commission/service/v1/commission.proto\x12\x19api.commission.service.v1\x1a\x1cgoogle/api/annotations.proto\x1a\x17validate/validate.proto\"?\n" +
-	"\x1bIncUserRegistrationCountReq\x12 \n" +
-	"\auser_id\x18\x01 \x01(\tB\a\xfaB\x04r\x02\x10\x01R\x06userId\"\x1f\n" +
-	"\x1dIncUserRegistrationCountReply\"9\n" +
-	"\x15InitUserCommissionReq\x12 \n" +
-	"\auser_id\x18\x01 \x01(\tB\a\xfaB\x04r\x02\x10\x01R\x06userId\"\x19\n" +
-	"\x17InitUserCommissionReply\"`\n" +
+	"*api/commission/service/v1/commission.proto\x12\x19api.commission.service.v1\x1a\x1cgoogle/api/annotations.proto\x1a\x17validate/validate.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"\xe3\x02\n" +
+	"\x17ListCommissionByUserReq\x12!\n" +
+	"\auser_id\x18\x01 \x01(\tB\b\xfaB\x05r\x03\xb0\x01\x01R\x06userId\x12\xba\x01\n" +
+	"\border_by\x18\x03 \x01(\tB\x9e\x01\xfaB\x9a\x01r\x97\x01R\x00R\x04dateR\x0frecharge_amountR\x12registration_countR\x18indirect_recharge_amountR\x16direct_recharge_amountR\x1bindirect_registration_countR\x19direct_registration_countR\aorderBy\x12\x12\n" +
+	"\x04date\x18\x04 \x01(\tR\x04date\x12\x14\n" +
+	"\x05limit\x18\x05 \x01(\x05R\x05limit\x12\x16\n" +
+	"\x06offset\x18\x06 \x01(\x05R\x06offset\x12&\n" +
+	"\x04sort\x18\a \x01(\tB\x12\xfaB\x0fr\rR\x00R\x03ascR\x04descR\x04sort\"\xc2\x03\n" +
+	"\x19ListCommissionByUserReply\x12\x17\n" +
+	"\auser_id\x18\x01 \x01(\tR\x06userId\x12a\n" +
+	"\vcommissions\x18\x02 \x03(\v2?.api.commission.service.v1.ListCommissionByUserReply.CommissionR\vcommissions\x1a\xa8\x02\n" +
+	"\n" +
+	"Commission\x128\n" +
+	"\x18indirect_recharge_amount\x18\x01 \x01(\x03R\x16indirectRechargeAmount\x124\n" +
+	"\x16direct_recharge_amount\x18\x02 \x01(\x03R\x14directRechargeAmount\x12>\n" +
+	"\x1bindirect_registration_count\x18\x03 \x01(\x03R\x19indirectRegistrationCount\x12:\n" +
+	"\x19direct_registration_count\x18\x04 \x01(\x03R\x17directRegistrationCount\x12.\n" +
+	"\x04date\x18\x05 \x01(\v2\x1a.google.protobuf.TimestampR\x04date\"L\n" +
+	"(IncChainRegistrationCountByDirectUserReq\x12 \n" +
+	"\auser_id\x18\x01 \x01(\tB\a\xfaB\x04r\x02\x10\x01R\x06userId\",\n" +
+	"*IncChainRegistrationCountByDirectUserReply\"`\n" +
 	"\x1cHandleOrderCommissionRequest\x12\x1f\n" +
 	"\x06domain\x18\x01 \x01(\tB\a\xfaB\x04r\x02\x10\x01R\x06domain\x12\x1f\n" +
 	"\x06amount\x18\x02 \x01(\x05B\a\xfaB\x04\x1a\x02 \x00R\x06amount\"\x1c\n" +
-	"\x1aHandleOrderCommissionReply\"<\n" +
-	"\x18GetUserCommissionRequest\x12 \n" +
-	"\auser_id\x18\x01 \x01(\tB\a\xfaB\x04r\x02\x10\x01R\x06userId\"\xba\x02\n" +
-	"\x16GetUserCommissionReply\x12\x0e\n" +
+	"\x1aHandleOrderCommissionReply\"A\n" +
+	"\x1dGetUserTotalCommissionRequest\x12 \n" +
+	"\auser_id\x18\x01 \x01(\tB\a\xfaB\x04r\x02\x10\x01R\x06userId\"\xbf\x02\n" +
+	"\x1bGetUserTotalCommissionReply\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x17\n" +
 	"\auser_id\x18\x02 \x01(\tR\x06userId\x12)\n" +
 	"\x10total_commission\x18\x03 \x01(\x05R\x0ftotalCommission\x12)\n" +
 	"\x10today_commission\x18\x04 \x01(\x05R\x0ftodayCommission\x12-\n" +
 	"\x12settled_commission\x18\x05 \x01(\x05R\x11settledCommission\x128\n" +
 	"\x18total_registration_count\x18\x06 \x01(\x05R\x16totalRegistrationCount\x128\n" +
-	"\x18today_registration_count\x18\a \x01(\x05R\x16todayRegistrationCount\"\x17\n" +
-	"\x15ListCommissionRequest\"j\n" +
-	"\x13ListCommissionReply\x12S\n" +
-	"\vcommissions\x18\x01 \x03(\v21.api.commission.service.v1.GetUserCommissionReplyR\vcommissions\"A\n" +
-	"\x19ListCommissionByParentReq\x12$\n" +
-	"\tparent_id\x18\x01 \x01(\tB\a\xfaB\x04r\x02\x10\x01R\bparentId\"r\n" +
-	"\x1bListCommissionByParentReply\x12S\n" +
-	"\vcommissions\x18\x01 \x03(\v21.api.commission.service.v1.GetUserCommissionReplyR\vcommissions2\x8f\a\n" +
+	"\x18today_registration_count\x18\a \x01(\x05R\x16todayRegistrationCount\"\x1c\n" +
+	"\x1aListTotalCommissionRequest\"t\n" +
+	"\x18ListTotalCommissionReply\x12X\n" +
+	"\vcommissions\x18\x01 \x03(\v26.api.commission.service.v1.GetUserTotalCommissionReplyR\vcommissions\"F\n" +
+	"\x1eListTotalCommissionByParentReq\x12$\n" +
+	"\tparent_id\x18\x01 \x01(\tB\a\xfaB\x04r\x02\x10\x01R\bparentId\"|\n" +
+	" ListTotalCommissionByParentReply\x12X\n" +
+	"\vcommissions\x18\x01 \x03(\v26.api.commission.service.v1.GetUserTotalCommissionReplyR\vcommissions2\xa8\b\n" +
 	"\n" +
 	"Commission\x12\x87\x01\n" +
-	"\x15HandleOrderCommission\x127.api.commission.service.v1.HandleOrderCommissionRequest\x1a5.api.commission.service.v1.HandleOrderCommissionReply\x12\xa3\x01\n" +
-	"\x11GetUserCommission\x123.api.commission.service.v1.GetUserCommissionRequest\x1a1.api.commission.service.v1.GetUserCommissionReply\"&\x82\xd3\xe4\x93\x02 \x12\x1e/v1/users/{user_id}/commission\x12\x8b\x01\n" +
-	"\x0eListCommission\x120.api.commission.service.v1.ListCommissionRequest\x1a..api.commission.service.v1.ListCommissionReply\"\x17\x82\xd3\xe4\x93\x02\x11\x12\x0f/v1/commissions\x12\xb7\x01\n" +
-	"\x16ListCommissionByParent\x124.api.commission.service.v1.ListCommissionByParentReq\x1a6.api.commission.service.v1.ListCommissionByParentReply\"/\x82\xd3\xe4\x93\x02)\x12'/v1/users/{parent_id}/users/commissions\x12z\n" +
-	"\x12InitUserCommission\x120.api.commission.service.v1.InitUserCommissionReq\x1a2.api.commission.service.v1.InitUserCommissionReply\x12\x8c\x01\n" +
-	"\x18IncUserRegistrationCount\x126.api.commission.service.v1.IncUserRegistrationCountReq\x1a8.api.commission.service.v1.IncUserRegistrationCountReplyBB\n" +
+	"\x15HandleOrderCommission\x127.api.commission.service.v1.HandleOrderCommissionRequest\x1a5.api.commission.service.v1.HandleOrderCommissionReply\x12\xb3\x01\n" +
+	"%IncChainRegistrationCountByDirectUser\x12C.api.commission.service.v1.IncChainRegistrationCountByDirectUserReq\x1aE.api.commission.service.v1.IncChainRegistrationCountByDirectUserReply\x12\xb8\x01\n" +
+	"\x16GetUserTotalCommission\x128.api.commission.service.v1.GetUserTotalCommissionRequest\x1a6.api.commission.service.v1.GetUserTotalCommissionReply\",\x82\xd3\xe4\x93\x02&\x12$/v1/users/{user_id}/total_commission\x12\xa0\x01\n" +
+	"\x13ListTotalCommission\x125.api.commission.service.v1.ListTotalCommissionRequest\x1a3.api.commission.service.v1.ListTotalCommissionReply\"\x1d\x82\xd3\xe4\x93\x02\x17\x12\x15/v1/total_commissions\x12\xcf\x01\n" +
+	"\x1bListTotalCommissionByParent\x129.api.commission.service.v1.ListTotalCommissionByParentReq\x1a;.api.commission.service.v1.ListTotalCommissionByParentReply\"8\x82\xd3\xe4\x93\x022\x120/v1/users/{parent_id}/children/total_commissions\x12\xa9\x01\n" +
+	"\x14ListCommissionByUser\x122.api.commission.service.v1.ListCommissionByUserReq\x1a4.api.commission.service.v1.ListCommissionByUserReply\"'\x82\xd3\xe4\x93\x02!\x12\x1f/v1/users/{user_id}/commissionsBB\n" +
 	"\x19api.commission.service.v1P\x01Z#agents/api/commission/service/v1;v1b\x06proto3"
 
 var (
@@ -629,41 +777,45 @@ func file_api_commission_service_v1_commission_proto_rawDescGZIP() []byte {
 	return file_api_commission_service_v1_commission_proto_rawDescData
 }
 
-var file_api_commission_service_v1_commission_proto_msgTypes = make([]protoimpl.MessageInfo, 12)
+var file_api_commission_service_v1_commission_proto_msgTypes = make([]protoimpl.MessageInfo, 13)
 var file_api_commission_service_v1_commission_proto_goTypes = []any{
-	(*IncUserRegistrationCountReq)(nil),   // 0: api.commission.service.v1.IncUserRegistrationCountReq
-	(*IncUserRegistrationCountReply)(nil), // 1: api.commission.service.v1.IncUserRegistrationCountReply
-	(*InitUserCommissionReq)(nil),         // 2: api.commission.service.v1.InitUserCommissionReq
-	(*InitUserCommissionReply)(nil),       // 3: api.commission.service.v1.InitUserCommissionReply
-	(*HandleOrderCommissionRequest)(nil),  // 4: api.commission.service.v1.HandleOrderCommissionRequest
-	(*HandleOrderCommissionReply)(nil),    // 5: api.commission.service.v1.HandleOrderCommissionReply
-	(*GetUserCommissionRequest)(nil),      // 6: api.commission.service.v1.GetUserCommissionRequest
-	(*GetUserCommissionReply)(nil),        // 7: api.commission.service.v1.GetUserCommissionReply
-	(*ListCommissionRequest)(nil),         // 8: api.commission.service.v1.ListCommissionRequest
-	(*ListCommissionReply)(nil),           // 9: api.commission.service.v1.ListCommissionReply
-	(*ListCommissionByParentReq)(nil),     // 10: api.commission.service.v1.ListCommissionByParentReq
-	(*ListCommissionByParentReply)(nil),   // 11: api.commission.service.v1.ListCommissionByParentReply
+	(*ListCommissionByUserReq)(nil),                    // 0: api.commission.service.v1.ListCommissionByUserReq
+	(*ListCommissionByUserReply)(nil),                  // 1: api.commission.service.v1.ListCommissionByUserReply
+	(*IncChainRegistrationCountByDirectUserReq)(nil),   // 2: api.commission.service.v1.IncChainRegistrationCountByDirectUserReq
+	(*IncChainRegistrationCountByDirectUserReply)(nil), // 3: api.commission.service.v1.IncChainRegistrationCountByDirectUserReply
+	(*HandleOrderCommissionRequest)(nil),               // 4: api.commission.service.v1.HandleOrderCommissionRequest
+	(*HandleOrderCommissionReply)(nil),                 // 5: api.commission.service.v1.HandleOrderCommissionReply
+	(*GetUserTotalCommissionRequest)(nil),              // 6: api.commission.service.v1.GetUserTotalCommissionRequest
+	(*GetUserTotalCommissionReply)(nil),                // 7: api.commission.service.v1.GetUserTotalCommissionReply
+	(*ListTotalCommissionRequest)(nil),                 // 8: api.commission.service.v1.ListTotalCommissionRequest
+	(*ListTotalCommissionReply)(nil),                   // 9: api.commission.service.v1.ListTotalCommissionReply
+	(*ListTotalCommissionByParentReq)(nil),             // 10: api.commission.service.v1.ListTotalCommissionByParentReq
+	(*ListTotalCommissionByParentReply)(nil),           // 11: api.commission.service.v1.ListTotalCommissionByParentReply
+	(*ListCommissionByUserReply_Commission)(nil),       // 12: api.commission.service.v1.ListCommissionByUserReply.Commission
+	(*timestamppb.Timestamp)(nil),                      // 13: google.protobuf.Timestamp
 }
 var file_api_commission_service_v1_commission_proto_depIdxs = []int32{
-	7,  // 0: api.commission.service.v1.ListCommissionReply.commissions:type_name -> api.commission.service.v1.GetUserCommissionReply
-	7,  // 1: api.commission.service.v1.ListCommissionByParentReply.commissions:type_name -> api.commission.service.v1.GetUserCommissionReply
-	4,  // 2: api.commission.service.v1.Commission.HandleOrderCommission:input_type -> api.commission.service.v1.HandleOrderCommissionRequest
-	6,  // 3: api.commission.service.v1.Commission.GetUserCommission:input_type -> api.commission.service.v1.GetUserCommissionRequest
-	8,  // 4: api.commission.service.v1.Commission.ListCommission:input_type -> api.commission.service.v1.ListCommissionRequest
-	10, // 5: api.commission.service.v1.Commission.ListCommissionByParent:input_type -> api.commission.service.v1.ListCommissionByParentReq
-	2,  // 6: api.commission.service.v1.Commission.InitUserCommission:input_type -> api.commission.service.v1.InitUserCommissionReq
-	0,  // 7: api.commission.service.v1.Commission.IncUserRegistrationCount:input_type -> api.commission.service.v1.IncUserRegistrationCountReq
-	5,  // 8: api.commission.service.v1.Commission.HandleOrderCommission:output_type -> api.commission.service.v1.HandleOrderCommissionReply
-	7,  // 9: api.commission.service.v1.Commission.GetUserCommission:output_type -> api.commission.service.v1.GetUserCommissionReply
-	9,  // 10: api.commission.service.v1.Commission.ListCommission:output_type -> api.commission.service.v1.ListCommissionReply
-	11, // 11: api.commission.service.v1.Commission.ListCommissionByParent:output_type -> api.commission.service.v1.ListCommissionByParentReply
-	3,  // 12: api.commission.service.v1.Commission.InitUserCommission:output_type -> api.commission.service.v1.InitUserCommissionReply
-	1,  // 13: api.commission.service.v1.Commission.IncUserRegistrationCount:output_type -> api.commission.service.v1.IncUserRegistrationCountReply
-	8,  // [8:14] is the sub-list for method output_type
-	2,  // [2:8] is the sub-list for method input_type
-	2,  // [2:2] is the sub-list for extension type_name
-	2,  // [2:2] is the sub-list for extension extendee
-	0,  // [0:2] is the sub-list for field type_name
+	12, // 0: api.commission.service.v1.ListCommissionByUserReply.commissions:type_name -> api.commission.service.v1.ListCommissionByUserReply.Commission
+	7,  // 1: api.commission.service.v1.ListTotalCommissionReply.commissions:type_name -> api.commission.service.v1.GetUserTotalCommissionReply
+	7,  // 2: api.commission.service.v1.ListTotalCommissionByParentReply.commissions:type_name -> api.commission.service.v1.GetUserTotalCommissionReply
+	13, // 3: api.commission.service.v1.ListCommissionByUserReply.Commission.date:type_name -> google.protobuf.Timestamp
+	4,  // 4: api.commission.service.v1.Commission.HandleOrderCommission:input_type -> api.commission.service.v1.HandleOrderCommissionRequest
+	2,  // 5: api.commission.service.v1.Commission.IncChainRegistrationCountByDirectUser:input_type -> api.commission.service.v1.IncChainRegistrationCountByDirectUserReq
+	6,  // 6: api.commission.service.v1.Commission.GetUserTotalCommission:input_type -> api.commission.service.v1.GetUserTotalCommissionRequest
+	8,  // 7: api.commission.service.v1.Commission.ListTotalCommission:input_type -> api.commission.service.v1.ListTotalCommissionRequest
+	10, // 8: api.commission.service.v1.Commission.ListTotalCommissionByParent:input_type -> api.commission.service.v1.ListTotalCommissionByParentReq
+	0,  // 9: api.commission.service.v1.Commission.ListCommissionByUser:input_type -> api.commission.service.v1.ListCommissionByUserReq
+	5,  // 10: api.commission.service.v1.Commission.HandleOrderCommission:output_type -> api.commission.service.v1.HandleOrderCommissionReply
+	3,  // 11: api.commission.service.v1.Commission.IncChainRegistrationCountByDirectUser:output_type -> api.commission.service.v1.IncChainRegistrationCountByDirectUserReply
+	7,  // 12: api.commission.service.v1.Commission.GetUserTotalCommission:output_type -> api.commission.service.v1.GetUserTotalCommissionReply
+	9,  // 13: api.commission.service.v1.Commission.ListTotalCommission:output_type -> api.commission.service.v1.ListTotalCommissionReply
+	11, // 14: api.commission.service.v1.Commission.ListTotalCommissionByParent:output_type -> api.commission.service.v1.ListTotalCommissionByParentReply
+	1,  // 15: api.commission.service.v1.Commission.ListCommissionByUser:output_type -> api.commission.service.v1.ListCommissionByUserReply
+	10, // [10:16] is the sub-list for method output_type
+	4,  // [4:10] is the sub-list for method input_type
+	4,  // [4:4] is the sub-list for extension type_name
+	4,  // [4:4] is the sub-list for extension extendee
+	0,  // [0:4] is the sub-list for field type_name
 }
 
 func init() { file_api_commission_service_v1_commission_proto_init() }
@@ -677,7 +829,7 @@ func file_api_commission_service_v1_commission_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_api_commission_service_v1_commission_proto_rawDesc), len(file_api_commission_service_v1_commission_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   12,
+			NumMessages:   13,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

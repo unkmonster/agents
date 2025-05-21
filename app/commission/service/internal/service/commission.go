@@ -5,6 +5,8 @@ import (
 
 	pb "agents/api/commission/service/v1"
 	"agents/app/commission/service/internal/biz"
+
+	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 type CommissionService struct {
@@ -23,14 +25,19 @@ func (s *CommissionService) HandleOrderCommission(ctx context.Context, req *pb.H
 	return &pb.HandleOrderCommissionReply{}, err
 }
 
-func (s *CommissionService) GetUserCommission(ctx context.Context, req *pb.GetUserCommissionRequest) (*pb.GetUserCommissionReply, error) {
-	comm, err := s.comm.GetUserCommission(ctx, req.UserId)
+func (s *CommissionService) IncChainRegistrationCountByDirectUser(ctx context.Context, req *pb.IncChainRegistrationCountByDirectUserReq) (*pb.IncChainRegistrationCountByDirectUserReply, error) {
+	err := s.comm.IncChainRegistrationCountByDirectUser(ctx, req.UserId)
+	return nil, err
+}
+
+func (s *CommissionService) GetUserTotalCommission(ctx context.Context, req *pb.GetUserTotalCommissionRequest) (*pb.GetUserTotalCommissionReply, error) {
+	comm, err := s.comm.GetUserTotalCommission(ctx, req.UserId)
 
 	if err != nil {
 		return nil, err
 	}
 
-	return &pb.GetUserCommissionReply{
+	return &pb.GetUserTotalCommissionReply{
 		Id:                     comm.Id,
 		UserId:                 comm.UserId,
 		TotalCommission:        comm.TotalCommission,
@@ -41,16 +48,16 @@ func (s *CommissionService) GetUserCommission(ctx context.Context, req *pb.GetUs
 	}, nil
 }
 
-func (s *CommissionService) ListCommission(ctx context.Context, req *pb.ListCommissionRequest) (*pb.ListCommissionReply, error) {
-	comms, err := s.comm.ListCommission(ctx)
+func (s *CommissionService) ListTotalCommission(ctx context.Context, req *pb.ListTotalCommissionRequest) (*pb.ListTotalCommissionReply, error) {
+	comms, err := s.comm.ListTotalCommission(ctx)
 
 	if err != nil {
 		return nil, err
 	}
 
-	reply := pb.ListCommissionReply{}
+	reply := pb.ListTotalCommissionReply{}
 	for _, comm := range comms {
-		reply.Commissions = append(reply.Commissions, &pb.GetUserCommissionReply{
+		reply.Commissions = append(reply.Commissions, &pb.GetUserTotalCommissionReply{
 			Id:                     comm.Id,
 			UserId:                 comm.UserId,
 			TotalCommission:        comm.TotalCommission,
@@ -63,16 +70,16 @@ func (s *CommissionService) ListCommission(ctx context.Context, req *pb.ListComm
 	return &reply, nil
 }
 
-func (s *CommissionService) ListCommissionByParent(ctx context.Context, req *pb.ListCommissionByParentReq) (*pb.ListCommissionByParentReply, error) {
-	comms, err := s.comm.ListCommissionByParent(ctx, req.ParentId)
+func (s *CommissionService) ListTotalCommissionByParent(ctx context.Context, req *pb.ListTotalCommissionByParentReq) (*pb.ListTotalCommissionByParentReply, error) {
+	comms, err := s.comm.ListTotalCommissionByParent(ctx, req.ParentId)
 
 	if err != nil {
 		return nil, err
 	}
 
-	reply := pb.ListCommissionByParentReply{}
+	reply := pb.ListTotalCommissionByParentReply{}
 	for _, comm := range comms {
-		reply.Commissions = append(reply.Commissions, &pb.GetUserCommissionReply{
+		reply.Commissions = append(reply.Commissions, &pb.GetUserTotalCommissionReply{
 			Id:                     comm.Id,
 			UserId:                 comm.UserId,
 			TotalCommission:        comm.TotalCommission,
@@ -85,12 +92,31 @@ func (s *CommissionService) ListCommissionByParent(ctx context.Context, req *pb.
 	return &reply, nil
 }
 
-func (s *CommissionService) InitUserCommission(ctx context.Context, req *pb.InitUserCommissionReq) (*pb.InitUserCommissionReply, error) {
-	err := s.comm.InitUserCommission(ctx, req.UserId)
-	return nil, err
-}
+func (s *CommissionService) ListCommissionByUser(ctx context.Context, req *pb.ListCommissionByUserReq) (*pb.ListCommissionByUserReply, error) {
+	if req.OrderBy == "" {
+		req.OrderBy = "date"
+	}
+	if req.Limit == 0 {
+		req.Limit = 20
+	}
+	if req.Sort == "" {
+		req.Sort = "desc"
+	}
 
-func (s *CommissionService) IncUserRegistrationCount(ctx context.Context, req *pb.IncUserRegistrationCountReq) (*pb.IncUserRegistrationCountReply, error) {
-	err := s.comm.IncUserRegistrationCount(ctx, req.UserId)
-	return nil, err
+	commissions, err := s.comm.ListCommissionByUser(ctx, req)
+	if err != nil {
+		return nil, err
+	}
+
+	reply := pb.ListCommissionByUserReply{UserId: req.UserId}
+	for _, commission := range commissions {
+		reply.Commissions = append(reply.Commissions, &pb.ListCommissionByUserReply_Commission{
+			IndirectRechargeAmount:    commission.IndirectRechargeAmount,
+			IndirectRegistrationCount: commission.IndirectRegistrationCount,
+			DirectRechargeAmount:      commission.DirectRechargeAmount,
+			DirectRegistrationCount:   commission.DirectRegistrationCount,
+			Date:                      timestamppb.New(commission.Date),
+		})
+	}
+	return &reply, nil
 }

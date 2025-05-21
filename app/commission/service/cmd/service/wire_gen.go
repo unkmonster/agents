@@ -30,7 +30,7 @@ func wireApp(confServer *conf.Server, confData *conf.Data, logger log.Logger, re
 	if err != nil {
 		return nil, nil, err
 	}
-	commissionRepo := data.NewCommissionRepo(dataData)
+	commissionRepo := data.NewCommissionRepo(dataData, logger)
 	userRepo := data.NewUserRepo(dataData)
 	commissionUseCase := biz.NewCommissionUseCase(commissionRepo, logger, userRepo)
 	commissionService := service.NewCommissionService(commissionUseCase)
