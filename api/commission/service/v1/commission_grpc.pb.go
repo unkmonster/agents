@@ -24,6 +24,7 @@ const (
 	Commission_GetUserTotalCommission_FullMethodName                = "/api.commission.service.v1.Commission/GetUserTotalCommission"
 	Commission_ListTotalCommission_FullMethodName                   = "/api.commission.service.v1.Commission/ListTotalCommission"
 	Commission_ListTotalCommissionByParent_FullMethodName           = "/api.commission.service.v1.Commission/ListTotalCommissionByParent"
+	Commission_ListCommissionByUser_FullMethodName                  = "/api.commission.service.v1.Commission/ListCommissionByUser"
 )
 
 // CommissionClient is the client API for Commission service.
@@ -39,6 +40,7 @@ type CommissionClient interface {
 	ListTotalCommission(ctx context.Context, in *ListTotalCommissionRequest, opts ...grpc.CallOption) (*ListTotalCommissionReply, error)
 	// 列出每个下游代理的累计佣金
 	ListTotalCommissionByParent(ctx context.Context, in *ListTotalCommissionByParentReq, opts ...grpc.CallOption) (*ListTotalCommissionByParentReply, error)
+	ListCommissionByUser(ctx context.Context, in *ListCommissionByUserReq, opts ...grpc.CallOption) (*ListCommissionByUserReply, error)
 }
 
 type commissionClient struct {
@@ -99,6 +101,16 @@ func (c *commissionClient) ListTotalCommissionByParent(ctx context.Context, in *
 	return out, nil
 }
 
+func (c *commissionClient) ListCommissionByUser(ctx context.Context, in *ListCommissionByUserReq, opts ...grpc.CallOption) (*ListCommissionByUserReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListCommissionByUserReply)
+	err := c.cc.Invoke(ctx, Commission_ListCommissionByUser_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // CommissionServer is the server API for Commission service.
 // All implementations must embed UnimplementedCommissionServer
 // for forward compatibility.
@@ -112,6 +124,7 @@ type CommissionServer interface {
 	ListTotalCommission(context.Context, *ListTotalCommissionRequest) (*ListTotalCommissionReply, error)
 	// 列出每个下游代理的累计佣金
 	ListTotalCommissionByParent(context.Context, *ListTotalCommissionByParentReq) (*ListTotalCommissionByParentReply, error)
+	ListCommissionByUser(context.Context, *ListCommissionByUserReq) (*ListCommissionByUserReply, error)
 	mustEmbedUnimplementedCommissionServer()
 }
 
@@ -136,6 +149,9 @@ func (UnimplementedCommissionServer) ListTotalCommission(context.Context, *ListT
 }
 func (UnimplementedCommissionServer) ListTotalCommissionByParent(context.Context, *ListTotalCommissionByParentReq) (*ListTotalCommissionByParentReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListTotalCommissionByParent not implemented")
+}
+func (UnimplementedCommissionServer) ListCommissionByUser(context.Context, *ListCommissionByUserReq) (*ListCommissionByUserReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListCommissionByUser not implemented")
 }
 func (UnimplementedCommissionServer) mustEmbedUnimplementedCommissionServer() {}
 func (UnimplementedCommissionServer) testEmbeddedByValue()                    {}
@@ -248,6 +264,24 @@ func _Commission_ListTotalCommissionByParent_Handler(srv interface{}, ctx contex
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Commission_ListCommissionByUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListCommissionByUserReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CommissionServer).ListCommissionByUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Commission_ListCommissionByUser_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CommissionServer).ListCommissionByUser(ctx, req.(*ListCommissionByUserReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Commission_ServiceDesc is the grpc.ServiceDesc for Commission service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -274,6 +308,10 @@ var Commission_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListTotalCommissionByParent",
 			Handler:    _Commission_ListTotalCommissionByParent_Handler,
+		},
+		{
+			MethodName: "ListCommissionByUser",
+			Handler:    _Commission_ListCommissionByUser_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

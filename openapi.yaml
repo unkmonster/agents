@@ -50,6 +50,49 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/Status'
+    /v1/users/{userId}/commissions:
+        get:
+            tags:
+                - Commission
+            operationId: Commission_ListCommissionByUser
+            parameters:
+                - name: userId
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+                - name: orderBy
+                  in: query
+                  description: query params
+                  schema:
+                    type: string
+                - name: date
+                  in: query
+                  schema:
+                    type: string
+                - name: limit
+                  in: query
+                  schema:
+                    type: integer
+                    format: int32
+                - name: offset
+                  in: query
+                  schema:
+                    type: integer
+                    format: int32
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ListCommissionByUserReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
     /v1/users/{userId}/total_commission:
         get:
             tags:
@@ -107,6 +150,29 @@ components:
                     description: The type of the serialized message.
             additionalProperties: true
             description: Contains an arbitrary serialized message along with a @type that describes the type of the serialized message.
+        ListCommissionByUserReply:
+            type: object
+            properties:
+                userId:
+                    type: string
+                commissions:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/ListCommissionByUserReply_Commission'
+        ListCommissionByUserReply_Commission:
+            type: object
+            properties:
+                indirectRechargeAmount:
+                    type: string
+                directRechargeAmount:
+                    type: string
+                indirectRegistrationCount:
+                    type: string
+                directRegistrationCount:
+                    type: string
+                date:
+                    type: string
+                    format: date-time
         ListTotalCommissionByParentReply:
             type: object
             properties:

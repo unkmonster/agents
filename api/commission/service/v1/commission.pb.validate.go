@@ -35,6 +35,277 @@ var (
 	_ = sort.Sort
 )
 
+// define the regex for a UUID once up-front
+var _commission_uuidPattern = regexp.MustCompile("^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$")
+
+// Validate checks the field values on ListCommissionByUserReq with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *ListCommissionByUserReq) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on ListCommissionByUserReq with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// ListCommissionByUserReqMultiError, or nil if none found.
+func (m *ListCommissionByUserReq) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *ListCommissionByUserReq) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if err := m._validateUuid(m.GetUserId()); err != nil {
+		err = ListCommissionByUserReqValidationError{
+			field:  "UserId",
+			reason: "value must be a valid UUID",
+			cause:  err,
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	// no validation rules for OrderBy
+
+	// no validation rules for Date
+
+	// no validation rules for Limit
+
+	// no validation rules for Offset
+
+	if len(errors) > 0 {
+		return ListCommissionByUserReqMultiError(errors)
+	}
+
+	return nil
+}
+
+func (m *ListCommissionByUserReq) _validateUuid(uuid string) error {
+	if matched := _commission_uuidPattern.MatchString(uuid); !matched {
+		return errors.New("invalid uuid format")
+	}
+
+	return nil
+}
+
+// ListCommissionByUserReqMultiError is an error wrapping multiple validation
+// errors returned by ListCommissionByUserReq.ValidateAll() if the designated
+// constraints aren't met.
+type ListCommissionByUserReqMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m ListCommissionByUserReqMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m ListCommissionByUserReqMultiError) AllErrors() []error { return m }
+
+// ListCommissionByUserReqValidationError is the validation error returned by
+// ListCommissionByUserReq.Validate if the designated constraints aren't met.
+type ListCommissionByUserReqValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e ListCommissionByUserReqValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e ListCommissionByUserReqValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e ListCommissionByUserReqValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e ListCommissionByUserReqValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e ListCommissionByUserReqValidationError) ErrorName() string {
+	return "ListCommissionByUserReqValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e ListCommissionByUserReqValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sListCommissionByUserReq.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = ListCommissionByUserReqValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = ListCommissionByUserReqValidationError{}
+
+// Validate checks the field values on ListCommissionByUserReply with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *ListCommissionByUserReply) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on ListCommissionByUserReply with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// ListCommissionByUserReplyMultiError, or nil if none found.
+func (m *ListCommissionByUserReply) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *ListCommissionByUserReply) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for UserId
+
+	for idx, item := range m.GetCommissions() {
+		_, _ = idx, item
+
+		if all {
+			switch v := interface{}(item).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, ListCommissionByUserReplyValidationError{
+						field:  fmt.Sprintf("Commissions[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, ListCommissionByUserReplyValidationError{
+						field:  fmt.Sprintf("Commissions[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return ListCommissionByUserReplyValidationError{
+					field:  fmt.Sprintf("Commissions[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
+	if len(errors) > 0 {
+		return ListCommissionByUserReplyMultiError(errors)
+	}
+
+	return nil
+}
+
+// ListCommissionByUserReplyMultiError is an error wrapping multiple validation
+// errors returned by ListCommissionByUserReply.ValidateAll() if the
+// designated constraints aren't met.
+type ListCommissionByUserReplyMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m ListCommissionByUserReplyMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m ListCommissionByUserReplyMultiError) AllErrors() []error { return m }
+
+// ListCommissionByUserReplyValidationError is the validation error returned by
+// ListCommissionByUserReply.Validate if the designated constraints aren't met.
+type ListCommissionByUserReplyValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e ListCommissionByUserReplyValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e ListCommissionByUserReplyValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e ListCommissionByUserReplyValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e ListCommissionByUserReplyValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e ListCommissionByUserReplyValidationError) ErrorName() string {
+	return "ListCommissionByUserReplyValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e ListCommissionByUserReplyValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sListCommissionByUserReply.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = ListCommissionByUserReplyValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = ListCommissionByUserReplyValidationError{}
+
 // Validate checks the field values on IncChainRegistrationCountByDirectUserReq
 // with the rules defined in the proto definition for this message. If any
 // rules are violated, the first error encountered is returned, or nil if
@@ -1206,3 +1477,145 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = ListTotalCommissionByParentReplyValidationError{}
+
+// Validate checks the field values on ListCommissionByUserReply_Commission
+// with the rules defined in the proto definition for this message. If any
+// rules are violated, the first error encountered is returned, or nil if
+// there are no violations.
+func (m *ListCommissionByUserReply_Commission) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on ListCommissionByUserReply_Commission
+// with the rules defined in the proto definition for this message. If any
+// rules are violated, the result is a list of violation errors wrapped in
+// ListCommissionByUserReply_CommissionMultiError, or nil if none found.
+func (m *ListCommissionByUserReply_Commission) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *ListCommissionByUserReply_Commission) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for IndirectRechargeAmount
+
+	// no validation rules for DirectRechargeAmount
+
+	// no validation rules for IndirectRegistrationCount
+
+	// no validation rules for DirectRegistrationCount
+
+	if all {
+		switch v := interface{}(m.GetDate()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, ListCommissionByUserReply_CommissionValidationError{
+					field:  "Date",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, ListCommissionByUserReply_CommissionValidationError{
+					field:  "Date",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetDate()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return ListCommissionByUserReply_CommissionValidationError{
+				field:  "Date",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	if len(errors) > 0 {
+		return ListCommissionByUserReply_CommissionMultiError(errors)
+	}
+
+	return nil
+}
+
+// ListCommissionByUserReply_CommissionMultiError is an error wrapping multiple
+// validation errors returned by
+// ListCommissionByUserReply_Commission.ValidateAll() if the designated
+// constraints aren't met.
+type ListCommissionByUserReply_CommissionMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m ListCommissionByUserReply_CommissionMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m ListCommissionByUserReply_CommissionMultiError) AllErrors() []error { return m }
+
+// ListCommissionByUserReply_CommissionValidationError is the validation error
+// returned by ListCommissionByUserReply_Commission.Validate if the designated
+// constraints aren't met.
+type ListCommissionByUserReply_CommissionValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e ListCommissionByUserReply_CommissionValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e ListCommissionByUserReply_CommissionValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e ListCommissionByUserReply_CommissionValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e ListCommissionByUserReply_CommissionValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e ListCommissionByUserReply_CommissionValidationError) ErrorName() string {
+	return "ListCommissionByUserReply_CommissionValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e ListCommissionByUserReply_CommissionValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sListCommissionByUserReply_Commission.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = ListCommissionByUserReply_CommissionValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = ListCommissionByUserReply_CommissionValidationError{}

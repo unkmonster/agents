@@ -5,6 +5,8 @@ import (
 
 	pb "agents/api/commission/service/v1"
 	"agents/app/commission/service/internal/biz"
+
+	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 type CommissionService struct {
@@ -85,6 +87,25 @@ func (s *CommissionService) ListTotalCommissionByParent(ctx context.Context, req
 			SettledCommission:      comm.SettledCommission,
 			TodayRegistrationCount: int32(comm.TodayRegistrationCount),
 			TotalRegistrationCount: int32(comm.TotalRegistrationCount),
+		})
+	}
+	return &reply, nil
+}
+
+func (s *CommissionService) ListCommissionByUser(ctx context.Context, req *pb.ListCommissionByUserReq) (*pb.ListCommissionByUserReply, error) {
+	commissions, err := s.comm.ListCommissionByUser(ctx, req)
+	if err != nil {
+		return nil, err
+	}
+
+	reply := pb.ListCommissionByUserReply{UserId: req.UserId}
+	for _, commission := range commissions {
+		reply.Commissions = append(reply.Commissions, &pb.ListCommissionByUserReply_Commission{
+			IndirectRechargeAmount:    commission.IndirectRechargeAmount,
+			IndirectRegistrationCount: commission.IndirectRegistrationCount,
+			DirectRechargeAmount:      commission.DirectRechargeAmount,
+			DirectRegistrationCount:   commission.DirectRegistrationCount,
+			Date:                      timestamppb.New(commission.Date),
 		})
 	}
 	return &reply, nil

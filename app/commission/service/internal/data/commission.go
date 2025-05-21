@@ -4,6 +4,7 @@ import (
 	"agents/app/commission/service/internal/biz"
 	"context"
 	"fmt"
+	"time"
 
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/google/uuid"
@@ -30,13 +31,13 @@ func NewCommissionRepo(data *Data, logger log.Logger) biz.CommissionRepo {
 }
 
 // GetUserCommission implements biz.CommissionRepo.
-func (c *commissionRepo) GetUserCommission(ctx context.Context, userId string) (*biz.Commission, error) {
+func (c *commissionRepo) GetUserTotalCommission(ctx context.Context, userId string) (*biz.TotalCommission, error) {
 	query := `
 		SELECT *
 		FROM user_commissions
 		WHERE user_id = ?;
 	`
-	dst := biz.Commission{}
+	dst := biz.TotalCommission{}
 	err := c.data.db.GetContext(ctx, &dst, query, userId)
 	return &dst, err
 }
@@ -65,18 +66,18 @@ func (c *commissionRepo) IncUserSettledCommission(ctx context.Context, userId st
 }
 
 // ListCommission implements biz.CommissionRepo.
-func (c *commissionRepo) ListCommission(ctx context.Context) ([]*biz.Commission, error) {
+func (c *commissionRepo) ListCommission(ctx context.Context) ([]*biz.TotalCommission, error) {
 	query := `
 		SELECT *
 		FROM user_commissions;
 	`
-	dst := []*biz.Commission{}
+	dst := []*biz.TotalCommission{}
 	err := c.data.db.SelectContext(ctx, &dst, query)
 	return dst, err
 }
 
 // ListTotalCommissionByParent implements biz.CommissionRepo.
-func (c *commissionRepo) ListTotalCommissionByParent(ctx context.Context, parentId string) ([]*biz.Commission, error) {
+func (c *commissionRepo) ListTotalCommissionByParent(ctx context.Context, parentId string) ([]*biz.TotalCommission, error) {
 	panic("unimplemented")
 }
 
@@ -228,4 +229,16 @@ func (c *commissionRepo) IncUserDirectRegistrationCount(ctx context.Context, use
 
 func (c *commissionRepo) IncUserIndirectRegistrationCount(ctx context.Context, userId string) error {
 	return c.incUserRegistrationCount(ctx, userId, regTypeIndirect)
+}
+
+func (c *commissionRepo) GetUserCommissionByDate(ctx context.Context, userId string, date time.Time) (*biz.DailyCommission, error) {
+	query := `
+		SELECT *
+		FROM daily_user_commissions
+		WHERE user_id = ?
+		AND date = ?;
+	`
+	dst := biz.DailyCommission{}
+	err := c.data.db.GetContext(ctx, &dst, query, userId, date)
+	return &dst, err
 }

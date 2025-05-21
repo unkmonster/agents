@@ -4,6 +4,7 @@ package api.commission.service.v1;
 
 import "google/api/annotations.proto";
 import "validate/validate.proto";
+import "google/protobuf/timestamp.proto";
 
 option go_package = "agents/api/commission/service/v1;v1";
 option java_multiple_files = true;
@@ -31,6 +32,32 @@ service Commission {
 			get: "/v1/users/{parent_id}/children/total_commissions"
 		};
 	};
+
+	rpc ListCommissionByUser(ListCommissionByUserReq) returns (ListCommissionByUserReply) {
+		option (google.api.http) = {
+			get: "/v1/users/{user_id}/commissions"
+		};
+	}
+}
+
+message ListCommissionByUserReq{
+	string user_id = 1 [(validate.rules).string = {uuid: true}];
+	// query params
+	string order_by = 3;
+	string date = 4;	// 如果 date 被指定将忽略 order_by 相关的参数
+	int32 limit = 5;
+	int32 offset = 6;
+}
+message ListCommissionByUserReply{
+	message Commission {
+		int64 indirect_recharge_amount = 1;
+		int64 direct_recharge_amount = 2;
+		int64 indirect_registration_count = 3;
+		int64 direct_registration_count = 4;
+		google.protobuf.Timestamp date = 5;
+	};
+	string user_id = 1;
+	repeated Commission commissions = 2;
 }
 
 message IncChainRegistrationCountByDirectUserReq {
