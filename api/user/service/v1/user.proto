@@ -4,6 +4,8 @@ package api.user.service.v1;
 
 import "google/api/annotations.proto";
 import "validate/validate.proto";
+import "google/protobuf/timestamp.proto";
+import "errors/errors.proto";
 
 option go_package = "agents/api/user/service/v1;v1";
 option java_multiple_files = true;
@@ -77,6 +79,16 @@ service User {
 	rpc GetUserByDomain(GetUserByDomainRequest) returns (GetUserByDomainReply);
 }
 
+message UserInfo2 {
+	string id = 1;
+	string username = 2;
+	int32 level = 3;
+	float share_percent = 4;
+	optional string nickname = 5;
+	optional string parent_id = 6;
+	google.protobuf.Timestamp created_at = 7;
+}
+
 message ListUserByParentIdReq {
 	string parent_id = 1[(validate.rules).string = {uuid: true}];
 	string order_by = 3 [(validate.rules).string = {in: ["", "created_at"]}];
@@ -85,20 +97,16 @@ message ListUserByParentIdReq {
 	string sort = 7 [(validate.rules).string = {in: ["", "asc", "desc"]}];
 }
 message ListUserByParentIdReply {
-	repeated GetUserReply users = 1;
+	reserved 1;
+	repeated UserInfo2 users = 2;
 }
 
 message GetUserByDomainRequest {
 	string domain = 1 [(validate.rules).string = {min_len: 1}];
 }
 message GetUserByDomainReply {
-	reserved 3, 4;
-	string id = 1;
-	string username = 2;
-	int32 level = 5;
-	float share_percent = 6;
-	optional string nickname = 7;
-	optional string parent_id = 8;
+	reserved 1 to 9;
+	UserInfo2 user = 10;
 }
 
 message GetUserByUsernameRequest {
@@ -162,13 +170,8 @@ message CreateUserRequest {
 	float share_percent = 7;
 }
 message CreateUserReply {
-	reserved 3, 4;
-	string id = 1;
-	string username = 2;
-	int32 level = 5;
-	float share_percent = 6;
-	optional string nickname = 7;
-	optional string parent_id = 8;
+	reserved 1 to 8;
+	UserInfo2 user = 10;
 }
 
 message UpdateUserRequest {
@@ -178,13 +181,8 @@ message UpdateUserRequest {
 	optional float share_percent = 5;
 }
 message UpdateUserReply {
-	reserved 3, 4;
-	string id = 1;
-	string username = 2;
-	int32 level = 5;
-	float share_percent = 6;
-	optional string nickname = 7;
-	optional string parent_id = 8;
+	reserved 1 to 8;
+	UserInfo2 user = 10;
 }
 
 message DeleteUserRequest {
@@ -196,24 +194,19 @@ message GetUserRequest {
 	string id = 1;
 }
 message GetUserReply {
-	reserved 3, 4;
-	string id = 1;
-	string username = 2;
-	int32 level = 5;
-	float share_percent = 6;
-	optional string nickname = 7;
-	optional string parent_id = 8;
+	reserved 1 to 8;
+	UserInfo2 user = 10;
 }
 
 message ListUserRequest {}
 message ListUserReply {
-	message User {
-		string id = 1;
-		string username = 2;
-		string nickname = 3;
-		string parent_id = 4;
-		int32 level = 5;
-		float share_percent = 6;
-	}
-	repeated User users = 1;
+	reserved 1;
+	repeated UserInfo2 users = 2;
+}
+
+enum ErrorReason {
+	option (errors.default_code) = 500;
+
+	MISSING_PARENT_ID = 0 [(errors.code) = 400];
+	USER_NOT_FOUNT = 1 [(errors.code) = 404];
 }

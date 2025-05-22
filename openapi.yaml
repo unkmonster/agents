@@ -305,20 +305,8 @@ components:
         CreateUserReply:
             type: object
             properties:
-                id:
-                    type: string
-                username:
-                    type: string
-                level:
-                    type: integer
-                    format: int32
-                sharePercent:
-                    type: number
-                    format: float
-                nickname:
-                    type: string
-                parentId:
-                    type: string
+                user:
+                    $ref: '#/components/schemas/UserInfo2'
         CreateUserRequest:
             type: object
             properties:
@@ -352,20 +340,8 @@ components:
         GetUserReply:
             type: object
             properties:
-                id:
-                    type: string
-                username:
-                    type: string
-                level:
-                    type: integer
-                    format: int32
-                sharePercent:
-                    type: number
-                    format: float
-                nickname:
-                    type: string
-                parentId:
-                    type: string
+                user:
+                    $ref: '#/components/schemas/UserInfo2'
         GoogleProtobufAny:
             type: object
             properties:
@@ -380,7 +356,7 @@ components:
                 users:
                     type: array
                     items:
-                        $ref: '#/components/schemas/GetUserReply'
+                        $ref: '#/components/schemas/UserInfo2'
         ListUserDomainsByUserIdReply:
             type: object
             properties:
@@ -419,24 +395,7 @@ components:
                 users:
                     type: array
                     items:
-                        $ref: '#/components/schemas/ListUserReply_User'
-        ListUserReply_User:
-            type: object
-            properties:
-                id:
-                    type: string
-                username:
-                    type: string
-                nickname:
-                    type: string
-                parentId:
-                    type: string
-                level:
-                    type: integer
-                    format: int32
-                sharePercent:
-                    type: number
-                    format: float
+                        $ref: '#/components/schemas/UserInfo2'
         Status:
             type: object
             properties:
@@ -456,6 +415,23 @@ components:
         UpdateUserReply:
             type: object
             properties:
+                user:
+                    $ref: '#/components/schemas/UserInfo2'
+        UpdateUserRequest:
+            type: object
+            properties:
+                id:
+                    type: string
+                password:
+                    type: string
+                nickname:
+                    type: string
+                sharePercent:
+                    type: number
+                    format: float
+        UserInfo2:
+            type: object
+            properties:
                 id:
                     type: string
                 username:
@@ -470,17 +446,8 @@ components:
                     type: string
                 parentId:
                     type: string
-        UpdateUserRequest:
-            type: object
-            properties:
-                id:
+                createdAt:
                     type: string
-                password:
-                    type: string
-                nickname:
-                    type: string
-                sharePercent:
-                    type: number
-                    format: float
+                    format: date-time
 tags:
     - name: User
