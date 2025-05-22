@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   LaptopOutlined,
   NotificationOutlined,
@@ -72,13 +72,13 @@ const items2 = [
 
 export default function DashboardLayout({ children }) {
   const router = useRouter();
-  const path = usePathname(); // 获取当前路由路径，如 "/login"
   const { user, error, isLoading } = useUser();
-  const [selectedKeys, setSelectedKeys] = useState([]);
+  const path = usePathname();
+  const keys = path.split("/").filter((v) => v);
 
   function handleSelected({ item, key, keyPath, selectedKeys, domEvent }) {
-    console.log({ item, key, keyPath, selectedKeys });
-    setSelectedKeys(selectedKeys);
+    //console.log({ item, key, keyPath, selectedKeys });
+    //setSelectedKeys(selectedKeys);
     router.push("/" + selectedKeys.join("/"));
   }
 
@@ -95,8 +95,18 @@ export default function DashboardLayout({ children }) {
     return;
   }
 
+  function itemRender(currentRoute, params, items, paths) {
+    const isLast = currentRoute?.path === items[items.length - 1]?.path;
+
+    return isLast ? (
+      <span>{currentRoute.title}</span>
+    ) : (
+      <a href={`/${paths.join("/")}`}>{currentRoute.title}</a>
+    );
+  }
+
   return (
-    <Layout style={{ height: "100vh" }}>
+    <Layout>
       <Header style={{ display: "flex", alignItems: "center" }}>
         <div className="demo-logo" />
         {/* <Title
@@ -134,16 +144,17 @@ export default function DashboardLayout({ children }) {
             style={{ height: "100%", borderRight: 0 }}
             items={items2}
             onSelect={handleSelected}
-            selectedKeys={selectedKeys}
+            selectedKeys={keys}
           />
         </Sider>
         <Layout style={{ padding: "0 24px 24px" }}>
           <Breadcrumb
             style={{ margin: "18px 0" }}
+            itemRender={itemRender}
             items={[
               { title: "主页" },
-              ...selectedKeys.map((key) => ({
-                title: items2.find((e) => e.key == key).label,
+              ...keys.map((key) => ({
+                title: items2.find((e) => e.key == key)?.label,
               })),
             ]}
           />
