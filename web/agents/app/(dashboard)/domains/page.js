@@ -104,19 +104,10 @@ export default function Main() {
     mutate();
   };
 
-  const { data, isLoading, isError, mutate } = useSWR(
+  const { data, isLoading, error, mutate } = useSWR(
     `/v1/users/${userId}/domains`,
     myfetch
   );
-
-  if (isLoading) {
-    return;
-  }
-  if (isError) {
-    setErr(isError);
-    console.log(isError);
-    return;
-  }
 
   return (
     <>
@@ -149,8 +140,16 @@ export default function Main() {
             添加
           </Button>
         }
+        loading={isLoading}
       >
-        <DomainsTable domains={data.domains} deleteDomain={deleteDomain} />
+        {error ? (
+          JSON.stringify(error)
+        ) : (
+          <DomainsTable
+            domains={data?.domains || []}
+            deleteDomain={deleteDomain}
+          />
+        )}
       </Card>
     </>
   );

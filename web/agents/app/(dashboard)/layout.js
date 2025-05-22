@@ -9,16 +9,18 @@ import {
   GlobalOutlined,
   DollarOutlined,
 } from "@ant-design/icons";
-import { Breadcrumb, Dropdown, Layout, Menu, theme } from "antd";
+import { Breadcrumb, Dropdown, Layout, Menu, Spin, theme } from "antd";
 import { useRouter } from "next/navigation";
 import { usePathname } from "next/navigation";
 import { Avatar, Space } from "antd";
-import { logOut, useUser } from "@/lib/session";
+import { logOut, useUser, useUserId } from "@/lib/session";
 import { Typography } from "antd";
+import { UserContext } from "@/lib/user_context";
 
 const { Title } = Typography;
 
 function UserMenu({ children }) {
+  const router = useRouter();
   const items = [
     {
       label: "退出登录",
@@ -30,6 +32,7 @@ function UserMenu({ children }) {
     console.log(key);
     if (key == "logout") {
       logOut();
+      router.push("/login");
     }
   };
 
@@ -75,23 +78,40 @@ export default function DashboardLayout({ children }) {
   const { user, error, isLoading } = useUser();
   const path = usePathname();
   const keys = path.split("/").filter((v) => v);
-
   function handleSelected({ item, key, keyPath, selectedKeys, domEvent }) {
     //console.log({ item, key, keyPath, selectedKeys });
     //setSelectedKeys(selectedKeys);
     router.push("/" + selectedKeys.join("/"));
   }
+  const userId = useUserId();
+  const [err, setErr] = useState();
+  useEffect(() => {
+    if (!error) {
+      return;
+    }
+    setErr(error);
+    if (error.code == 401 || error.message == "Unauthorized") {
+      router.push("/login");
+    }
+  }, [error]);
 
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
 
+  // getUser
   if (isLoading) {
-    return;
+    return <Spin fullscreen />;
   }
-  if (error) {
-    console.log(error);
-    router.push("/login"); // temp
+
+  // getUser
+  if (err) {
+    return JSON.stringify(err);
+    const msg = error.toString();
+    console.log(msg);
+    const data = JSON.parse(msg);
+    console.log(data);
+    //router.push("/login"); // temp
     return;
   }
 
@@ -123,7 +143,7 @@ export default function DashboardLayout({ children }) {
         <UserMenu>
           {user ? (
             <Avatar style={{ marginLeft: "auto", backgroundColor: "#87d068" }}>
-              {user.username}
+              {user.user.username[0].toUpperCase()}
             </Avatar>
           ) : (
             <Avatar icon={<UserOutlined />} style={{ marginLeft: "auto" }} />
@@ -167,7 +187,9 @@ export default function DashboardLayout({ children }) {
               borderRadius: borderRadiusLG,
             }}
           >
-            {children}
+            <UserContext.Provider value={user?.user}>
+              {children}
+            </UserContext.Provider>
           </Content>
         </Layout>
       </Layout>

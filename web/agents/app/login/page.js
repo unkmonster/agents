@@ -12,7 +12,7 @@ function LoginForm() {
 
   const onFinish = async (values) => {
     const res = await fetch(
-      process.env.NEXT_PUBLIC_API_BASE + "/api/auth/login",
+      process.env.NEXT_PUBLIC_API_BASE + "/v1/auth/login",
       {
         method: "POST",
         headers: {

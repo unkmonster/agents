@@ -1,5 +1,5 @@
 import useSWR from "swr";
-import { NotLoggedInError } from "./error";
+import { AppError, NotLoggedInError, TokenInvalidError } from "./error";
 import dayjs from "dayjs";
 
 export function useUserId() {
@@ -23,16 +23,17 @@ export async function myfetch(path, option) {
   const token = useToken();
 
   option = option || {};
-  option.headers = {
-    ...(option.headers || {}),
-    Authorization: "Bearer " + token,
-  };
+  option.headers = option.headers || {};
+  if (token) {
+    option.headers.Authorization = "Bearer " + token;
+  }
 
   const res = await fetch(process.env.NEXT_PUBLIC_API_BASE + path, option);
+  const data = await res.json();
   if (!res.ok) {
-    throw new Error(await res.text());
+    throw new AppError(data);
   }
-  return res.json();
+  return data;
 }
 
 export function useUser() {
