@@ -5,10 +5,11 @@ import (
 	"time"
 
 	pb "agents/api/user/service/v1"
+	"agents/pkg/paging"
 
-	"github.com/go-kratos/kratos/v2/errors"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/google/uuid"
+	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 type User struct {
@@ -28,6 +29,7 @@ type UserRepo interface {
 	DeleteUser(ctx context.Context, id string) error
 	GetUserByUsername(ctx context.Context, username string) (*User, error)
 	GetUserByDomain(ctx context.Context, domain string) (*User, error)
+	ListUserByParent(ctx context.Context, parentId string, paging *paging.Paging) ([]*User, error)
 }
 
 type UserUseCase struct {
@@ -42,10 +44,8 @@ func NewUserUseCase(repo UserRepo, logger log.Logger) *UserUseCase {
 func (uc *UserUseCase) CreateUser(ctx context.Context, req *pb.CreateUserRequest) (*pb.CreateUserReply, error) {
 	// 仅允许 0 级代理（管理员）没有父级代理
 	if req.Level != 0 && req.ParentId == nil {
-		return nil, errors.New(400, "MISSING_PARENT_ID", "缺少父级代理 ID ")
+		return nil, pb.ErrorMissingParentId("")
 	}
-
-	// TODO: parent_id 仅允许为调用者 ID, level 必须大于调用者 level 并且小于等于 max_level
 
 	user := User{
 		Id:           uuid.New().String(),
@@ -61,12 +61,15 @@ func (uc *UserUseCase) CreateUser(ctx context.Context, req *pb.CreateUserRequest
 	}
 
 	return &pb.CreateUserReply{
-		Id:           user.Id,
-		Username:     user.Username,
-		Nickname:     user.Nickname,
-		ParentId:     user.ParentId,
-		Level:        (user.Level),
-		SharePercent: user.SharePercent,
+		User: &pb.UserInfo2{
+			Id:           user.Id,
+			Username:     user.Username,
+			Nickname:     user.Nickname,
+			ParentId:     user.ParentId,
+			Level:        (user.Level),
+			SharePercent: user.SharePercent,
+			CreatedAt:    timestamppb.Now(),
+		},
 	}, nil
 }
 
@@ -84,4 +87,8 @@ func (uc *UserUseCase) GetUserByUsername(ctx context.Context, username string) (
 
 func (uc *UserUseCase) GetUserByDomain(ctx context.Context, domain string) (*User, error) {
 	return uc.repo.GetUserByDomain(ctx, domain)
+}
+
+func (uc *UserUseCase) ListUserByParent(ctx context.Context, parentId string, paging *paging.Paging) ([]*User, error) {
+	return uc.repo.ListUserByParent(ctx, parentId, paging)
 }

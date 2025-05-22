@@ -20,7 +20,8 @@ func (d *domainRepo) Get(ctx context.Context, domain string) (*biz.User, error) 
 	}
 
 	return &biz.User{
-		Id: reply.Id,
+		Id:        reply.User.Id,
+		CreatedAT: reply.User.CreatedAt.AsTime(),
 	}, nil
 }
 

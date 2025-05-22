@@ -37,12 +37,12 @@ func (u *userRepo) Create(ctx context.Context, user *biz.User) (*biz.User, error
 	}
 
 	return &biz.User{
-		Id:           reply.Id,
-		Username:     reply.Username,
-		Nickname:     reply.Nickname,
-		ParentId:     reply.ParentId,
-		Level:        reply.Level,
-		SharePercent: reply.SharePercent,
+		Id:           reply.User.Id,
+		Username:     reply.User.Username,
+		Nickname:     reply.User.Nickname,
+		ParentId:     reply.User.ParentId,
+		Level:        reply.User.Level,
+		SharePercent: reply.User.SharePercent,
 	}, nil
 }
 
@@ -57,12 +57,13 @@ func (u *userRepo) GetByUsername(ctx context.Context, username string) (*biz.Use
 	}
 
 	return &biz.User{
-		Id:           reply.Id,
-		Username:     reply.Username,
-		Nickname:     reply.Nickname,
-		ParentId:     reply.ParentId,
-		Level:        reply.Level,
-		SharePercent: reply.SharePercent,
+		Id:           reply.User.Id,
+		Username:     reply.User.Username,
+		Nickname:     reply.User.Nickname,
+		ParentId:     reply.User.ParentId,
+		Level:        reply.User.Level,
+		SharePercent: reply.User.SharePercent,
+		CreatedAt:    reply.User.CreatedAt.AsTime(),
 	}, nil
 }
 
