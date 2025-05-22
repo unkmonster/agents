@@ -12,6 +12,7 @@ message Bootstrap {
   Auth auth = 3;
   Registry registry = 5;
   Kong kong = 6;
+  SystemUser system_user = 7;
 }
 
 message Server {
@@ -65,4 +66,9 @@ message Registry {
 message Kong {
   string admin_api = 1;
   string api_key = 2;
+}
+
+message SystemUser {
+  string username = 1;
+  string password = 2;
 }

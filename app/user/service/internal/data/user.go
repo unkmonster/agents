@@ -23,6 +23,18 @@ func NewUserRepo(data *Data, logger log.Logger) biz.UserRepo {
 	}
 }
 
+// GetZeroUser implements biz.UserRepo.
+func (r *userRepo) GetZeroUser(ctx context.Context) (*biz.User, error) {
+	query := `
+		SELECT *
+		FROM users
+		WHERE level = 0;
+	`
+	dst := biz.User{}
+	err := r.data.db.GetContext(ctx, &dst, query)
+	return &dst, err
+}
+
 func (r *userRepo) CreateUser(ctx context.Context, user *biz.User) error {
 	query := `
 		INSERT INTO users (

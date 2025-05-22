@@ -23,3 +23,6 @@ registry:
     schema: http
 kong:
   admin_api: "http://kong:8001"
+system_user:
+  username: "system"
+  password: "password"

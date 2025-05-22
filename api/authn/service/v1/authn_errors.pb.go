@@ -22,3 +22,27 @@ func IsUserNotFount(err error) bool {
 func ErrorUserNotFount(format string, args ...interface{}) *errors.Error {
 	return errors.New(404, ErrorReason_USER_NOT_FOUNT.String(), fmt.Sprintf(format, args...))
 }
+
+func IsIllegalParentId(err error) bool {
+	if err == nil {
+		return false
+	}
+	e := errors.FromError(err)
+	return e.Reason == ErrorReason_ILLEGAL_PARENT_ID.String() && e.Code == 403
+}
+
+func ErrorIllegalParentId(format string, args ...interface{}) *errors.Error {
+	return errors.New(403, ErrorReason_ILLEGAL_PARENT_ID.String(), fmt.Sprintf(format, args...))
+}
+
+func IsIllegalUserLevel(err error) bool {
+	if err == nil {
+		return false
+	}
+	e := errors.FromError(err)
+	return e.Reason == ErrorReason_ILLEGAL_USER_LEVEL.String() && e.Code == 400
+}
+
+func ErrorIllegalUserLevel(format string, args ...interface{}) *errors.Error {
+	return errors.New(400, ErrorReason_ILLEGAL_USER_LEVEL.String(), fmt.Sprintf(format, args...))
+}

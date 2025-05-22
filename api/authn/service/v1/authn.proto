@@ -5,6 +5,7 @@ package api.authn.service.v1;
 import "google/api/annotations.proto";
 import "validate/validate.proto";
 import "errors/errors.proto";
+import "google/protobuf/timestamp.proto";
 
 option go_package = "agents/api/authn/service/v1;v1";
 option java_multiple_files = true;
@@ -32,12 +33,15 @@ service Authn {
 }
 
 message UserInfo {
-	optional string id = 1;
-	optional string username = 2;
-	optional string nickname = 3;
-	optional string parent_id = 4;
-	optional int32 level = 5;
-	float share_percent = 6;
+	reserved 1 to 6;
+
+	string id = 7;
+	string username = 8;
+	optional string nickname = 9;
+	optional string parent_id = 10;
+	int32 level = 11;
+	float share_percent = 12;
+	google.protobuf.Timestamp created_at = 13;
 }
 
 message AuthReply {
@@ -59,15 +63,24 @@ message VerifyReply {
 }
 
 message RegisterRequest {
-	optional string username = 1 [(validate.rules).string = {min_len: 3, max_len: 20}];
-	optional string password = 2 [(validate.rules).string = {min_len: 8, max_len: 20}];
-	optional string nickname = 3 [(validate.rules).string = {max_len: 20}];
-	optional string parent_id = 4;
-	optional int32 level = 5;
+	reserved 1 to 5;
+
+	// optional string username = 1 [(validate.rules).string = {min_len: 3, max_len: 20}];
+	// optional string password = 2 [(validate.rules).string = {min_len: 8, max_len: 20}];
+	// optional string nickname = 3 [(validate.rules).string = {max_len: 20}];
+	// optional string parent_id = 4;
+	// optional int32 level = 5;
 	float share_percent = 6;
+	string username = 7[(validate.rules).string = {min_len: 3, max_len: 20}];
+	string password = 8 [(validate.rules).string = {min_len: 8, max_len: 20}];
+	optional string nickname = 9 [(validate.rules).string = {max_len: 20}];
+	string parent_id = 10 [(validate.rules).string = {uuid: true}];
+	int32 level = 11;
 }
 
 enum ErrorReason {
 	option (errors.default_code) = 500;
 	USER_NOT_FOUNT = 0 [(errors.code) = 404];
+	ILLEGAL_PARENT_ID = 1[(errors.code) = 403];
+	ILLEGAL_USER_LEVEL = 2[(errors.code) = 400];
 }

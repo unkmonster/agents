@@ -21,6 +21,7 @@ import (
 	jwtv5 "github.com/golang-jwt/jwt/v5"
 	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
+	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 const MaxAgentLevel = 2
@@ -81,28 +82,80 @@ func parseRSAPrivateKeyFromPEM(pemData []byte) (*rsa.PrivateKey, error) {
 	return privKey, nil
 }
 
-// Register 不是注册，用于上级代理创建他的下级
-func (uc *AuthUserCase) Register(ctx context.Context, req *pb.RegisterRequest) (*pb.AuthReply, error) {
+func (uc *AuthUserCase) RegisterZeroUser(ctx context.Context, username, password string) (*User, error) {
+	user, err := uc.ur.Create(ctx, &User{
+		Username:     username,
+		Level:        0,
+		SharePercent: 1,
+		ParentId:     nil,
+	})
+	if err != nil {
+		return nil, err
+	}
+	// TODO: rollback
+
+	// hash password
+	h, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	if err != nil {
+		return nil, err
+	}
+
+	// 根据签名算法生成 key-pair 或 secret
+	priv, pub, err := encrypt.GenerateRS256KeyPair()
+	if err != nil {
+		return nil, err
+	}
+
+	// 创建网管消费者
+	consumer, err := uc.gateway.CreateUserConsumer(ctx, user)
+	if err != nil {
+		return nil, err
+	}
+
+	jwtKey, err := uc.gateway.EnableJwtPluginForConsumer(ctx, consumer, pub)
+	if err != nil {
+		return nil, err
+	}
+
+	_, err = uc.cr.Create(ctx, &UserCredential{
+		Id:             uuid.NewString(),
+		UserId:         user.Id,
+		Username:       user.Username,
+		HashedPassword: string(h),
+		Alg:            DefaultSigningAlg,
+		PublicKey:      &pub,
+		PrivateKey:     &priv,
+		TokenKey:       jwtKey,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	return user, nil
+}
+
+// RegisterChildUser 不是注册，用于上级代理创建他的下级
+func (uc *AuthUserCase) RegisterChildUser(ctx context.Context, req *pb.RegisterRequest) (*pb.AuthReply, error) {
 	t, _ := mjwt.FromContext(ctx)
 	token, ok := t.(*jwt.UserClaims)
 	if !ok {
 		return nil, kerrors.New(401, "INVALID_TOKEN", "无效 token")
 	}
 
-	if token.Subject != *req.ParentId {
-		return nil, kerrors.New(403, "ILLEGAL_PARENT_ID", "非法父代理 ID")
+	if token.Subject != req.ParentId {
+		return nil, pb.ErrorIllegalParentId("非法操作")
 	}
 
 	// 被注册用户等级不允许小于调用者，并且不大于 MAX_LEVEL
-	if *req.Level > MaxAgentLevel || *req.Level <= int32(token.Level) {
-		return nil, kerrors.New(403, "ILLEGAL_USER_LEVEL", "不合法的代理等级")
+	if req.Level > MaxAgentLevel || req.Level <= int32(token.Level) {
+		return nil, pb.ErrorIllegalUserLevel("用户等级不合法: %d", req.Level)
 	}
 
 	user, err := uc.ur.Create(ctx, &User{
-		Username:     *req.Username,
+		Username:     req.Username,
 		Nickname:     req.Nickname,
-		ParentId:     req.ParentId,
-		Level:        *req.Level,
+		ParentId:     &req.ParentId,
+		Level:        req.Level,
 		SharePercent: req.SharePercent,
 	})
 	if err != nil {
@@ -110,7 +163,7 @@ func (uc *AuthUserCase) Register(ctx context.Context, req *pb.RegisterRequest) (
 	}
 
 	// hash password
-	h, err := bcrypt.GenerateFromPassword([]byte(*req.Password), bcrypt.DefaultCost)
+	h, err := bcrypt.GenerateFromPassword([]byte(req.Password), bcrypt.DefaultCost)
 	if err != nil {
 		return nil, err
 	}
@@ -147,12 +200,13 @@ func (uc *AuthUserCase) Register(ctx context.Context, req *pb.RegisterRequest) (
 
 	return &pb.AuthReply{
 		User: &pb.UserInfo{
-			Id:           &user.Id,
-			Username:     &user.Username,
+			Id:           user.Id,
+			Username:     user.Username,
 			Nickname:     user.Nickname,
 			ParentId:     user.ParentId,
-			Level:        &user.Level,
+			Level:        user.Level,
 			SharePercent: user.SharePercent,
+			CreatedAt:    timestamppb.New(user.CreatedAt),
 		},
 	}, nil
 }
@@ -202,3 +256,5 @@ func (uc *AuthUserCase) Login(ctx context.Context, req *pb.LoginRequest) (*pb.Au
 func (uc *AuthUserCase) GetUserCredential(ctx context.Context, userId string) (*UserCredential, error) {
 	return uc.cr.GetByUserId(ctx, userId)
 }
+
+//func (uc *AuthUserCase) GetZeroUser

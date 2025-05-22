@@ -12,6 +12,7 @@ import (
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
@@ -27,16 +28,22 @@ const (
 type ErrorReason int32
 
 const (
-	ErrorReason_USER_NOT_FOUNT ErrorReason = 0
+	ErrorReason_USER_NOT_FOUNT     ErrorReason = 0
+	ErrorReason_ILLEGAL_PARENT_ID  ErrorReason = 1
+	ErrorReason_ILLEGAL_USER_LEVEL ErrorReason = 2
 )
 
 // Enum value maps for ErrorReason.
 var (
 	ErrorReason_name = map[int32]string{
 		0: "USER_NOT_FOUNT",
+		1: "ILLEGAL_PARENT_ID",
+		2: "ILLEGAL_USER_LEVEL",
 	}
 	ErrorReason_value = map[string]int32{
-		"USER_NOT_FOUNT": 0,
+		"USER_NOT_FOUNT":     0,
+		"ILLEGAL_PARENT_ID":  1,
+		"ILLEGAL_USER_LEVEL": 2,
 	}
 )
 
@@ -69,12 +76,13 @@ func (ErrorReason) EnumDescriptor() ([]byte, []int) {
 
 type UserInfo struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            *string                `protobuf:"bytes,1,opt,name=id,proto3,oneof" json:"id,omitempty"`
-	Username      *string                `protobuf:"bytes,2,opt,name=username,proto3,oneof" json:"username,omitempty"`
-	Nickname      *string                `protobuf:"bytes,3,opt,name=nickname,proto3,oneof" json:"nickname,omitempty"`
-	ParentId      *string                `protobuf:"bytes,4,opt,name=parent_id,json=parentId,proto3,oneof" json:"parent_id,omitempty"`
-	Level         *int32                 `protobuf:"varint,5,opt,name=level,proto3,oneof" json:"level,omitempty"`
-	SharePercent  float32                `protobuf:"fixed32,6,opt,name=share_percent,json=sharePercent,proto3" json:"share_percent,omitempty"`
+	Id            string                 `protobuf:"bytes,7,opt,name=id,proto3" json:"id,omitempty"`
+	Username      string                 `protobuf:"bytes,8,opt,name=username,proto3" json:"username,omitempty"`
+	Nickname      *string                `protobuf:"bytes,9,opt,name=nickname,proto3,oneof" json:"nickname,omitempty"`
+	ParentId      *string                `protobuf:"bytes,10,opt,name=parent_id,json=parentId,proto3,oneof" json:"parent_id,omitempty"`
+	Level         int32                  `protobuf:"varint,11,opt,name=level,proto3" json:"level,omitempty"`
+	SharePercent  float32                `protobuf:"fixed32,12,opt,name=share_percent,json=sharePercent,proto3" json:"share_percent,omitempty"`
+	CreatedAt     *timestamppb.Timestamp `protobuf:"bytes,13,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -110,15 +118,15 @@ func (*UserInfo) Descriptor() ([]byte, []int) {
 }
 
 func (x *UserInfo) GetId() string {
-	if x != nil && x.Id != nil {
-		return *x.Id
+	if x != nil {
+		return x.Id
 	}
 	return ""
 }
 
 func (x *UserInfo) GetUsername() string {
-	if x != nil && x.Username != nil {
-		return *x.Username
+	if x != nil {
+		return x.Username
 	}
 	return ""
 }
@@ -138,8 +146,8 @@ func (x *UserInfo) GetParentId() string {
 }
 
 func (x *UserInfo) GetLevel() int32 {
-	if x != nil && x.Level != nil {
-		return *x.Level
+	if x != nil {
+		return x.Level
 	}
 	return 0
 }
@@ -149,6 +157,13 @@ func (x *UserInfo) GetSharePercent() float32 {
 		return x.SharePercent
 	}
 	return 0
+}
+
+func (x *UserInfo) GetCreatedAt() *timestamppb.Timestamp {
+	if x != nil {
+		return x.CreatedAt
+	}
+	return nil
 }
 
 type AuthReply struct {
@@ -344,13 +359,18 @@ func (x *VerifyReply) GetUser() *UserInfo {
 }
 
 type RegisterRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Username      *string                `protobuf:"bytes,1,opt,name=username,proto3,oneof" json:"username,omitempty"`
-	Password      *string                `protobuf:"bytes,2,opt,name=password,proto3,oneof" json:"password,omitempty"`
-	Nickname      *string                `protobuf:"bytes,3,opt,name=nickname,proto3,oneof" json:"nickname,omitempty"`
-	ParentId      *string                `protobuf:"bytes,4,opt,name=parent_id,json=parentId,proto3,oneof" json:"parent_id,omitempty"`
-	Level         *int32                 `protobuf:"varint,5,opt,name=level,proto3,oneof" json:"level,omitempty"`
-	SharePercent  float32                `protobuf:"fixed32,6,opt,name=share_percent,json=sharePercent,proto3" json:"share_percent,omitempty"`
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// optional string username = 1 [(validate.rules).string = {min_len: 3, max_len: 20}];
+	// optional string password = 2 [(validate.rules).string = {min_len: 8, max_len: 20}];
+	// optional string nickname = 3 [(validate.rules).string = {max_len: 20}];
+	// optional string parent_id = 4;
+	// optional int32 level = 5;
+	SharePercent  float32 `protobuf:"fixed32,6,opt,name=share_percent,json=sharePercent,proto3" json:"share_percent,omitempty"`
+	Username      string  `protobuf:"bytes,7,opt,name=username,proto3" json:"username,omitempty"`
+	Password      string  `protobuf:"bytes,8,opt,name=password,proto3" json:"password,omitempty"`
+	Nickname      *string `protobuf:"bytes,9,opt,name=nickname,proto3,oneof" json:"nickname,omitempty"`
+	ParentId      string  `protobuf:"bytes,10,opt,name=parent_id,json=parentId,proto3" json:"parent_id,omitempty"`
+	Level         int32   `protobuf:"varint,11,opt,name=level,proto3" json:"level,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -385,16 +405,23 @@ func (*RegisterRequest) Descriptor() ([]byte, []int) {
 	return file_api_authn_service_v1_authn_proto_rawDescGZIP(), []int{5}
 }
 
+func (x *RegisterRequest) GetSharePercent() float32 {
+	if x != nil {
+		return x.SharePercent
+	}
+	return 0
+}
+
 func (x *RegisterRequest) GetUsername() string {
-	if x != nil && x.Username != nil {
-		return *x.Username
+	if x != nil {
+		return x.Username
 	}
 	return ""
 }
 
 func (x *RegisterRequest) GetPassword() string {
-	if x != nil && x.Password != nil {
-		return *x.Password
+	if x != nil {
+		return x.Password
 	}
 	return ""
 }
@@ -407,22 +434,15 @@ func (x *RegisterRequest) GetNickname() string {
 }
 
 func (x *RegisterRequest) GetParentId() string {
-	if x != nil && x.ParentId != nil {
-		return *x.ParentId
+	if x != nil {
+		return x.ParentId
 	}
 	return ""
 }
 
 func (x *RegisterRequest) GetLevel() int32 {
-	if x != nil && x.Level != nil {
-		return *x.Level
-	}
-	return 0
-}
-
-func (x *RegisterRequest) GetSharePercent() float32 {
 	if x != nil {
-		return x.SharePercent
+		return x.Level
 	}
 	return 0
 }
@@ -431,20 +451,20 @@ var File_api_authn_service_v1_authn_proto protoreflect.FileDescriptor
 
 const file_api_authn_service_v1_authn_proto_rawDesc = "" +
 	"\n" +
-	" api/authn/service/v1/authn.proto\x12\x14api.authn.service.v1\x1a\x1cgoogle/api/annotations.proto\x1a\x17validate/validate.proto\x1a\x13errors/errors.proto\"\xfc\x01\n" +
-	"\bUserInfo\x12\x13\n" +
-	"\x02id\x18\x01 \x01(\tH\x00R\x02id\x88\x01\x01\x12\x1f\n" +
-	"\busername\x18\x02 \x01(\tH\x01R\busername\x88\x01\x01\x12\x1f\n" +
-	"\bnickname\x18\x03 \x01(\tH\x02R\bnickname\x88\x01\x01\x12 \n" +
-	"\tparent_id\x18\x04 \x01(\tH\x03R\bparentId\x88\x01\x01\x12\x19\n" +
-	"\x05level\x18\x05 \x01(\x05H\x04R\x05level\x88\x01\x01\x12#\n" +
-	"\rshare_percent\x18\x06 \x01(\x02R\fsharePercentB\x05\n" +
-	"\x03_idB\v\n" +
-	"\t_usernameB\v\n" +
+	" api/authn/service/v1/authn.proto\x12\x14api.authn.service.v1\x1a\x1cgoogle/api/annotations.proto\x1a\x17validate/validate.proto\x1a\x13errors/errors.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"\x90\x02\n" +
+	"\bUserInfo\x12\x0e\n" +
+	"\x02id\x18\a \x01(\tR\x02id\x12\x1a\n" +
+	"\busername\x18\b \x01(\tR\busername\x12\x1f\n" +
+	"\bnickname\x18\t \x01(\tH\x00R\bnickname\x88\x01\x01\x12 \n" +
+	"\tparent_id\x18\n" +
+	" \x01(\tH\x01R\bparentId\x88\x01\x01\x12\x14\n" +
+	"\x05level\x18\v \x01(\x05R\x05level\x12#\n" +
+	"\rshare_percent\x18\f \x01(\x02R\fsharePercent\x129\n" +
+	"\n" +
+	"created_at\x18\r \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAtB\v\n" +
 	"\t_nicknameB\f\n" +
 	"\n" +
-	"_parent_idB\b\n" +
-	"\x06_level\"d\n" +
+	"_parent_idJ\x04\b\x01\x10\a\"d\n" +
 	"\tAuthReply\x12\x19\n" +
 	"\x05token\x18\x01 \x01(\tH\x00R\x05token\x88\x01\x01\x122\n" +
 	"\x04user\x18\x02 \x01(\v2\x1e.api.authn.service.v1.UserInfoR\x04userB\b\n" +
@@ -458,22 +478,20 @@ const file_api_authn_service_v1_authn_proto_rawDesc = "" +
 	"\x05token\x18\x01 \x01(\tH\x00R\x05token\x88\x01\x01B\b\n" +
 	"\x06_token\"A\n" +
 	"\vVerifyReply\x122\n" +
-	"\x04user\x18\x01 \x01(\v2\x1e.api.authn.service.v1.UserInfoR\x04user\"\xb4\x02\n" +
-	"\x0fRegisterRequest\x12*\n" +
-	"\busername\x18\x01 \x01(\tB\t\xfaB\x06r\x04\x10\x03\x18\x14H\x00R\busername\x88\x01\x01\x12*\n" +
-	"\bpassword\x18\x02 \x01(\tB\t\xfaB\x06r\x04\x10\b\x18\x14H\x01R\bpassword\x88\x01\x01\x12(\n" +
-	"\bnickname\x18\x03 \x01(\tB\a\xfaB\x04r\x02\x18\x14H\x02R\bnickname\x88\x01\x01\x12 \n" +
-	"\tparent_id\x18\x04 \x01(\tH\x03R\bparentId\x88\x01\x01\x12\x19\n" +
-	"\x05level\x18\x05 \x01(\x05H\x04R\x05level\x88\x01\x01\x12#\n" +
-	"\rshare_percent\x18\x06 \x01(\x02R\fsharePercentB\v\n" +
-	"\t_usernameB\v\n" +
-	"\t_passwordB\v\n" +
-	"\t_nicknameB\f\n" +
-	"\n" +
-	"_parent_idB\b\n" +
-	"\x06_level*-\n" +
+	"\x04user\x18\x01 \x01(\v2\x1e.api.authn.service.v1.UserInfoR\x04user\"\xfe\x01\n" +
+	"\x0fRegisterRequest\x12#\n" +
+	"\rshare_percent\x18\x06 \x01(\x02R\fsharePercent\x12%\n" +
+	"\busername\x18\a \x01(\tB\t\xfaB\x06r\x04\x10\x03\x18\x14R\busername\x12%\n" +
+	"\bpassword\x18\b \x01(\tB\t\xfaB\x06r\x04\x10\b\x18\x14R\bpassword\x12(\n" +
+	"\bnickname\x18\t \x01(\tB\a\xfaB\x04r\x02\x18\x14H\x00R\bnickname\x88\x01\x01\x12%\n" +
+	"\tparent_id\x18\n" +
+	" \x01(\tB\b\xfaB\x05r\x03\xb0\x01\x01R\bparentId\x12\x14\n" +
+	"\x05level\x18\v \x01(\x05R\x05levelB\v\n" +
+	"\t_nicknameJ\x04\b\x01\x10\x06*h\n" +
 	"\vErrorReason\x12\x18\n" +
-	"\x0eUSER_NOT_FOUNT\x10\x00\x1a\x04\xa8E\x94\x03\x1a\x04\xa0E\xf4\x032\xd0\x02\n" +
+	"\x0eUSER_NOT_FOUNT\x10\x00\x1a\x04\xa8E\x94\x03\x12\x1b\n" +
+	"\x11ILLEGAL_PARENT_ID\x10\x01\x1a\x04\xa8E\x93\x03\x12\x1c\n" +
+	"\x12ILLEGAL_USER_LEVEL\x10\x02\x1a\x04\xa8E\x90\x03\x1a\x04\xa0E\xf4\x032\xd0\x02\n" +
 	"\x05Authn\x12g\n" +
 	"\x05Login\x12\".api.authn.service.v1.LoginRequest\x1a\x1f.api.authn.service.v1.AuthReply\"\x19\x82\xd3\xe4\x93\x02\x13:\x01*\"\x0e/v1/auth/login\x12p\n" +
 	"\bRegister\x12%.api.authn.service.v1.RegisterRequest\x1a\x1f.api.authn.service.v1.AuthReply\"\x1c\x82\xd3\xe4\x93\x02\x16:\x01*\"\x11/v1/auth/register\x12l\n" +
@@ -495,28 +513,30 @@ func file_api_authn_service_v1_authn_proto_rawDescGZIP() []byte {
 var file_api_authn_service_v1_authn_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
 var file_api_authn_service_v1_authn_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
 var file_api_authn_service_v1_authn_proto_goTypes = []any{
-	(ErrorReason)(0),        // 0: api.authn.service.v1.ErrorReason
-	(*UserInfo)(nil),        // 1: api.authn.service.v1.UserInfo
-	(*AuthReply)(nil),       // 2: api.authn.service.v1.AuthReply
-	(*LoginRequest)(nil),    // 3: api.authn.service.v1.LoginRequest
-	(*VerifyRequest)(nil),   // 4: api.authn.service.v1.VerifyRequest
-	(*VerifyReply)(nil),     // 5: api.authn.service.v1.VerifyReply
-	(*RegisterRequest)(nil), // 6: api.authn.service.v1.RegisterRequest
+	(ErrorReason)(0),              // 0: api.authn.service.v1.ErrorReason
+	(*UserInfo)(nil),              // 1: api.authn.service.v1.UserInfo
+	(*AuthReply)(nil),             // 2: api.authn.service.v1.AuthReply
+	(*LoginRequest)(nil),          // 3: api.authn.service.v1.LoginRequest
+	(*VerifyRequest)(nil),         // 4: api.authn.service.v1.VerifyRequest
+	(*VerifyReply)(nil),           // 5: api.authn.service.v1.VerifyReply
+	(*RegisterRequest)(nil),       // 6: api.authn.service.v1.RegisterRequest
+	(*timestamppb.Timestamp)(nil), // 7: google.protobuf.Timestamp
 }
 var file_api_authn_service_v1_authn_proto_depIdxs = []int32{
-	1, // 0: api.authn.service.v1.AuthReply.user:type_name -> api.authn.service.v1.UserInfo
-	1, // 1: api.authn.service.v1.VerifyReply.user:type_name -> api.authn.service.v1.UserInfo
-	3, // 2: api.authn.service.v1.Authn.Login:input_type -> api.authn.service.v1.LoginRequest
-	6, // 3: api.authn.service.v1.Authn.Register:input_type -> api.authn.service.v1.RegisterRequest
-	4, // 4: api.authn.service.v1.Authn.Verify:input_type -> api.authn.service.v1.VerifyRequest
-	2, // 5: api.authn.service.v1.Authn.Login:output_type -> api.authn.service.v1.AuthReply
-	2, // 6: api.authn.service.v1.Authn.Register:output_type -> api.authn.service.v1.AuthReply
-	5, // 7: api.authn.service.v1.Authn.Verify:output_type -> api.authn.service.v1.VerifyReply
-	5, // [5:8] is the sub-list for method output_type
-	2, // [2:5] is the sub-list for method input_type
-	2, // [2:2] is the sub-list for extension type_name
-	2, // [2:2] is the sub-list for extension extendee
-	0, // [0:2] is the sub-list for field type_name
+	7, // 0: api.authn.service.v1.UserInfo.created_at:type_name -> google.protobuf.Timestamp
+	1, // 1: api.authn.service.v1.AuthReply.user:type_name -> api.authn.service.v1.UserInfo
+	1, // 2: api.authn.service.v1.VerifyReply.user:type_name -> api.authn.service.v1.UserInfo
+	3, // 3: api.authn.service.v1.Authn.Login:input_type -> api.authn.service.v1.LoginRequest
+	6, // 4: api.authn.service.v1.Authn.Register:input_type -> api.authn.service.v1.RegisterRequest
+	4, // 5: api.authn.service.v1.Authn.Verify:input_type -> api.authn.service.v1.VerifyRequest
+	2, // 6: api.authn.service.v1.Authn.Login:output_type -> api.authn.service.v1.AuthReply
+	2, // 7: api.authn.service.v1.Authn.Register:output_type -> api.authn.service.v1.AuthReply
+	5, // 8: api.authn.service.v1.Authn.Verify:output_type -> api.authn.service.v1.VerifyReply
+	6, // [6:9] is the sub-list for method output_type
+	3, // [3:6] is the sub-list for method input_type
+	3, // [3:3] is the sub-list for extension type_name
+	3, // [3:3] is the sub-list for extension extendee
+	0, // [0:3] is the sub-list for field type_name
 }
 
 func init() { file_api_authn_service_v1_authn_proto_init() }

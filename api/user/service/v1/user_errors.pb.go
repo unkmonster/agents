@@ -34,3 +34,15 @@ func IsUserNotFount(err error) bool {
 func ErrorUserNotFount(format string, args ...interface{}) *errors.Error {
 	return errors.New(404, ErrorReason_USER_NOT_FOUNT.String(), fmt.Sprintf(format, args...))
 }
+
+func IsUserIsExists(err error) bool {
+	if err == nil {
+		return false
+	}
+	e := errors.FromError(err)
+	return e.Reason == ErrorReason_USER_IS_EXISTS.String() && e.Code == 400
+}
+
+func ErrorUserIsExists(format string, args ...interface{}) *errors.Error {
+	return errors.New(400, ErrorReason_USER_IS_EXISTS.String(), fmt.Sprintf(format, args...))
+}
