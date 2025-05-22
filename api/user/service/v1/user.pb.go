@@ -30,6 +30,7 @@ type ErrorReason int32
 const (
 	ErrorReason_MISSING_PARENT_ID ErrorReason = 0
 	ErrorReason_USER_NOT_FOUNT    ErrorReason = 1
+	ErrorReason_USER_IS_EXISTS    ErrorReason = 2
 )
 
 // Enum value maps for ErrorReason.
@@ -37,10 +38,12 @@ var (
 	ErrorReason_name = map[int32]string{
 		0: "MISSING_PARENT_ID",
 		1: "USER_NOT_FOUNT",
+		2: "USER_IS_EXISTS",
 	}
 	ErrorReason_value = map[string]int32{
 		"MISSING_PARENT_ID": 0,
 		"USER_NOT_FOUNT":    1,
+		"USER_IS_EXISTS":    2,
 	}
 )
 
@@ -1577,10 +1580,11 @@ const file_api_user_service_v1_user_proto_rawDesc = "" +
 	" \x01(\v2\x1e.api.user.service.v1.UserInfo2R\x04userJ\x04\b\x01\x10\t\"\x11\n" +
 	"\x0fListUserRequest\"K\n" +
 	"\rListUserReply\x124\n" +
-	"\x05users\x18\x02 \x03(\v2\x1e.api.user.service.v1.UserInfo2R\x05usersJ\x04\b\x01\x10\x02*J\n" +
+	"\x05users\x18\x02 \x03(\v2\x1e.api.user.service.v1.UserInfo2R\x05usersJ\x04\b\x01\x10\x02*d\n" +
 	"\vErrorReason\x12\x1b\n" +
 	"\x11MISSING_PARENT_ID\x10\x00\x1a\x04\xa8E\x90\x03\x12\x18\n" +
-	"\x0eUSER_NOT_FOUNT\x10\x01\x1a\x04\xa8E\x94\x03\x1a\x04\xa0E\xf4\x032\xdd\f\n" +
+	"\x0eUSER_NOT_FOUNT\x10\x01\x1a\x04\xa8E\x94\x03\x12\x18\n" +
+	"\x0eUSER_IS_EXISTS\x10\x02\x1a\x04\xa8E\x90\x03\x1a\x04\xa0E\xf4\x032\xdd\f\n" +
 	"\x04User\x12p\n" +
 	"\n" +
 	"CreateUser\x12&.api.user.service.v1.CreateUserRequest\x1a$.api.user.service.v1.CreateUserReply\"\x14\x82\xd3\xe4\x93\x02\x0e:\x01*\"\t/v1/users\x12u\n" +

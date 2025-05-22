@@ -4,7 +4,6 @@ import (
 	authnv1 "agents/api/authn/service/v1"
 	"agents/app/authn/service/internal/conf"
 	"agents/app/authn/service/internal/service"
-	"agents/pkg/encrypt"
 	myjwt "agents/pkg/jwt"
 	"context"
 
@@ -19,7 +18,7 @@ import (
 )
 
 // NewHTTPServer new an HTTP server.
-func NewHTTPServer(c *conf.Server, logger log.Logger, auth *service.AuthnService, conf *conf.Auth) *http.Server {
+func NewHTTPServer(c *conf.Server, logger log.Logger, auth *service.AuthnService, keyfunc jwtv5.Keyfunc) *http.Server {
 	var opts = []http.ServerOption{
 		http.Middleware(
 			recovery.Recovery(),
@@ -35,28 +34,13 @@ func NewHTTPServer(c *conf.Server, logger log.Logger, auth *service.AuthnService
 		opts = append(opts, http.Timeout(c.Http.Timeout.AsDuration()))
 	}
 
-	method, err := myjwt.ConvertSigningMethod(conf.SigningMethod)
-	if err != nil {
-		log.NewHelper(logger).Fatal(err)
-	}
-
-	var pubKey interface{} = conf.PublicKey
-	if conf.SigningMethod == "RS256" {
-		pubKey, err = encrypt.LoadRSAPublicKey(conf.PublicKey)
-		if err != nil {
-			log.NewHelper(logger).Fatal(err)
-		}
-	}
-
 	opts = append(opts, http.Middleware(
 		recovery.Recovery(),
 		logging.Server(logger),
 
 		selector.Server(jwt.Server(
-			func(token *jwtv5.Token) (interface{}, error) {
-				return pubKey, nil
-			},
-			jwt.WithSigningMethod(method),
+			keyfunc,
+			jwt.WithSigningMethod(jwtv5.SigningMethodRS256), // TODO: 不要硬编码
 			jwt.WithClaims(func() jwtv5.Claims { return &myjwt.UserClaims{} }),
 		)).Match(func(ctx context.Context, operation string) bool {
 			return operation != "/api.authn.service.v1.Authn/Login"

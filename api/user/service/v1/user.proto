@@ -209,4 +209,5 @@ enum ErrorReason {
 
 	MISSING_PARENT_ID = 0 [(errors.code) = 400];
 	USER_NOT_FOUNT = 1 [(errors.code) = 404];
+	USER_IS_EXISTS = 2 [(errors.code) = 400];
 }

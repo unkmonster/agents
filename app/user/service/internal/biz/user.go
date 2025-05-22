@@ -5,6 +5,7 @@ import (
 	"time"
 
 	pb "agents/api/user/service/v1"
+	"agents/pkg/mysql"
 	"agents/pkg/paging"
 
 	"github.com/go-kratos/kratos/v2/log"
@@ -30,6 +31,7 @@ type UserRepo interface {
 	GetUserByUsername(ctx context.Context, username string) (*User, error)
 	GetUserByDomain(ctx context.Context, domain string) (*User, error)
 	ListUserByParent(ctx context.Context, parentId string, paging *paging.Paging) ([]*User, error)
+	GetZeroUser(ctx context.Context) (*User, error)
 }
 
 type UserUseCase struct {
@@ -56,7 +58,15 @@ func (uc *UserUseCase) CreateUser(ctx context.Context, req *pb.CreateUserRequest
 		SharePercent: req.SharePercent,
 	}
 
+	if req.Level == 0 {
+		user.Id = "0000000-0000-0000-0000-000000000000"
+	}
+
 	if err := uc.repo.CreateUser(ctx, &user); err != nil {
+		uc.log.Infof("%#v", err)
+		if mysql.IsDuplicateEntryError(err) {
+			return nil, pb.ErrorUserIsExists("")
+		}
 		return nil, err
 	}
 

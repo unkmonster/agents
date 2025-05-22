@@ -1,2 +1,2 @@
-ALTER TABLE users DROP COLUMN level;
-ALTER TABLE users DROP COLUMN parent_id;
+ALTER TABLE users DROP COLUMN level, 
+    DROP COLUMN parent_id;
