@@ -5,6 +5,7 @@ import (
 	"time"
 
 	pb "agents/api/user/service/v1"
+	"agents/pkg/paging"
 
 	"github.com/go-kratos/kratos/v2/errors"
 	"github.com/go-kratos/kratos/v2/log"
@@ -28,6 +29,7 @@ type UserRepo interface {
 	DeleteUser(ctx context.Context, id string) error
 	GetUserByUsername(ctx context.Context, username string) (*User, error)
 	GetUserByDomain(ctx context.Context, domain string) (*User, error)
+	ListUserByParent(ctx context.Context, parentId string, paging *paging.Paging) ([]*User, error)
 }
 
 type UserUseCase struct {
@@ -84,4 +86,8 @@ func (uc *UserUseCase) GetUserByUsername(ctx context.Context, username string) (
 
 func (uc *UserUseCase) GetUserByDomain(ctx context.Context, domain string) (*User, error) {
 	return uc.repo.GetUserByDomain(ctx, domain)
+}
+
+func (uc *UserUseCase) ListUserByParent(ctx context.Context, parentId string, paging *paging.Paging) ([]*User, error) {
+	return uc.repo.ListUserByParent(ctx, parentId, paging)
 }

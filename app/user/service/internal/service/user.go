@@ -5,6 +5,7 @@ import (
 
 	pb "agents/api/user/service/v1"
 	"agents/app/user/service/internal/biz"
+	"agents/pkg/paging"
 )
 
 type UserService struct {
@@ -150,4 +151,33 @@ func (s *UserService) GetUserByDomain(ctx context.Context, req *pb.GetUserByDoma
 		Level:        user.Level,
 		SharePercent: user.SharePercent,
 	}, nil
+}
+
+func (s *UserService) ListUserByParentId(ctx context.Context, req *pb.ListUserByParentIdReq) (*pb.ListUserByParentIdReply, error) {
+	if req.Limit == 0 {
+		req.Limit = 20
+	}
+
+	users, err := s.user.ListUserByParent(ctx, req.ParentId, &paging.Paging{
+		Offset:  int64(req.Offset),
+		Limit:   int64(req.Limit),
+		OrderBy: req.OrderBy,
+		Sort:    req.Sort,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	reply := pb.ListUserByParentIdReply{}
+	for _, user := range users {
+		reply.Users = append(reply.Users, &pb.GetUserReply{
+			Id:           user.Id,
+			Username:     user.Username,
+			Level:        user.Level,
+			SharePercent: user.SharePercent,
+			Nickname:     user.Nickname,
+			ParentId:     user.ParentId,
+		})
+	}
+	return &reply, nil
 }

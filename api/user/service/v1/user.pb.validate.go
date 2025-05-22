@@ -35,6 +35,304 @@ var (
 	_ = sort.Sort
 )
 
+// define the regex for a UUID once up-front
+var _user_uuidPattern = regexp.MustCompile("^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$")
+
+// Validate checks the field values on ListUserByParentIdReq with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *ListUserByParentIdReq) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on ListUserByParentIdReq with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// ListUserByParentIdReqMultiError, or nil if none found.
+func (m *ListUserByParentIdReq) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *ListUserByParentIdReq) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if err := m._validateUuid(m.GetParentId()); err != nil {
+		err = ListUserByParentIdReqValidationError{
+			field:  "ParentId",
+			reason: "value must be a valid UUID",
+			cause:  err,
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if _, ok := _ListUserByParentIdReq_OrderBy_InLookup[m.GetOrderBy()]; !ok {
+		err := ListUserByParentIdReqValidationError{
+			field:  "OrderBy",
+			reason: "value must be in list [ created_at]",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	// no validation rules for Limit
+
+	// no validation rules for Offset
+
+	if _, ok := _ListUserByParentIdReq_Sort_InLookup[m.GetSort()]; !ok {
+		err := ListUserByParentIdReqValidationError{
+			field:  "Sort",
+			reason: "value must be in list [ asc desc]",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if len(errors) > 0 {
+		return ListUserByParentIdReqMultiError(errors)
+	}
+
+	return nil
+}
+
+func (m *ListUserByParentIdReq) _validateUuid(uuid string) error {
+	if matched := _user_uuidPattern.MatchString(uuid); !matched {
+		return errors.New("invalid uuid format")
+	}
+
+	return nil
+}
+
+// ListUserByParentIdReqMultiError is an error wrapping multiple validation
+// errors returned by ListUserByParentIdReq.ValidateAll() if the designated
+// constraints aren't met.
+type ListUserByParentIdReqMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m ListUserByParentIdReqMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m ListUserByParentIdReqMultiError) AllErrors() []error { return m }
+
+// ListUserByParentIdReqValidationError is the validation error returned by
+// ListUserByParentIdReq.Validate if the designated constraints aren't met.
+type ListUserByParentIdReqValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e ListUserByParentIdReqValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e ListUserByParentIdReqValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e ListUserByParentIdReqValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e ListUserByParentIdReqValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e ListUserByParentIdReqValidationError) ErrorName() string {
+	return "ListUserByParentIdReqValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e ListUserByParentIdReqValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sListUserByParentIdReq.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = ListUserByParentIdReqValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = ListUserByParentIdReqValidationError{}
+
+var _ListUserByParentIdReq_OrderBy_InLookup = map[string]struct{}{
+	"":           {},
+	"created_at": {},
+}
+
+var _ListUserByParentIdReq_Sort_InLookup = map[string]struct{}{
+	"":     {},
+	"asc":  {},
+	"desc": {},
+}
+
+// Validate checks the field values on ListUserByParentIdReply with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *ListUserByParentIdReply) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on ListUserByParentIdReply with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// ListUserByParentIdReplyMultiError, or nil if none found.
+func (m *ListUserByParentIdReply) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *ListUserByParentIdReply) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	for idx, item := range m.GetUsers() {
+		_, _ = idx, item
+
+		if all {
+			switch v := interface{}(item).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, ListUserByParentIdReplyValidationError{
+						field:  fmt.Sprintf("Users[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, ListUserByParentIdReplyValidationError{
+						field:  fmt.Sprintf("Users[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return ListUserByParentIdReplyValidationError{
+					field:  fmt.Sprintf("Users[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
+	if len(errors) > 0 {
+		return ListUserByParentIdReplyMultiError(errors)
+	}
+
+	return nil
+}
+
+// ListUserByParentIdReplyMultiError is an error wrapping multiple validation
+// errors returned by ListUserByParentIdReply.ValidateAll() if the designated
+// constraints aren't met.
+type ListUserByParentIdReplyMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m ListUserByParentIdReplyMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m ListUserByParentIdReplyMultiError) AllErrors() []error { return m }
+
+// ListUserByParentIdReplyValidationError is the validation error returned by
+// ListUserByParentIdReply.Validate if the designated constraints aren't met.
+type ListUserByParentIdReplyValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e ListUserByParentIdReplyValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e ListUserByParentIdReplyValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e ListUserByParentIdReplyValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e ListUserByParentIdReplyValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e ListUserByParentIdReplyValidationError) ErrorName() string {
+	return "ListUserByParentIdReplyValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e ListUserByParentIdReplyValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sListUserByParentIdReply.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = ListUserByParentIdReplyValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = ListUserByParentIdReplyValidationError{}
+
 // Validate checks the field values on GetUserByDomainRequest with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.

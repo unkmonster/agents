@@ -26,6 +26,7 @@ const (
 	User_ListUser_FullMethodName                = "/api.user.service.v1.User/ListUser"
 	User_GetUserByUsername_FullMethodName       = "/api.user.service.v1.User/GetUserByUsername"
 	User_CreateUserDomain_FullMethodName        = "/api.user.service.v1.User/CreateUserDomain"
+	User_ListUserByParentId_FullMethodName      = "/api.user.service.v1.User/ListUserByParentId"
 	User_GetUserDomain_FullMethodName           = "/api.user.service.v1.User/GetUserDomain"
 	User_ListUserDomains_FullMethodName         = "/api.user.service.v1.User/ListUserDomains"
 	User_ListUserDomainsByUserId_FullMethodName = "/api.user.service.v1.User/ListUserDomainsByUserId"
@@ -44,6 +45,7 @@ type UserClient interface {
 	ListUser(ctx context.Context, in *ListUserRequest, opts ...grpc.CallOption) (*ListUserReply, error)
 	GetUserByUsername(ctx context.Context, in *GetUserByUsernameRequest, opts ...grpc.CallOption) (*GetUserReply, error)
 	CreateUserDomain(ctx context.Context, in *CreateUserDomainRequest, opts ...grpc.CallOption) (*CreateUserDomainReply, error)
+	ListUserByParentId(ctx context.Context, in *ListUserByParentIdReq, opts ...grpc.CallOption) (*ListUserByParentIdReply, error)
 	// 获取域名
 	GetUserDomain(ctx context.Context, in *GetUserDomainRequest, opts ...grpc.CallOption) (*GetUserDomainReply, error)
 	ListUserDomains(ctx context.Context, in *ListUserDomainsRequest, opts ...grpc.CallOption) (*ListUserDomainsReply, error)
@@ -130,6 +132,16 @@ func (c *userClient) CreateUserDomain(ctx context.Context, in *CreateUserDomainR
 	return out, nil
 }
 
+func (c *userClient) ListUserByParentId(ctx context.Context, in *ListUserByParentIdReq, opts ...grpc.CallOption) (*ListUserByParentIdReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListUserByParentIdReply)
+	err := c.cc.Invoke(ctx, User_ListUserByParentId_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *userClient) GetUserDomain(ctx context.Context, in *GetUserDomainRequest, opts ...grpc.CallOption) (*GetUserDomainReply, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(GetUserDomainReply)
@@ -191,6 +203,7 @@ type UserServer interface {
 	ListUser(context.Context, *ListUserRequest) (*ListUserReply, error)
 	GetUserByUsername(context.Context, *GetUserByUsernameRequest) (*GetUserReply, error)
 	CreateUserDomain(context.Context, *CreateUserDomainRequest) (*CreateUserDomainReply, error)
+	ListUserByParentId(context.Context, *ListUserByParentIdReq) (*ListUserByParentIdReply, error)
 	// 获取域名
 	GetUserDomain(context.Context, *GetUserDomainRequest) (*GetUserDomainReply, error)
 	ListUserDomains(context.Context, *ListUserDomainsRequest) (*ListUserDomainsReply, error)
@@ -227,6 +240,9 @@ func (UnimplementedUserServer) GetUserByUsername(context.Context, *GetUserByUser
 }
 func (UnimplementedUserServer) CreateUserDomain(context.Context, *CreateUserDomainRequest) (*CreateUserDomainReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateUserDomain not implemented")
+}
+func (UnimplementedUserServer) ListUserByParentId(context.Context, *ListUserByParentIdReq) (*ListUserByParentIdReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListUserByParentId not implemented")
 }
 func (UnimplementedUserServer) GetUserDomain(context.Context, *GetUserDomainRequest) (*GetUserDomainReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetUserDomain not implemented")
@@ -390,6 +406,24 @@ func _User_CreateUserDomain_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
+func _User_ListUserByParentId_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListUserByParentIdReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).ListUserByParentId(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_ListUserByParentId_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).ListUserByParentId(ctx, req.(*ListUserByParentIdReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _User_GetUserDomain_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetUserDomainRequest)
 	if err := dec(in); err != nil {
@@ -514,6 +548,10 @@ var User_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "CreateUserDomain",
 			Handler:    _User_CreateUserDomain_Handler,
+		},
+		{
+			MethodName: "ListUserByParentId",
+			Handler:    _User_ListUserByParentId_Handler,
 		},
 		{
 			MethodName: "GetUserDomain",

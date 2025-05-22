@@ -45,6 +45,13 @@ service User {
 			body: "*"
 		};
 	};
+
+	rpc ListUserByParentId(ListUserByParentIdReq) returns (ListUserByParentIdReply) {
+		option (google.api.http) = {
+			get: "/v1/users/{parent_id}/children"
+		};
+	};
+
 	// 获取域名
 	rpc GetUserDomain(GetUserDomainRequest) returns (GetUserDomainReply) {
 		option (google.api.http) = {
@@ -68,6 +75,17 @@ service User {
 	};
 
 	rpc GetUserByDomain(GetUserByDomainRequest) returns (GetUserByDomainReply);
+}
+
+message ListUserByParentIdReq {
+	string parent_id = 1[(validate.rules).string = {uuid: true}];
+	string order_by = 3 [(validate.rules).string = {in: ["", "created_at"]}];
+	int32 limit = 5;
+	int32 offset = 6;
+	string sort = 7 [(validate.rules).string = {in: ["", "asc", "desc"]}];
+}
+message ListUserByParentIdReply {
+	repeated GetUserReply users = 1;
 }
 
 message GetUserByDomainRequest {
