@@ -4,7 +4,9 @@ import (
 	"context"
 	"crypto/rsa"
 	"crypto/x509"
+	"database/sql"
 	"encoding/pem"
+	"errors"
 	"fmt"
 	"time"
 
@@ -13,7 +15,7 @@ import (
 	"agents/pkg/encrypt"
 	"agents/pkg/jwt"
 
-	"github.com/go-kratos/kratos/v2/errors"
+	kerrors "github.com/go-kratos/kratos/v2/errors"
 	"github.com/go-kratos/kratos/v2/log"
 	mjwt "github.com/go-kratos/kratos/v2/middleware/auth/jwt"
 	jwtv5 "github.com/golang-jwt/jwt/v5"
@@ -40,6 +42,7 @@ type UserCredential struct {
 type UserCredentialRepo interface {
 	Create(ctx context.Context, uc *UserCredential) (*UserCredential, error)
 	GetByUsername(ctx context.Context, username string) (*UserCredential, error)
+	GetByUserId(ctx context.Context, userId string) (*UserCredential, error)
 }
 
 type AuthUserCase struct {
@@ -83,16 +86,16 @@ func (uc *AuthUserCase) Register(ctx context.Context, req *pb.RegisterRequest) (
 	t, _ := mjwt.FromContext(ctx)
 	token, ok := t.(*jwt.UserClaims)
 	if !ok {
-		return nil, errors.New(401, "INVALID_TOKEN", "无效 token")
+		return nil, kerrors.New(401, "INVALID_TOKEN", "无效 token")
 	}
 
 	if token.Subject != *req.ParentId {
-		return nil, errors.New(403, "ILLEGAL_PARENT_ID", "非法父代理 ID")
+		return nil, kerrors.New(403, "ILLEGAL_PARENT_ID", "非法父代理 ID")
 	}
 
 	// 被注册用户等级不允许小于调用者，并且不大于 MAX_LEVEL
 	if *req.Level > MaxAgentLevel || *req.Level <= int32(token.Level) {
-		return nil, errors.New(403, "ILLEGAL_USER_LEVEL", "不合法的代理等级")
+		return nil, kerrors.New(403, "ILLEGAL_USER_LEVEL", "不合法的代理等级")
 	}
 
 	user, err := uc.ur.Create(ctx, &User{
@@ -165,6 +168,9 @@ func (uc *AuthUserCase) Login(ctx context.Context, req *pb.LoginRequest) (*pb.Au
 	}
 
 	user, err := uc.ur.GetByUsername(ctx, *req.Username)
+	if errors.Is(err, sql.ErrNoRows) {
+		err = pb.ErrorUserNotFount("user %q not fount", *req.Username)
+	}
 	if err != nil {
 		return nil, err
 	}
@@ -191,4 +197,8 @@ func (uc *AuthUserCase) Login(ctx context.Context, req *pb.LoginRequest) (*pb.Au
 	return &pb.AuthReply{
 		Token: &tokenStr,
 	}, nil
+}
+
+func (uc *AuthUserCase) GetUserCredential(ctx context.Context, userId string) (*UserCredential, error) {
+	return uc.cr.GetByUserId(ctx, userId)
 }

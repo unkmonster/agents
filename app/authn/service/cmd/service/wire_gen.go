@@ -36,8 +36,9 @@ func wireApp(confServer *conf.Server, confData *conf.Data, logger log.Logger, au
 	gatewayRepo := data.NewGatewayRepo(dataData, kong)
 	authUserCase := biz.NewAuthUserCase(userCredentialRepo, logger, userRepo, auth, gatewayRepo)
 	authnService := service.NewAuthnService(authUserCase)
-	grpcServer := server.NewGRPCServer(confServer, authnService, logger, auth)
-	httpServer := server.NewHTTPServer(confServer, logger, authnService, auth)
+	keyfunc := server.NewJwtKeyFunc(authUserCase)
+	grpcServer := server.NewGRPCServer(confServer, authnService, logger, keyfunc)
+	httpServer := server.NewHTTPServer(confServer, logger, authnService, keyfunc)
 	registrar := server.NewRegistrar(registry)
 	app := newApp(logger, grpcServer, httpServer, registrar)
 	return app, func() {

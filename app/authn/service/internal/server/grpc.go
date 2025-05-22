@@ -6,7 +6,6 @@ import (
 	"agents/app/authn/service/internal/service"
 	"context"
 
-	"agents/pkg/encrypt"
 	myjwt "agents/pkg/jwt"
 
 	"github.com/go-kratos/kratos/contrib/middleware/validate/v2"
@@ -20,7 +19,7 @@ import (
 )
 
 // NewGRPCServer new a gRPC server.
-func NewGRPCServer(c *conf.Server, authn *service.AuthnService, logger log.Logger, conf *conf.Auth) *grpc.Server {
+func NewGRPCServer(c *conf.Server, authn *service.AuthnService, logger log.Logger, keyfunc jwtv5.Keyfunc) *grpc.Server {
 	var opts = []grpc.ServerOption{
 		grpc.Middleware(
 			recovery.Recovery(),
@@ -36,27 +35,13 @@ func NewGRPCServer(c *conf.Server, authn *service.AuthnService, logger log.Logge
 		opts = append(opts, grpc.Timeout(c.Grpc.Timeout.AsDuration()))
 	}
 
-	method, err := myjwt.ConvertSigningMethod(conf.SigningMethod)
-	if err != nil {
-		log.NewHelper(logger).Fatal(err)
-	}
-	var pubKey interface{} = conf.PublicKey
-	if conf.SigningMethod == "RS256" {
-		pubKey, err = encrypt.LoadRSAPublicKey(conf.PublicKey)
-		if err != nil {
-			log.NewHelper(logger).Fatal(err)
-		}
-	}
-
 	opts = append(opts, grpc.Middleware(
 		recovery.Recovery(),
 		logging.Server(logger),
 
 		selector.Server(jwt.Server(
-			func(token *jwtv5.Token) (interface{}, error) {
-				return pubKey, nil
-			},
-			jwt.WithSigningMethod(method),
+			keyfunc,
+			jwt.WithSigningMethod(jwtv5.SigningMethodRS256), // TODO: 不要硬编码
 			jwt.WithClaims(func() jwtv5.Claims { return &myjwt.UserClaims{} }),
 		)).Match(func(ctx context.Context, operation string) bool {
 			return operation != "/api.authn.service.v1.Authn/Login"

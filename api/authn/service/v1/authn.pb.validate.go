@@ -723,18 +723,7 @@ func (m *RegisterRequest) validate(all bool) error {
 	}
 
 	if m.Level != nil {
-
-		if m.GetLevel() > 2 {
-			err := RegisterRequestValidationError{
-				field:  "Level",
-				reason: "value must be less than or equal to 2",
-			}
-			if !all {
-				return err
-			}
-			errors = append(errors, err)
-		}
-
+		// no validation rules for Level
 	}
 
 	if len(errors) > 0 {

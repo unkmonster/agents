@@ -8,6 +8,7 @@ package v1
 
 import (
 	_ "github.com/envoyproxy/protoc-gen-validate/validate"
+	_ "github.com/go-kratos/kratos/v2/errors"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
@@ -22,6 +23,49 @@ const (
 	// Verify that runtime/protoimpl is sufficiently up-to-date.
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
+
+type ErrorReason int32
+
+const (
+	ErrorReason_USER_NOT_FOUNT ErrorReason = 0
+)
+
+// Enum value maps for ErrorReason.
+var (
+	ErrorReason_name = map[int32]string{
+		0: "USER_NOT_FOUNT",
+	}
+	ErrorReason_value = map[string]int32{
+		"USER_NOT_FOUNT": 0,
+	}
+)
+
+func (x ErrorReason) Enum() *ErrorReason {
+	p := new(ErrorReason)
+	*p = x
+	return p
+}
+
+func (x ErrorReason) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (ErrorReason) Descriptor() protoreflect.EnumDescriptor {
+	return file_api_authn_service_v1_authn_proto_enumTypes[0].Descriptor()
+}
+
+func (ErrorReason) Type() protoreflect.EnumType {
+	return &file_api_authn_service_v1_authn_proto_enumTypes[0]
+}
+
+func (x ErrorReason) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use ErrorReason.Descriptor instead.
+func (ErrorReason) EnumDescriptor() ([]byte, []int) {
+	return file_api_authn_service_v1_authn_proto_rawDescGZIP(), []int{0}
+}
 
 type UserInfo struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
@@ -387,7 +431,7 @@ var File_api_authn_service_v1_authn_proto protoreflect.FileDescriptor
 
 const file_api_authn_service_v1_authn_proto_rawDesc = "" +
 	"\n" +
-	" api/authn/service/v1/authn.proto\x12\x14api.authn.service.v1\x1a\x1cgoogle/api/annotations.proto\x1a\x17validate/validate.proto\"\xfc\x01\n" +
+	" api/authn/service/v1/authn.proto\x12\x14api.authn.service.v1\x1a\x1cgoogle/api/annotations.proto\x1a\x17validate/validate.proto\x1a\x13errors/errors.proto\"\xfc\x01\n" +
 	"\bUserInfo\x12\x13\n" +
 	"\x02id\x18\x01 \x01(\tH\x00R\x02id\x88\x01\x01\x12\x1f\n" +
 	"\busername\x18\x02 \x01(\tH\x01R\busername\x88\x01\x01\x12\x1f\n" +
@@ -414,20 +458,22 @@ const file_api_authn_service_v1_authn_proto_rawDesc = "" +
 	"\x05token\x18\x01 \x01(\tH\x00R\x05token\x88\x01\x01B\b\n" +
 	"\x06_token\"A\n" +
 	"\vVerifyReply\x122\n" +
-	"\x04user\x18\x01 \x01(\v2\x1e.api.authn.service.v1.UserInfoR\x04user\"\xbd\x02\n" +
+	"\x04user\x18\x01 \x01(\v2\x1e.api.authn.service.v1.UserInfoR\x04user\"\xb4\x02\n" +
 	"\x0fRegisterRequest\x12*\n" +
 	"\busername\x18\x01 \x01(\tB\t\xfaB\x06r\x04\x10\x03\x18\x14H\x00R\busername\x88\x01\x01\x12*\n" +
 	"\bpassword\x18\x02 \x01(\tB\t\xfaB\x06r\x04\x10\b\x18\x14H\x01R\bpassword\x88\x01\x01\x12(\n" +
 	"\bnickname\x18\x03 \x01(\tB\a\xfaB\x04r\x02\x18\x14H\x02R\bnickname\x88\x01\x01\x12 \n" +
-	"\tparent_id\x18\x04 \x01(\tH\x03R\bparentId\x88\x01\x01\x12\"\n" +
-	"\x05level\x18\x05 \x01(\x05B\a\xfaB\x04\x1a\x02\x18\x02H\x04R\x05level\x88\x01\x01\x12#\n" +
+	"\tparent_id\x18\x04 \x01(\tH\x03R\bparentId\x88\x01\x01\x12\x19\n" +
+	"\x05level\x18\x05 \x01(\x05H\x04R\x05level\x88\x01\x01\x12#\n" +
 	"\rshare_percent\x18\x06 \x01(\x02R\fsharePercentB\v\n" +
 	"\t_usernameB\v\n" +
 	"\t_passwordB\v\n" +
 	"\t_nicknameB\f\n" +
 	"\n" +
 	"_parent_idB\b\n" +
-	"\x06_level2\xd0\x02\n" +
+	"\x06_level*-\n" +
+	"\vErrorReason\x12\x18\n" +
+	"\x0eUSER_NOT_FOUNT\x10\x00\x1a\x04\xa8E\x94\x03\x1a\x04\xa0E\xf4\x032\xd0\x02\n" +
 	"\x05Authn\x12g\n" +
 	"\x05Login\x12\".api.authn.service.v1.LoginRequest\x1a\x1f.api.authn.service.v1.AuthReply\"\x19\x82\xd3\xe4\x93\x02\x13:\x01*\"\x0e/v1/auth/login\x12p\n" +
 	"\bRegister\x12%.api.authn.service.v1.RegisterRequest\x1a\x1f.api.authn.service.v1.AuthReply\"\x1c\x82\xd3\xe4\x93\x02\x16:\x01*\"\x11/v1/auth/register\x12l\n" +
@@ -446,24 +492,26 @@ func file_api_authn_service_v1_authn_proto_rawDescGZIP() []byte {
 	return file_api_authn_service_v1_authn_proto_rawDescData
 }
 
+var file_api_authn_service_v1_authn_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
 var file_api_authn_service_v1_authn_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
 var file_api_authn_service_v1_authn_proto_goTypes = []any{
-	(*UserInfo)(nil),        // 0: api.authn.service.v1.UserInfo
-	(*AuthReply)(nil),       // 1: api.authn.service.v1.AuthReply
-	(*LoginRequest)(nil),    // 2: api.authn.service.v1.LoginRequest
-	(*VerifyRequest)(nil),   // 3: api.authn.service.v1.VerifyRequest
-	(*VerifyReply)(nil),     // 4: api.authn.service.v1.VerifyReply
-	(*RegisterRequest)(nil), // 5: api.authn.service.v1.RegisterRequest
+	(ErrorReason)(0),        // 0: api.authn.service.v1.ErrorReason
+	(*UserInfo)(nil),        // 1: api.authn.service.v1.UserInfo
+	(*AuthReply)(nil),       // 2: api.authn.service.v1.AuthReply
+	(*LoginRequest)(nil),    // 3: api.authn.service.v1.LoginRequest
+	(*VerifyRequest)(nil),   // 4: api.authn.service.v1.VerifyRequest
+	(*VerifyReply)(nil),     // 5: api.authn.service.v1.VerifyReply
+	(*RegisterRequest)(nil), // 6: api.authn.service.v1.RegisterRequest
 }
 var file_api_authn_service_v1_authn_proto_depIdxs = []int32{
-	0, // 0: api.authn.service.v1.AuthReply.user:type_name -> api.authn.service.v1.UserInfo
-	0, // 1: api.authn.service.v1.VerifyReply.user:type_name -> api.authn.service.v1.UserInfo
-	2, // 2: api.authn.service.v1.Authn.Login:input_type -> api.authn.service.v1.LoginRequest
-	5, // 3: api.authn.service.v1.Authn.Register:input_type -> api.authn.service.v1.RegisterRequest
-	3, // 4: api.authn.service.v1.Authn.Verify:input_type -> api.authn.service.v1.VerifyRequest
-	1, // 5: api.authn.service.v1.Authn.Login:output_type -> api.authn.service.v1.AuthReply
-	1, // 6: api.authn.service.v1.Authn.Register:output_type -> api.authn.service.v1.AuthReply
-	4, // 7: api.authn.service.v1.Authn.Verify:output_type -> api.authn.service.v1.VerifyReply
+	1, // 0: api.authn.service.v1.AuthReply.user:type_name -> api.authn.service.v1.UserInfo
+	1, // 1: api.authn.service.v1.VerifyReply.user:type_name -> api.authn.service.v1.UserInfo
+	3, // 2: api.authn.service.v1.Authn.Login:input_type -> api.authn.service.v1.LoginRequest
+	6, // 3: api.authn.service.v1.Authn.Register:input_type -> api.authn.service.v1.RegisterRequest
+	4, // 4: api.authn.service.v1.Authn.Verify:input_type -> api.authn.service.v1.VerifyRequest
+	2, // 5: api.authn.service.v1.Authn.Login:output_type -> api.authn.service.v1.AuthReply
+	2, // 6: api.authn.service.v1.Authn.Register:output_type -> api.authn.service.v1.AuthReply
+	5, // 7: api.authn.service.v1.Authn.Verify:output_type -> api.authn.service.v1.VerifyReply
 	5, // [5:8] is the sub-list for method output_type
 	2, // [2:5] is the sub-list for method input_type
 	2, // [2:2] is the sub-list for extension type_name
@@ -486,13 +534,14 @@ func file_api_authn_service_v1_authn_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_api_authn_service_v1_authn_proto_rawDesc), len(file_api_authn_service_v1_authn_proto_rawDesc)),
-			NumEnums:      0,
+			NumEnums:      1,
 			NumMessages:   6,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
 		GoTypes:           file_api_authn_service_v1_authn_proto_goTypes,
 		DependencyIndexes: file_api_authn_service_v1_authn_proto_depIdxs,
+		EnumInfos:         file_api_authn_service_v1_authn_proto_enumTypes,
 		MessageInfos:      file_api_authn_service_v1_authn_proto_msgTypes,
 	}.Build()
 	File_api_authn_service_v1_authn_proto = out.File
