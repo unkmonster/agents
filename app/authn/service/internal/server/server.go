@@ -16,6 +16,7 @@ import (
 	"github.com/go-kratos/kratos/v2/middleware/logging"
 	"github.com/go-kratos/kratos/v2/middleware/recovery"
 	"github.com/go-kratos/kratos/v2/middleware/selector"
+	"github.com/go-kratos/kratos/v2/middleware/tracing"
 	"github.com/go-kratos/kratos/v2/registry"
 	jwtv5 "github.com/golang-jwt/jwt/v5"
 	"github.com/google/wire"
@@ -37,7 +38,7 @@ func NewRegistrar(conf *conf.Registry) registry.Registrar {
 	return r
 }
 
-func NewJwtKeyFunc(auth *biz.AuthUserCase) jwtv5.Keyfunc {
+func NewJwtKeyFunc(auth *biz.AuthUseCase) jwtv5.Keyfunc {
 	return func(token *jwtv5.Token) (interface{}, error) {
 		sub, err := token.Claims.GetSubject()
 		if err != nil {
@@ -52,7 +53,7 @@ func NewJwtKeyFunc(auth *biz.AuthUserCase) jwtv5.Keyfunc {
 	}
 }
 
-func NewBeforeStart(logger log.Logger, authn *biz.AuthUserCase, conf *conf.SystemUser) func(context.Context) error {
+func NewBeforeStart(logger log.Logger, authn *biz.AuthUseCase, conf *conf.SystemUser) func(context.Context) error {
 	return func(context.Context) error {
 		user, err := authn.RegisterZeroUser(context.Background(), conf.Username, conf.Password)
 		if userv1.IsUserIsExists(err) {
@@ -71,6 +72,7 @@ func NewBeforeStart(logger log.Logger, authn *biz.AuthUserCase, conf *conf.Syste
 func NewMiddlewares(logger log.Logger, keyfunc jwtv5.Keyfunc) []middleware.Middleware {
 	return []middleware.Middleware{
 		recovery.Recovery(),
+		tracing.Server(),
 		logging.Server(logger),
 
 		selector.Server(jwt.Server(

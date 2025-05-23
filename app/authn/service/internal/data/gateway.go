@@ -53,7 +53,7 @@ func (g *gateway) CreateUserConsumer(ctx context.Context, user *biz.User) (strin
 }
 
 // EnableJwtPluginForConsumer implements biz.Gateway.
-func (g *gateway) EnableJwtPluginForConsumer(ctx context.Context, consumer string, pubkeyPem string) (string, error) {
+func (g *gateway) CreateConsumerCredential(ctx context.Context, consumer string, pubkeyPem string) (string, error) {
 	req := g.data.cli.R().SetContext(ctx)
 	req.SetBody(map[string]string{
 		"algorithm":      biz.DefaultSigningAlg,

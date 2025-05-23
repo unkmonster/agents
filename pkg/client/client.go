@@ -6,6 +6,7 @@ import (
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/go-kratos/kratos/v2/middleware/logging"
 	"github.com/go-kratos/kratos/v2/middleware/recovery"
+	"github.com/go-kratos/kratos/v2/middleware/tracing"
 	"github.com/go-kratos/kratos/v2/registry"
 	"github.com/go-kratos/kratos/v2/transport/grpc"
 
@@ -20,6 +21,7 @@ func NewUserServiceClient(dis registry.Discovery, logger log.Logger) userv1.User
 		grpc.WithDiscovery(dis),
 		grpc.WithMiddleware(
 			recovery.Recovery(),
+			tracing.Client(),
 			logging.Client(logger),
 		),
 	)
@@ -36,6 +38,7 @@ func NewCommissionServiceClient(dis registry.Discovery, logger log.Logger) commv
 		grpc.WithDiscovery(dis),
 		grpc.WithMiddleware(
 			recovery.Recovery(),
+			tracing.Client(),
 			logging.Client(logger),
 		),
 	)
