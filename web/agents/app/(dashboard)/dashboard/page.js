@@ -136,10 +136,6 @@ export default function Main() {
   const commRes = useTotalCommission();
   const tcRes = useTodayCommission();
 
-  if (commRes.error || tcRes.error) {
-    return (commRes.error || tcRes.error).toString();
-  }
-
   return (
     <Space direction="vertical" size={"middle"} style={{ width: "100%" }}>
       <Title level={3}>总览</Title>
@@ -155,8 +151,12 @@ export default function Main() {
               title={"今日注册"}
               value={
                 tcRes.data &&
-                parseInt(tcRes.data.commissions[0].directRegistrationCount) +
-                  parseInt(tcRes.data.commissions[0].indirectRegistrationCount)
+                parseInt(
+                  tcRes.data?.commissions[0]?.directRegistrationCount || 0
+                ) +
+                  parseInt(
+                    tcRes.data?.commissions[0]?.indirectRegistrationCount || 0
+                  )
               }
               loading={tcRes.isLoading}
             />

@@ -33,7 +33,7 @@ export default function Main() {
     }));
 
     const now = new Date();
-    if (new Date(ds[0].date).getDate() < now.getDate()) {
+    if (ds.length == 0 || new Date(ds[0].date).getDate() < now.getDate()) {
       ds.unshift({
         key: commListRes.data.userId,
         date: now,
