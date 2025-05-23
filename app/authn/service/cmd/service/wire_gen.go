@@ -37,11 +37,12 @@ func wireApp(confServer *conf.Server, confData *conf.Data, logger log.Logger, au
 	authUserCase := biz.NewAuthUserCase(userCredentialRepo, logger, userRepo, auth, gatewayRepo)
 	authnService := service.NewAuthnService(authUserCase)
 	keyfunc := server.NewJwtKeyFunc(authUserCase)
-	grpcServer := server.NewGRPCServer(confServer, authnService, logger, keyfunc)
-	httpServer := server.NewHTTPServer(confServer, logger, authnService, keyfunc)
+	v := server.NewMiddlewares(logger, keyfunc)
+	grpcServer := server.NewGRPCServer(confServer, authnService, logger, v)
+	httpServer := server.NewHTTPServer(confServer, logger, authnService, v)
 	registrar := server.NewRegistrar(registry)
-	v := server.NewBeforeStart(logger, authUserCase, systemUser)
-	app := newApp(logger, grpcServer, httpServer, registrar, v)
+	v2 := server.NewBeforeStart(logger, authUserCase, systemUser)
+	app := newApp(logger, grpcServer, httpServer, registrar, v2)
 	return app, func() {
 		cleanup()
 	}, nil

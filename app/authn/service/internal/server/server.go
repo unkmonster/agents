@@ -3,12 +3,19 @@ package server
 import (
 	"agents/app/authn/service/internal/biz"
 	"agents/app/authn/service/internal/conf"
+	myjwt "agents/pkg/jwt"
 	"context"
 
 	userv1 "agents/api/user/service/v1"
 
+	"github.com/go-kratos/kratos/contrib/middleware/validate/v2"
 	"github.com/go-kratos/kratos/contrib/registry/consul/v2"
 	"github.com/go-kratos/kratos/v2/log"
+	"github.com/go-kratos/kratos/v2/middleware"
+	"github.com/go-kratos/kratos/v2/middleware/auth/jwt"
+	"github.com/go-kratos/kratos/v2/middleware/logging"
+	"github.com/go-kratos/kratos/v2/middleware/recovery"
+	"github.com/go-kratos/kratos/v2/middleware/selector"
 	"github.com/go-kratos/kratos/v2/registry"
 	jwtv5 "github.com/golang-jwt/jwt/v5"
 	"github.com/google/wire"
@@ -16,7 +23,7 @@ import (
 )
 
 // ProviderSet is server providers.
-var ProviderSet = wire.NewSet(NewGRPCServer, NewHTTPServer, NewRegistrar, NewJwtKeyFunc, NewBeforeStart)
+var ProviderSet = wire.NewSet(NewGRPCServer, NewHTTPServer, NewRegistrar, NewJwtKeyFunc, NewBeforeStart, NewMiddlewares)
 
 func NewRegistrar(conf *conf.Registry) registry.Registrar {
 	c := consulAPI.DefaultConfig()
@@ -59,6 +66,21 @@ func NewBeforeStart(logger log.Logger, authn *biz.AuthUserCase, conf *conf.Syste
 		log.NewHelper(logger).Infof("register zero user complete: %#v", user)
 		return nil
 	}
-	//func CreateZeroUser(logger log.Logger, conf *conf.SystemUser, uc *AuthUserCase) int {
+}
 
+func NewMiddlewares(logger log.Logger, keyfunc jwtv5.Keyfunc) []middleware.Middleware {
+	return []middleware.Middleware{
+		recovery.Recovery(),
+		logging.Server(logger),
+
+		selector.Server(jwt.Server(
+			keyfunc,
+			jwt.WithSigningMethod(jwtv5.SigningMethodRS256), // TODO: 签名算法不要硬编码
+			jwt.WithClaims(func() jwtv5.Claims { return &myjwt.UserClaims{} }),
+		)).Match(func(ctx context.Context, operation string) bool {
+			return operation != "/api.authn.service.v1.Authn/Login"
+		}).Build(),
+
+		validate.ProtoValidate(),
+	}
 }
