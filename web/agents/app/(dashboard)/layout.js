@@ -9,7 +9,7 @@ import {
   GlobalOutlined,
   DollarOutlined,
 } from "@ant-design/icons";
-import { Breadcrumb, Dropdown, Layout, Menu, Spin, theme } from "antd";
+import { Breadcrumb, Dropdown, Layout, Menu, Result, Spin, theme } from "antd";
 import { useRouter } from "next/navigation";
 import { usePathname } from "next/navigation";
 import { Avatar, Space } from "antd";
@@ -83,36 +83,37 @@ export default function DashboardLayout({ children }) {
     //setSelectedKeys(selectedKeys);
     router.push("/" + selectedKeys.join("/"));
   }
-  const userId = useUserId();
   const [err, setErr] = useState();
+  const [jumping, setJumping] = useState(false);
+
   useEffect(() => {
     if (!error) {
       return;
     }
     setErr(error);
-    if (error.code == 401 || error.message == "Unauthorized") {
-      router.push("/login");
+    if (error.isUnauthorized()) {
+      setJumping(true);
+      setTimeout(() => router.push("/login"), 1000);
     }
   }, [error]);
 
-  const {
-    token: { colorBgContainer, borderRadiusLG },
-  } = theme.useToken();
-
   // getUser
   if (isLoading) {
-    return <Spin fullscreen />;
+    return <Spin fullscreen tip="正在加载用户信息" />;
   }
 
+  if (jumping) {
+    return <Spin fullscreen tip="未登录/登陆失效 正在跳转至登陆界面" />;
+  }
   // getUser
   if (err) {
-    return JSON.stringify(err);
-    const msg = error.toString();
-    console.log(msg);
-    const data = JSON.parse(msg);
-    console.log(data);
-    //router.push("/login"); // temp
-    return;
+    return (
+      <Result
+        status={"error"}
+        title={"获取用户信息失败"}
+        subTitle={JSON.stringify(err)}
+      />
+    );
   }
 
   function itemRender(currentRoute, params, items, paths) {
@@ -126,37 +127,44 @@ export default function DashboardLayout({ children }) {
   }
 
   return (
-    <Layout>
-      <Header style={{ display: "flex", alignItems: "center" }}>
-        <div className="demo-logo" />
-        {/* <Title
-          level={3}
-          style={{
-            margin: 0,
-            color: "white",
-            lineHeight: "inherit", // 继承 Header 的高度
-            paddingLeft: 16,
-          }}
-        >
-          代理系统后台
-        </Title> */}
+    <Layout style={{ minHeight: "100vh" }}>
+      <Header style={{ display: "flex", alignItems: "center", height: "48px" }}>
+        <div className="demo-logo">
+          <Space direction="vertical" align="center">
+            <span
+              style={{
+                color: "white",
+                fontSize: "14px",
+                fontWeight: "500",
+                userSelect: "none",
+              }}
+            >
+              AGENTS
+            </span>
+          </Space>
+        </div>
+
         <UserMenu>
           {user ? (
-            <Avatar style={{ marginLeft: "auto", backgroundColor: "#87d068" }}>
-              {user.user.username[0].toUpperCase()}
+            <Avatar
+              style={{
+                marginLeft: "auto",
+                backgroundColor: "#87d068",
+                userSelect: "none",
+              }}
+            >
+              {user.user?.username[0].toUpperCase()}
             </Avatar>
           ) : (
-            <Avatar icon={<UserOutlined />} style={{ marginLeft: "auto" }} />
+            <Avatar
+              icon={<UserOutlined />}
+              style={{ marginLeft: "auto", userSelect: "none" }}
+            />
           )}
         </UserMenu>
       </Header>
       <Layout>
-        <Sider
-          width={200}
-          style={{ background: colorBgContainer }}
-          breakpoint="lg"
-          collapsedWidth="0"
-        >
+        <Sider width={200} breakpoint="lg" collapsedWidth="0">
           <Menu
             mode="inline"
             defaultSelectedKeys={["dashboard"]}
@@ -180,11 +188,11 @@ export default function DashboardLayout({ children }) {
           />
           <Content
             style={{
-              padding: 24,
+              //padding: 24,
               margin: 0,
-              minHeight: 280,
-              background: colorBgContainer,
-              borderRadius: borderRadiusLG,
+              //minHeight: 280,
+              // background: colorBgContainer,
+              //borderRadius: borderRadiusLG,
             }}
           >
             <UserContext.Provider value={user?.user}>

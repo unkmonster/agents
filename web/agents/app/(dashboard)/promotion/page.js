@@ -15,7 +15,7 @@ export default function Main() {
 
   useEffect(() => {
     if (!userId) {
-      router.push("/login");
+      //router.push("/login");
       return;
     }
 
@@ -114,7 +114,7 @@ export default function Main() {
         columns={columns}
         dataSource={dataSource}
         loading={commListRes.isLoading || userRes.isLoading}
-        size="middle"
+        size="small"
       />
     </Card>
   );

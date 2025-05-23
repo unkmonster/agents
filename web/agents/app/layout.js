@@ -1,6 +1,7 @@
 import { AntdRegistry } from "@ant-design/nextjs-registry";
-import "./globals.css";
+//import "./globals.css";
 import "@ant-design/v5-patch-for-react-19";
+import { App, ConfigProvider, theme } from "antd";
 
 export const metadata = {
   title: "Create Next App",
@@ -10,8 +11,20 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html>
-      <body>
-        <AntdRegistry>{children}</AntdRegistry>
+      <body style={{ margin: 0 }}>
+        <AntdRegistry>
+          <ConfigProvider
+            theme={{
+              // 1. 单独使用暗色算法
+              algorithm: [theme.darkAlgorithm, theme.compactAlgorithm],
+
+              // 2. 组合使用暗色算法与紧凑算法
+              // algorithm: [theme.darkAlgorithm, theme.compactAlgorithm],
+            }}
+          >
+            <App>{children}</App>
+          </ConfigProvider>
+        </AntdRegistry>
       </body>
     </html>
   );

@@ -18,6 +18,7 @@ import {
   Spin,
   Space,
   Dropdown,
+  Empty,
 } from "antd";
 import { DownOutlined, SmileOutlined } from "@ant-design/icons";
 
@@ -60,8 +61,9 @@ function SevenDaysRechargeChart() {
 
     setDataSource([...registerDs, ...rechargeDs]);
   }, [data]);
+
   if (error) {
-    return error.toString();
+    return JSON.stringify(error);
   }
 
   const config = {
@@ -119,7 +121,7 @@ function SevenDaysRechargeChart() {
         </Dropdown>
       }
     >
-      <Line {...config} />
+      {!dataSource ? <Empty /> : <Line {...config} />}
     </Card>
   );
 }
@@ -134,7 +136,7 @@ function StatCard({ title, value, prefix, actions }) {
 
 export default function Main() {
   const commRes = useTotalCommission();
-  const tcRes = useTodayCommission();
+  const todayCommRes = useTodayCommission();
 
   return (
     <Space direction="vertical" size={"middle"} style={{ width: "100%" }}>
@@ -146,35 +148,41 @@ export default function Main() {
         ]}
       >
         <Col xs={24} sm={12} md={8} xl={6}>
-          <Spin spinning={tcRes.isLoading}>
+          <Spin spinning={todayCommRes.isLoading}>
             <StatCard
               title={"今日注册"}
               value={
-                tcRes.data &&
+                todayCommRes.data &&
                 parseInt(
-                  tcRes.data?.commissions[0]?.directRegistrationCount || 0
+                  todayCommRes.data?.commissions[0]?.directRegistrationCount ||
+                    0
                 ) +
                   parseInt(
-                    tcRes.data?.commissions[0]?.indirectRegistrationCount || 0
+                    todayCommRes.data?.commissions[0]
+                      ?.indirectRegistrationCount || 0
                   )
               }
-              loading={tcRes.isLoading}
+              loading={todayCommRes.isLoading}
             />
           </Spin>
         </Col>
 
         <Col xs={24} sm={12} md={8} xl={6}>
-          <Spin spinning={tcRes.isLoading}>
+          <Spin spinning={todayCommRes.isLoading}>
             <StatCard
               title={"今日充值"}
               value={
-                tcRes.data &&
-                (parseInt(tcRes.data.commissions[0].directRechargeAmount) +
-                  parseInt(tcRes.data.commissions[0].indirectRechargeAmount)) /
+                todayCommRes.data &&
+                (parseInt(
+                  todayCommRes.data.commissions[0].directRechargeAmount
+                ) +
+                  parseInt(
+                    todayCommRes.data.commissions[0].indirectRechargeAmount
+                  )) /
                   100
               }
               prefix={"￥"}
-              loading={tcRes.isLoading}
+              loading={todayCommRes.isLoading}
             />
           </Spin>
         </Col>

@@ -1,7 +1,16 @@
 "use client";
 import { myfetch, useToken, useUserId } from "@/lib/session";
-import { Button, Card, Modal, Space, Table } from "antd";
-import { useState } from "react";
+import {
+  Alert,
+  Button,
+  Card,
+  Modal,
+  notification,
+  Result,
+  Space,
+  Table,
+} from "antd";
+import { createContext, useState } from "react";
 import { Input } from "antd";
 import useSWR from "swr";
 
@@ -55,102 +64,115 @@ function DomainsTable({ domains, deleteDomain }) {
         id: domain.id,
         domain: domain.domain,
       }))}
-      size="middle"
+      size="small"
     />
   );
 }
 
+const Context = createContext({ name: "Default" });
+
 export default function Main() {
+  const [api, contextHolder] = notification.useNotification();
+
   const userId = useUserId();
-  const token = useToken();
-  const [err, setErr] = useState();
   const [showModal, setShowModal] = useState(false);
   const [domain, setDomain] = useState("");
   const [confirmLoading, setConfirmLoading] = useState(false);
-
-  const createDomain = async () => {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE}/v1/users/${userId}/domains`,
-      {
-        method: "POST",
-        headers: {
-          "content-type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          domain,
-        }),
-      }
-    );
-    if (!res.ok) {
-      setErr(await res.text());
-    }
-  };
-
-  const deleteDomain = async (domain) => {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE}/v1/domains/${domain}`,
-      {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-    if (!res.ok) {
-      setErr(await res.text());
-      return;
-    }
-    mutate();
-  };
 
   const { data, isLoading, error, mutate } = useSWR(
     `/v1/users/${userId}/domains`,
     myfetch
   );
 
-  return (
-    <>
-      <Modal
-        title="添加域名"
-        open={showModal}
-        onCancel={() => setShowModal(false)}
-        onOk={() => {
-          setConfirmLoading(true);
-          createDomain();
-          setConfirmLoading(false);
-          setShowModal(false);
-          mutate();
-        }}
-        confirmLoading={confirmLoading}
-      >
-        <Input
-          placeholder="输入域名"
-          value={domain}
-          onChange={(e) => {
-            setDomain(e.target.value);
-          }}
-        />
-      </Modal>
+  const createDomain = async () => {
+    try {
+      await myfetch(`/v1/users/${userId}/domains`, {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify({
+          domain,
+        }),
+      });
+      mutate();
+    } catch (err) {
+      api.info({
+        message: "创建失败",
+        description: JSON.stringify(err),
+        placement: "topRight",
+      });
+    }
+  };
 
-      <Card
-        title="域名管理"
-        extra={
-          <Button type="primary" onClick={() => setShowModal(true)}>
-            添加
-          </Button>
-        }
-        loading={isLoading}
-      >
-        {error ? (
-          JSON.stringify(error)
-        ) : (
-          <DomainsTable
-            domains={data?.domains || []}
-            deleteDomain={deleteDomain}
+  const deleteDomain = async (domain) => {
+    try {
+      const res = await myfetch(`/v1/domains/${domain}`, {
+        method: "DELETE",
+      });
+      if (!res.ok) {
+        setErr(await res.text());
+        return;
+      }
+      mutate();
+    } catch (err) {
+      api.info({
+        message: "删除失败",
+        description: JSON.stringify(err),
+        placement: "topRight",
+      });
+    }
+  };
+
+  return (
+    <Context.Provider value={null}>
+      <>
+        {contextHolder}
+        <Modal
+          title="添加域名"
+          open={showModal}
+          onCancel={() => setShowModal(false)}
+          onOk={() => {
+            setConfirmLoading(true);
+            createDomain();
+            setConfirmLoading(false);
+            setShowModal(false);
+            mutate();
+          }}
+          confirmLoading={confirmLoading}
+        >
+          <Input
+            placeholder="输入域名"
+            value={domain}
+            onChange={(e) => {
+              setDomain(e.target.value);
+            }}
           />
-        )}
-      </Card>
-    </>
+        </Modal>
+
+        <Card
+          title="域名管理"
+          extra={
+            <Button type="primary" onClick={() => setShowModal(true)}>
+              添加
+            </Button>
+          }
+          loading={isLoading}
+        >
+          {error ? (
+            <Result
+              status={"error"}
+              title={"加载失败"}
+              subTitle={JSON.stringify(error)}
+            />
+          ) : (
+            <DomainsTable
+              domains={data?.domains || []}
+              deleteDomain={deleteDomain}
+            />
+          )}
+        </Card>
+      </>
+    </Context.Provider>
   );
 }

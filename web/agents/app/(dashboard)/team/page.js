@@ -7,16 +7,19 @@ import {
   Card,
   Form,
   Input,
+  message,
   Modal,
+  Result,
   Space,
   Spin,
   Table,
 } from "antd";
+import useMessage from "antd/es/message/useMessage";
 import { useRouter } from "next/navigation";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import useSWR from "swr";
 
-function CreateChildModal({ show, onClose }) {
+function CreateChildModal({ show, onClose, messageApi }) {
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState();
   const [form] = Form.useForm();
@@ -45,8 +48,12 @@ function CreateChildModal({ show, onClose }) {
     try {
       await createChild(values);
       onClose();
+      messageApi.open({
+        type: "success",
+        content: "开户成功",
+      });
     } catch (err) {
-      if (err.name == "AppError" && err.code == 401) {
+      if (err.code == 401) {
         logOut();
         router.push("/login");
       }
@@ -118,6 +125,10 @@ export default function Main() {
       dataIndex: "level",
     },
     {
+      title: "分成比例",
+      dataIndex: "sharePercent",
+    },
+    {
       title: "注册日期",
       dataIndex: "created_at",
     },
@@ -127,16 +138,24 @@ export default function Main() {
   const childrenRes = useSWR(`/v1/users/${user?.id}/children`, myfetch);
   const router = useRouter();
   const [showModal, setShowModal] = useState(false);
+  const [messageApi, messageHolder] = useMessage();
+  useEffect(() => {
+    if (childrenRes.error && childrenRes.error.isUnauthorized()) {
+      logOut();
+      router.push("/login");
+    }
+  }, [childrenRes.error]);
 
-  if (!user) {
-    router.push("/login");
-    return <Spin fullscreen />;
-  }
   return (
     <>
-      <CreateChildModal show={showModal} onClose={() => setShowModal(false)} />
+      {messageHolder}
+      <CreateChildModal
+        show={showModal}
+        onClose={() => setShowModal(false)}
+        messageApi={messageApi}
+      />
+
       <Card
-        loading={childrenRes.isLoading}
         title="下级管理"
         extra={
           <Button type="primary" onClick={() => setShowModal(true)}>
@@ -145,9 +164,11 @@ export default function Main() {
         }
       >
         {childrenRes.error ? (
-          childrenRes.error.toString()
+          <Result title={JSON.stringify(childrenRes.error)} />
         ) : (
           <Table
+            loading={childrenRes.isLoading}
+            size="small"
             columns={columns}
             dataSource={
               childrenRes.data &&
@@ -157,6 +178,7 @@ export default function Main() {
                 username: user.username,
                 created_at: user.createdAt,
                 level: user.level,
+                sharePercent: user.sharePercent,
               }))
             }
           />

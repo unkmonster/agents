@@ -31,7 +31,7 @@ export async function myfetch(path, option) {
   const res = await fetch(process.env.NEXT_PUBLIC_API_BASE + path, option);
   const data = await res.json();
   if (!res.ok) {
-    throw new AppError(data);
+    throw new AppError(data, res.status);
   }
   return data;
 }

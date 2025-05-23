@@ -13,11 +13,12 @@ export class TokenInvalidError extends Error {
 }
 
 export class AppError extends Error {
-  constructor(data) {
+  constructor(data, status) {
     super(data.message);
     this.name = "AppError";
     this.reason = data.reason;
     this.code = data.code;
+    this.status = status;
     this.metadata = data.metadata;
   }
 
@@ -26,6 +27,11 @@ export class AppError extends Error {
       message: this.message,
       reason: this.reason,
       code: this.code,
+      status: this.status,
     };
+  }
+
+  isUnauthorized() {
+    return this.code == 401 || this.status == 401;
   }
 }
