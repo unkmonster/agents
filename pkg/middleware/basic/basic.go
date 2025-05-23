@@ -1,4 +1,4 @@
-package middleware
+package basic
 
 import (
 	"github.com/go-kratos/kratos/contrib/middleware/validate/v2"
@@ -14,16 +14,24 @@ type JwtConfig struct {
 	Method    string
 }
 
-// ServerBasic 返回基础中间件列表
+// Server 返回基础中间件列表
 // 1. recovery
-// 2. logging
-// 3. jwt
+// 2. tracing
+// 3. logging
 // 4. validate
-func ServerBasic(logger log.Logger) kratosMiddleware.Middleware {
+func Server(logger log.Logger) kratosMiddleware.Middleware {
 	return kratosMiddleware.Chain(
 		recovery.Recovery(),
 		tracing.Server(),
 		logging.Server(logger),
 		validate.ProtoValidate(),
+	)
+}
+
+func Client(logger log.Logger) kratosMiddleware.Middleware {
+	return kratosMiddleware.Chain(
+		recovery.Recovery(),
+		tracing.Client(),
+		logging.Client(logger),
 	)
 }

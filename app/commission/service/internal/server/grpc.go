@@ -4,19 +4,19 @@ import (
 	"agents/app/commission/service/internal/conf"
 	"agents/app/commission/service/internal/service"
 
-	"github.com/go-kratos/kratos/v2/log"
-	"github.com/go-kratos/kratos/v2/middleware"
-	"github.com/go-kratos/kratos/v2/middleware/recovery"
-	"github.com/go-kratos/kratos/v2/transport/grpc"
-
 	commv1 "agents/api/commission/service/v1"
+
+	"agents/pkg/middleware/basic"
+
+	"github.com/go-kratos/kratos/v2/log"
+	"github.com/go-kratos/kratos/v2/transport/grpc"
 )
 
 // NewGRPCServer new a gRPC server.
-func NewGRPCServer(c *conf.Server, logger log.Logger, comm *service.CommissionService, wallet *service.WalletService, basic middleware.Middleware) *grpc.Server {
+func NewGRPCServer(c *conf.Server, logger log.Logger, comm *service.CommissionService, wallet *service.WalletService) *grpc.Server {
 	var opts = []grpc.ServerOption{
 		grpc.Middleware(
-			recovery.Recovery(),
+			basic.Server(logger),
 		),
 	}
 	if c.Grpc.Network != "" {
@@ -29,12 +29,7 @@ func NewGRPCServer(c *conf.Server, logger log.Logger, comm *service.CommissionSe
 		opts = append(opts, grpc.Timeout(c.Grpc.Timeout.AsDuration()))
 	}
 
-	opts = append(opts, grpc.Middleware(
-		basic,
-	))
-
 	srv := grpc.NewServer(opts...)
-
 	commv1.RegisterCommissionServer(srv, comm)
 	commv1.RegisterWalletServer(srv, wallet)
 	return srv

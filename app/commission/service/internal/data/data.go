@@ -2,14 +2,12 @@ package data
 
 import (
 	"agents/app/commission/service/internal/conf"
+	"agents/pkg/client"
 	"agents/pkg/migration"
-	"context"
 
 	"github.com/go-kratos/kratos/contrib/registry/consul/v2"
 	"github.com/go-kratos/kratos/v2/log"
-	"github.com/go-kratos/kratos/v2/middleware/recovery"
 	"github.com/go-kratos/kratos/v2/registry"
-	"github.com/go-kratos/kratos/v2/transport/grpc"
 	"github.com/golang-migrate/migrate/v4"
 	"github.com/google/wire"
 	"github.com/hashicorp/consul/api"
@@ -70,16 +68,5 @@ func NewDiscovery(registry *conf.Registry) registry.Discovery {
 }
 
 func NewUserServiceClient(dis registry.Discovery, logger log.Logger) userv1.UserClient {
-	conn, err := grpc.DialInsecure(
-		context.Background(),
-		grpc.WithEndpoint("discovery:///agents.user.service"),
-		grpc.WithDiscovery(dis),
-		grpc.WithMiddleware(
-			recovery.Recovery(),
-		),
-	)
-	if err != nil {
-		log.NewHelper(logger).Fatalf(err.Error())
-	}
-	return userv1.NewUserClient(conn)
+	return client.NewUserServiceClient(dis, logger)
 }

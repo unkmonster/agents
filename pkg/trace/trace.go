@@ -11,7 +11,7 @@ import (
 	semconv "go.opentelemetry.io/otel/semconv/v1.4.0"
 )
 
-func SetTracerProvider(ctx context.Context, appName string) error {
+func InitTracerProvider(ctx context.Context, appName string) error {
 	// Create the Jaeger exporter
 	exp, err := otlptracegrpc.New(ctx, otlptracegrpc.WithEndpoint("jaeger:4317"), otlptracegrpc.WithInsecure())
 	if err != nil {

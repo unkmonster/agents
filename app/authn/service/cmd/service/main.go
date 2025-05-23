@@ -79,7 +79,7 @@ func main() {
 		panic(err)
 	}
 
-	if err := trace.SetTracerProvider(context.Background(), Name); err != nil {
+	if err := trace.InitTracerProvider(context.Background(), Name); err != nil {
 		panic(err)
 	}
 
