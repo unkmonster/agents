@@ -46,21 +46,21 @@ type UserCredentialRepo interface {
 	GetByUserId(ctx context.Context, userId string) (*UserCredential, error)
 }
 
-type AuthUserCase struct {
-	cr  UserCredentialRepo
-	ur  UserRepo
-	log *log.Helper
+type AuthUseCase struct {
+	credential UserCredentialRepo
+	user       UserRepo
+	log        *log.Helper
 
 	tokenDuration time.Duration
 
 	gateway GatewayRepo
 }
 
-func NewAuthUserCase(repo UserCredentialRepo, logger log.Logger, ur UserRepo, auth *conf.Auth, gateway GatewayRepo) *AuthUserCase {
-	return &AuthUserCase{
-		cr:  repo,
-		log: log.NewHelper(logger),
-		ur:  ur,
+func NewAuthUserCase(repo UserCredentialRepo, logger log.Logger, ur UserRepo, auth *conf.Auth, gateway GatewayRepo) *AuthUseCase {
+	return &AuthUseCase{
+		credential: repo,
+		log:        log.NewHelper(logger),
+		user:       ur,
 
 		tokenDuration: auth.TokenDuration.AsDuration(),
 		gateway:       gateway,
@@ -82,60 +82,78 @@ func parseRSAPrivateKeyFromPEM(pemData []byte) (*rsa.PrivateKey, error) {
 	return privKey, nil
 }
 
-func (uc *AuthUserCase) RegisterZeroUser(ctx context.Context, username, password string) (*User, error) {
-	user, err := uc.ur.Create(ctx, &User{
+// doRegisterUser 做实际注册用户需要的工作，调用用户服务创建用户，保存用户凭据，创建网关消费者...
+func (uc *AuthUseCase) doRegisterUser(ctx context.Context, password string, user *User) (*User, error) {
+	username := user.Username
+
+	// 调用用户服务创建用户
+	uc.log.Infow("msg", "start creating user in user_service", "username", user.Username)
+	user, err := uc.user.Create(ctx, user)
+	if err != nil {
+		uc.log.Errorw("msg", "creating user in user_service failed", "username", username, "reason", err)
+		return nil, err
+	}
+
+	// 创建网关消费者
+	uc.log.Infow("msg", "start creating consumer in gateway", "username", user.Username)
+	consumer, err := uc.gateway.CreateUserConsumer(ctx, user)
+	if err != nil {
+		uc.log.Errorw("msg", "creating consumer in gateway failed", "username", user.Username, "reason", err)
+		return nil, err
+	}
+
+	// 生成一对 RSA 密钥
+	priv, pub, err := encrypt.GenerateRS256KeyPair()
+	if err != nil {
+		uc.log.Errorw("msg", "generation RSA key-pair failed", "username", user.Username, "reason", err)
+		return nil, err
+	}
+
+	// 创建凭据为网关消费者
+	uc.log.Infow("msg", "start creating credential for gateway consumer", "consumer", consumer)
+	jwtKey, err := uc.gateway.CreateConsumerCredential(ctx, consumer, pub)
+	if err != nil {
+		uc.log.Errorw("msg", "creating credential for gateway consumer failed", "username", user.Username, "reason", err)
+		return nil, err
+	}
+
+	// 保存用户凭据
+	h, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	if err != nil {
+		uc.log.Errorw("hash user password failed", "username", user.Username, "reason", err)
+		return nil, err
+	}
+
+	uc.log.Infow("msg", "start saving user credentials", "username", user.Username, "userid", user.Id)
+	_, err = uc.credential.Create(ctx, &UserCredential{
+		Id:             uuid.NewString(),
+		Username:       user.Username,
+		UserId:         user.Id,
+		HashedPassword: string(h),
+		Alg:            "RS256",
+		PublicKey:      &pub,
+		PrivateKey:     &priv,
+		TokenKey:       jwtKey,
+		CreatedAt:      time.Now(),
+	})
+	if err != nil {
+		uc.log.Errorw("msg", "saving user credential failed", "username", user.Username, "reason", err)
+		return nil, err
+	}
+	return user, nil
+}
+
+func (uc *AuthUseCase) RegisterZeroUser(ctx context.Context, username, password string) (*User, error) {
+	return uc.doRegisterUser(ctx, password, &User{
 		Username:     username,
 		Level:        0,
 		SharePercent: 1,
 		ParentId:     nil,
 	})
-	if err != nil {
-		return nil, err
-	}
-	// TODO: rollback
-
-	// hash password
-	h, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
-	if err != nil {
-		return nil, err
-	}
-
-	// 根据签名算法生成 key-pair 或 secret
-	priv, pub, err := encrypt.GenerateRS256KeyPair()
-	if err != nil {
-		return nil, err
-	}
-
-	// 创建网管消费者
-	consumer, err := uc.gateway.CreateUserConsumer(ctx, user)
-	if err != nil {
-		return nil, err
-	}
-
-	jwtKey, err := uc.gateway.EnableJwtPluginForConsumer(ctx, consumer, pub)
-	if err != nil {
-		return nil, err
-	}
-
-	_, err = uc.cr.Create(ctx, &UserCredential{
-		Id:             uuid.NewString(),
-		UserId:         user.Id,
-		Username:       user.Username,
-		HashedPassword: string(h),
-		Alg:            DefaultSigningAlg,
-		PublicKey:      &pub,
-		PrivateKey:     &priv,
-		TokenKey:       jwtKey,
-	})
-	if err != nil {
-		return nil, err
-	}
-
-	return user, nil
 }
 
 // RegisterChildUser 不是注册，用于上级代理创建他的下级
-func (uc *AuthUserCase) RegisterChildUser(ctx context.Context, req *pb.RegisterRequest) (*pb.AuthReply, error) {
+func (uc *AuthUseCase) RegisterChildUser(ctx context.Context, req *pb.RegisterRequest) (*pb.AuthReply, error) {
 	t, _ := mjwt.FromContext(ctx)
 	token, ok := t.(*jwt.UserClaims)
 	if !ok {
@@ -151,48 +169,12 @@ func (uc *AuthUserCase) RegisterChildUser(ctx context.Context, req *pb.RegisterR
 		return nil, pb.ErrorIllegalUserLevel("用户等级不合法: %d", req.Level)
 	}
 
-	user, err := uc.ur.Create(ctx, &User{
+	user, err := uc.doRegisterUser(ctx, req.Password, &User{
 		Username:     req.Username,
 		Nickname:     req.Nickname,
 		ParentId:     &req.ParentId,
 		Level:        req.Level,
 		SharePercent: req.SharePercent,
-	})
-	if err != nil {
-		return nil, err
-	}
-
-	// hash password
-	h, err := bcrypt.GenerateFromPassword([]byte(req.Password), bcrypt.DefaultCost)
-	if err != nil {
-		return nil, err
-	}
-
-	// 根据签名算法生成 key-pair 或 secret
-	priv, pub, err := encrypt.GenerateRS256KeyPair()
-	if err != nil {
-		return nil, err
-	}
-
-	consumer, err := uc.gateway.CreateUserConsumer(ctx, user)
-	if err != nil {
-		return nil, err
-	}
-
-	jwtKey, err := uc.gateway.EnableJwtPluginForConsumer(ctx, consumer, pub)
-	if err != nil {
-		return nil, err
-	}
-
-	_, err = uc.cr.Create(ctx, &UserCredential{
-		Id:             uuid.NewString(),
-		UserId:         user.Id,
-		Username:       user.Username,
-		HashedPassword: string(h),
-		Alg:            DefaultSigningAlg,
-		PublicKey:      &pub,
-		PrivateKey:     &priv,
-		TokenKey:       jwtKey,
 	})
 	if err != nil {
 		return nil, err
@@ -211,8 +193,8 @@ func (uc *AuthUserCase) RegisterChildUser(ctx context.Context, req *pb.RegisterR
 	}, nil
 }
 
-func (uc *AuthUserCase) Login(ctx context.Context, req *pb.LoginRequest) (*pb.AuthReply, error) {
-	credential, err := uc.cr.GetByUsername(ctx, *req.Username)
+func (uc *AuthUseCase) Login(ctx context.Context, req *pb.LoginRequest) (*pb.AuthReply, error) {
+	credential, err := uc.credential.GetByUsername(ctx, *req.Username)
 	if err != nil {
 		return nil, err
 	}
@@ -221,7 +203,7 @@ func (uc *AuthUserCase) Login(ctx context.Context, req *pb.LoginRequest) (*pb.Au
 		return nil, err
 	}
 
-	user, err := uc.ur.GetByUsername(ctx, *req.Username)
+	user, err := uc.user.GetByUsername(ctx, *req.Username)
 	if errors.Is(err, sql.ErrNoRows) {
 		err = pb.ErrorUserNotFount("user %q not fount", *req.Username)
 	}
@@ -253,8 +235,8 @@ func (uc *AuthUserCase) Login(ctx context.Context, req *pb.LoginRequest) (*pb.Au
 	}, nil
 }
 
-func (uc *AuthUserCase) GetUserCredential(ctx context.Context, userId string) (*UserCredential, error) {
-	return uc.cr.GetByUserId(ctx, userId)
+func (uc *AuthUseCase) GetUserCredential(ctx context.Context, userId string) (*UserCredential, error) {
+	return uc.credential.GetByUserId(ctx, userId)
 }
 
 //func (uc *AuthUserCase) GetZeroUser

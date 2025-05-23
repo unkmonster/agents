@@ -1,10 +1,12 @@
 package main
 
 import (
+	"context"
 	"flag"
 	"os"
 
 	"agents/app/order/service/internal/conf"
+	"agents/pkg/trace"
 
 	"github.com/go-kratos/kratos/v2"
 	"github.com/go-kratos/kratos/v2/config"
@@ -73,6 +75,10 @@ func main() {
 
 	var bc conf.Bootstrap
 	if err := c.Scan(&bc); err != nil {
+		panic(err)
+	}
+
+	if err := trace.InitTracerProvider(context.TODO(), Name); err != nil {
 		panic(err)
 	}
 

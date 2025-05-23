@@ -2,13 +2,11 @@ package data
 
 import (
 	"agents/app/authn/service/internal/conf"
+	"agents/pkg/client"
 	"agents/pkg/migration"
-	"context"
 
 	"github.com/go-kratos/kratos/v2/log"
-	"github.com/go-kratos/kratos/v2/middleware/recovery"
 	"github.com/go-kratos/kratos/v2/registry"
-	"github.com/go-kratos/kratos/v2/transport/grpc"
 	"github.com/go-resty/resty/v2"
 	"github.com/google/wire"
 	"github.com/jmoiron/sqlx"
@@ -28,7 +26,7 @@ var ProviderSet = wire.NewSet(
 	NewData,
 	NewSqlxClient,
 	NewDiscovery,
-	NewUserServiceClient,
+	client.NewUserServiceClient,
 	NewUserCredentialRepo,
 	NewUserRepo,
 	NewGatewayRepo,
@@ -85,19 +83,4 @@ func NewDiscovery(registry *conf.Registry) registry.Discovery {
 	dis := consul.New(client)
 
 	return dis
-}
-
-func NewUserServiceClient(dis registry.Discovery) userv1.UserClient {
-	conn, err := grpc.DialInsecure(
-		context.Background(),
-		grpc.WithEndpoint("discovery:///agents.user.service"),
-		grpc.WithDiscovery(dis),
-		grpc.WithMiddleware(
-			recovery.Recovery(),
-		),
-	)
-	if err != nil {
-		panic(err)
-	}
-	return userv1.NewUserClient(conn)
 }
