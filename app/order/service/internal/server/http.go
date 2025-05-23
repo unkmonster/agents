@@ -3,20 +3,19 @@ package server
 import (
 	"agents/app/order/service/internal/conf"
 	"agents/app/order/service/internal/service"
+	"agents/pkg/middleware/basic"
 
 	"github.com/go-kratos/kratos/v2/log"
-	"github.com/go-kratos/kratos/v2/middleware"
-	"github.com/go-kratos/kratos/v2/middleware/recovery"
 	"github.com/go-kratos/kratos/v2/transport/http"
 
 	orderv1 "agents/api/order/service/v1"
 )
 
 // NewHTTPServer new an HTTP server.
-func NewHTTPServer(c *conf.Server, logger log.Logger, order *service.OrderService, basic middleware.Middleware) *http.Server {
+func NewHTTPServer(c *conf.Server, logger log.Logger, order *service.OrderService) *http.Server {
 	var opts = []http.ServerOption{
 		http.Middleware(
-			recovery.Recovery(),
+			basic.Server(logger),
 		),
 	}
 	if c.Http.Network != "" {
@@ -29,12 +28,7 @@ func NewHTTPServer(c *conf.Server, logger log.Logger, order *service.OrderServic
 		opts = append(opts, http.Timeout(c.Http.Timeout.AsDuration()))
 	}
 
-	opts = append(opts, http.Middleware(
-		basic,
-	))
-
 	srv := http.NewServer(opts...)
-
 	orderv1.RegisterOrderHTTPServer(srv, order)
 	return srv
 }

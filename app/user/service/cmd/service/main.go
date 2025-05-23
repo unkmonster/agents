@@ -78,7 +78,7 @@ func main() {
 		panic(err)
 	}
 
-	trace.SetTracerProvider(context.Background(), Name)
+	trace.InitTracerProvider(context.Background(), Name)
 	app, cleanup, err := wireApp(bc.Server, bc.Data, logger, bc.Registry, bc.Auth)
 	if err != nil {
 		panic(err)
