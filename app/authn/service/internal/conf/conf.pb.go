@@ -212,10 +212,7 @@ func (x *Data) GetRedis() *Data_Redis {
 
 type Auth struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Secret        string                 `protobuf:"bytes,3,opt,name=secret,proto3" json:"secret,omitempty"`
-	PublicKey     string                 `protobuf:"bytes,4,opt,name=public_key,json=publicKey,proto3" json:"public_key,omitempty"`
 	TokenDuration *durationpb.Duration   `protobuf:"bytes,5,opt,name=token_duration,json=tokenDuration,proto3" json:"token_duration,omitempty"`
-	SigningMethod string                 `protobuf:"bytes,6,opt,name=signing_method,json=signingMethod,proto3" json:"signing_method,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -250,32 +247,11 @@ func (*Auth) Descriptor() ([]byte, []int) {
 	return file_app_authn_service_internal_conf_conf_proto_rawDescGZIP(), []int{3}
 }
 
-func (x *Auth) GetSecret() string {
-	if x != nil {
-		return x.Secret
-	}
-	return ""
-}
-
-func (x *Auth) GetPublicKey() string {
-	if x != nil {
-		return x.PublicKey
-	}
-	return ""
-}
-
 func (x *Auth) GetTokenDuration() *durationpb.Duration {
 	if x != nil {
 		return x.TokenDuration
 	}
 	return nil
-}
-
-func (x *Auth) GetSigningMethod() string {
-	if x != nil {
-		return x.SigningMethod
-	}
-	return ""
 }
 
 type Registry struct {
@@ -762,13 +738,9 @@ const file_app_authn_service_internal_conf_conf_proto_rawDesc = "" +
 	"\anetwork\x18\x01 \x01(\tR\anetwork\x12\x12\n" +
 	"\x04addr\x18\x02 \x01(\tR\x04addr\x12<\n" +
 	"\fread_timeout\x18\x03 \x01(\v2\x19.google.protobuf.DurationR\vreadTimeout\x12>\n" +
-	"\rwrite_timeout\x18\x04 \x01(\v2\x19.google.protobuf.DurationR\fwriteTimeout\"\xb2\x01\n" +
-	"\x04Auth\x12\x16\n" +
-	"\x06secret\x18\x03 \x01(\tR\x06secret\x12\x1d\n" +
-	"\n" +
-	"public_key\x18\x04 \x01(\tR\tpublicKey\x12@\n" +
-	"\x0etoken_duration\x18\x05 \x01(\v2\x19.google.protobuf.DurationR\rtokenDuration\x12%\n" +
-	"\x0esigning_method\x18\x06 \x01(\tR\rsigningMethodJ\x04\b\x01\x10\x02J\x04\b\x02\x10\x03\"{\n" +
+	"\rwrite_timeout\x18\x04 \x01(\v2\x19.google.protobuf.DurationR\fwriteTimeout\"f\n" +
+	"\x04Auth\x12@\n" +
+	"\x0etoken_duration\x18\x05 \x01(\v2\x19.google.protobuf.DurationR\rtokenDurationJ\x04\b\x01\x10\x02J\x04\b\x02\x10\x03J\x04\b\x03\x10\x04J\x04\b\x04\x10\x05J\x04\b\x06\x10\a\"{\n" +
 	"\bRegistry\x123\n" +
 	"\x06consul\x18\x01 \x01(\v2\x1b.kratos.api.Registry.ConsulR\x06consul\x1a:\n" +
 	"\x06Consul\x12\x18\n" +

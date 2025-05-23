@@ -24,7 +24,7 @@ import (
 )
 
 // ProviderSet is server providers.
-var ProviderSet = wire.NewSet(NewGRPCServer, NewHTTPServer, NewRegistrar, NewJwtKeyFunc, NewBeforeStart, NewMiddlewares)
+var ProviderSet = wire.NewSet(NewGRPCServer, NewHTTPServer, NewRegistrar, NewJwtServerMiddleware, NewBeforeStart, NewMiddlewares)
 
 func NewRegistrar(conf *conf.Registry) registry.Registrar {
 	c := consulAPI.DefaultConfig()
@@ -38,18 +38,26 @@ func NewRegistrar(conf *conf.Registry) registry.Registrar {
 	return r
 }
 
-func NewJwtKeyFunc(auth *biz.AuthUseCase) jwtv5.Keyfunc {
-	return func(token *jwtv5.Token) (interface{}, error) {
-		sub, err := token.Claims.GetSubject()
-		if err != nil {
-			return nil, err
-		}
+func NewJwtServerMiddleware(auth *biz.AuthUseCase) middleware.Middleware {
+	return func(handler middleware.Handler) middleware.Handler {
+		return func(ctx context.Context, req any) (any, error) {
+			return jwt.Server(
+				func(token *jwtv5.Token) (interface{}, error) {
+					sub, err := token.Claims.GetSubject()
+					if err != nil {
+						return nil, err
+					}
 
-		credential, err := auth.GetUserCredential(context.Background(), sub)
-		if err != nil {
-			return nil, err
+					credential, err := auth.GetUserCredential(ctx, sub)
+					if err != nil {
+						return nil, err
+					}
+					return jwtv5.ParseRSAPublicKeyFromPEM([]byte(*credential.PublicKey))
+				},
+				jwt.WithSigningMethod(jwtv5.SigningMethodRS256), // TODO: 签名算法不要硬编码
+				jwt.WithClaims(func() jwtv5.Claims { return &myjwt.UserClaims{} }),
+			)(handler)(ctx, req) // 天才
 		}
-		return jwtv5.ParseRSAPublicKeyFromPEM([]byte(*credential.PublicKey))
 	}
 }
 
@@ -69,17 +77,13 @@ func NewBeforeStart(logger log.Logger, authn *biz.AuthUseCase, conf *conf.System
 	}
 }
 
-func NewMiddlewares(logger log.Logger, keyfunc jwtv5.Keyfunc) []middleware.Middleware {
+func NewMiddlewares(logger log.Logger, jwt middleware.Middleware) []middleware.Middleware {
 	return []middleware.Middleware{
 		recovery.Recovery(),
 		tracing.Server(),
 		logging.Server(logger),
 
-		selector.Server(jwt.Server(
-			keyfunc,
-			jwt.WithSigningMethod(jwtv5.SigningMethodRS256), // TODO: 签名算法不要硬编码
-			jwt.WithClaims(func() jwtv5.Claims { return &myjwt.UserClaims{} }),
-		)).Match(func(ctx context.Context, operation string) bool {
+		selector.Server(jwt).Match(func(ctx context.Context, operation string) bool {
 			return operation != "/api.authn.service.v1.Authn/Login"
 		}).Build(),
 

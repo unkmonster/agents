@@ -79,9 +79,10 @@ services:
     depends_on:
       mysql:
         condition: service_healthy
-        restart: true
       consul:
         condition: service_healthy
+      user:
+        condition: service_started
     # ports:
     #   - 8001:8000
     #   - 9001:9000

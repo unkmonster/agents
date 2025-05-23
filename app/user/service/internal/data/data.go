@@ -9,8 +9,12 @@ import (
 	"github.com/golang-migrate/migrate/v4"
 	"github.com/google/wire"
 	"github.com/jmoiron/sqlx"
+	"github.com/uptrace/opentelemetry-go-extra/otelsql"
+	"github.com/uptrace/opentelemetry-go-extra/otelsqlx"
 
 	_ "github.com/golang-migrate/migrate/v4/source/file"
+
+	semconv "go.opentelemetry.io/otel/semconv/v1.10.0"
 )
 
 // ProviderSet is data providers.
@@ -25,9 +29,11 @@ type Data struct {
 func NewSqlxClient(c *conf.Data, logger log.Logger) *sqlx.DB {
 	log := log.NewHelper(logger)
 
-	db, err := sqlx.Connect(c.Database.Driver, c.Database.Source)
+	db, err := otelsqlx.Open(c.Database.Driver, c.Database.Source,
+		otelsql.WithAttributes(semconv.DBSystemMySQL),
+	)
 	if err != nil {
-		log.Fatalf("failed to connect database: %v", err)
+		log.Fatalf("failed to open database: %v", err)
 	}
 
 	m := migration.New(logger, db.DB, c.Database.Driver, c.Database.MigrationSource)

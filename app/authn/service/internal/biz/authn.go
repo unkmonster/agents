@@ -2,12 +2,10 @@ package biz
 
 import (
 	"context"
-	"crypto/rsa"
-	"crypto/x509"
 	"database/sql"
-	"encoding/pem"
 	"errors"
 	"fmt"
+	"runtime"
 	"time"
 
 	pb "agents/api/authn/service/v1"
@@ -20,6 +18,8 @@ import (
 	mjwt "github.com/go-kratos/kratos/v2/middleware/auth/jwt"
 	jwtv5 "github.com/golang-jwt/jwt/v5"
 	"github.com/google/uuid"
+	"github.com/panjf2000/ants/v2"
+	"go.opentelemetry.io/otel/trace"
 	"golang.org/x/crypto/bcrypt"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
@@ -54,44 +54,42 @@ type AuthUseCase struct {
 	tokenDuration time.Duration
 
 	gateway GatewayRepo
+
+	pool *ants.Pool
 }
 
-func NewAuthUserCase(repo UserCredentialRepo, logger log.Logger, ur UserRepo, auth *conf.Auth, gateway GatewayRepo) *AuthUseCase {
+func NewAuthUserCase(logger log.Logger, auth *conf.Auth, credential UserCredentialRepo, user UserRepo, gateway GatewayRepo) *AuthUseCase {
+	log := log.NewHelper(log.With(logger, "module", "usecase/authn"))
+	pool, err := ants.NewPool(runtime.NumCPU() * 5)
+	if err != nil {
+		log.Fatalf("creating routine pool failed: %v", err)
+	}
+
 	return &AuthUseCase{
-		credential: repo,
-		log:        log.NewHelper(logger),
-		user:       ur,
+		credential: credential,
+		log:        log,
+		user:       user,
 
 		tokenDuration: auth.TokenDuration.AsDuration(),
 		gateway:       gateway,
+		pool:          pool,
 	}
-}
-
-// 解析 PEM 格式的 RSA 私钥
-func parseRSAPrivateKeyFromPEM(pemData []byte) (*rsa.PrivateKey, error) {
-	block, _ := pem.Decode(pemData)
-	if block == nil || block.Type != "RSA PRIVATE KEY" {
-		return nil, fmt.Errorf("failed to decode PEM block containing RSA private key")
-	}
-
-	privKey, err := x509.ParsePKCS1PrivateKey(block.Bytes)
-	if err != nil {
-		return nil, err
-	}
-
-	return privKey, nil
 }
 
 // doRegisterUser 做实际注册用户需要的工作，调用用户服务创建用户，保存用户凭据，创建网关消费者...
 func (uc *AuthUseCase) doRegisterUser(ctx context.Context, password string, user *User) (*User, error) {
 	username := user.Username
+	span := trace.SpanFromContext(ctx)
+
+	// tr, _ := transport.FromServerContext(ctx)
+	// tracer := tracing.NewTracer(trace.SpanKindServer)
 
 	// 调用用户服务创建用户
 	uc.log.Infow("msg", "start creating user in user_service", "username", user.Username)
 	user, err := uc.user.Create(ctx, user)
 	if err != nil {
 		uc.log.Errorw("msg", "creating user in user_service failed", "username", username, "reason", err)
-		return nil, err
+		return nil, fmt.Errorf("creating_user: %w", err)
 	}
 
 	// 创建网关消费者
@@ -103,7 +101,9 @@ func (uc *AuthUseCase) doRegisterUser(ctx context.Context, password string, user
 	}
 
 	// 生成一对 RSA 密钥
+	span.AddEvent("GenerateRS256KeyPair.Start")
 	priv, pub, err := encrypt.GenerateRS256KeyPair()
+	span.AddEvent("GenerateRS256KeyPair.End")
 	if err != nil {
 		uc.log.Errorw("msg", "generation RSA key-pair failed", "username", user.Username, "reason", err)
 		return nil, err
@@ -118,7 +118,9 @@ func (uc *AuthUseCase) doRegisterUser(ctx context.Context, password string, user
 	}
 
 	// 保存用户凭据
+	span.AddEvent("GenerateFromPassword.Start")
 	h, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	span.AddEvent("GenerateFromPassword.End")
 	if err != nil {
 		uc.log.Errorw("hash user password failed", "username", user.Username, "reason", err)
 		return nil, err
@@ -212,7 +214,7 @@ func (uc *AuthUseCase) Login(ctx context.Context, req *pb.LoginRequest) (*pb.Aut
 	}
 
 	// pem -> *rsa.PrivateKey
-	pk, err := parseRSAPrivateKeyFromPEM([]byte(*credential.PrivateKey))
+	pk, err := jwtv5.ParseRSAPublicKeyFromPEM([]byte(*credential.PrivateKey))
 	if err != nil {
 		return nil, err
 	}

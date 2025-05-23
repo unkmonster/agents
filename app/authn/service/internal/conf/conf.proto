@@ -47,12 +47,9 @@ message Data {
 }
 
 message Auth {
-  reserved 1, 2;
+  reserved 1, 2, 3, 4, 6;
  
-  string secret = 3;
-  string public_key = 4;
   google.protobuf.Duration token_duration = 5;
-  string signing_method = 6;
 }
 
 message Registry {

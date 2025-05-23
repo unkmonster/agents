@@ -5,11 +5,13 @@ import (
 	"agents/pkg/client"
 	"agents/pkg/migration"
 
+	"github.com/dubonzi/otelresty"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/go-kratos/kratos/v2/registry"
 	"github.com/go-resty/resty/v2"
 	"github.com/google/wire"
 	"github.com/jmoiron/sqlx"
+	"github.com/uptrace/opentelemetry-go-extra/otelsqlx"
 
 	userv1 "agents/api/user/service/v1"
 
@@ -46,15 +48,21 @@ func NewData(c *conf.Data, logger log.Logger, db *sqlx.DB, uc userv1.UserClient)
 		log.NewHelper(logger).Info("closing the data resources")
 		db.Close()
 	}
+
 	return &Data{
 		db:  db,
 		uc:  uc,
-		cli: resty.New(),
+		cli: NewRestyClient(),
 	}, cleanup, nil
 }
 
 func NewSqlxClient(c *conf.Data, logger log.Logger) *sqlx.DB {
-	db, err := sqlx.Connect(c.Database.Driver, c.Database.Source)
+	db, err := otelsqlx.Open(
+		c.Database.Driver,
+		c.Database.Source,
+		//otelsql.WithDBSystem("mysql"),
+		//otelsql.WithTracerProvider(otel.GetTracerProvider()),
+	)
 	if err != nil {
 		log.NewHelper(logger).Fatal(err)
 	}
@@ -83,4 +91,19 @@ func NewDiscovery(registry *conf.Registry) registry.Discovery {
 	dis := consul.New(client)
 
 	return dis
+}
+
+func NewRestyClient() *resty.Client {
+
+	cli := resty.New()
+	cli.SetRetryCount(5)
+
+	otelresty.TraceClient(cli)
+	return cli
+	// cli.OnBeforeRequest(func(c *resty.Client, r *resty.Request) error {
+	// 	// Now you have access to the Client and Request instance
+	// 	// manipulate it as per your need
+
+	// 	return nil // if its successful otherwise return error
+	// })
 }
