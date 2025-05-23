@@ -31,9 +31,8 @@ func wireApp(confServer *conf.Server, confData *conf.Data, logger log.Logger, re
 	orderRepo := data.NewOrderRepo(dataData)
 	orderUseCase := biz.NewOrderUseCase(logger, orderRepo)
 	orderService := service.NewOrderService(orderUseCase)
-	middleware := server.NewBasicMiddleware(logger)
-	grpcServer := server.NewGRPCServer(confServer, logger, orderService, middleware)
-	httpServer := server.NewHTTPServer(confServer, logger, orderService, middleware)
+	grpcServer := server.NewGRPCServer(confServer, logger, orderService)
+	httpServer := server.NewHTTPServer(confServer, logger, orderService)
 	registrar := server.NewRegistrar(logger, registry)
 	app := newApp(logger, grpcServer, httpServer, registrar)
 	return app, func() {

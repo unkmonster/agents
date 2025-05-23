@@ -521,6 +521,62 @@
         ]
       }
     },
+    "/v1/users/{parentId}/children": {
+      "get": {
+        "operationId": "User_ListUserByParentId",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1ListUserByParentIdReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "parentId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "orderBy",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "User"
+        ]
+      }
+    },
     "/v1/users/{parentId}/children/total_commissions": {
       "get": {
         "summary": "列出每个下游代理的累计佣金",
@@ -974,31 +1030,6 @@
         }
       }
     },
-    "ListUserReplyUser": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string"
-        },
-        "username": {
-          "type": "string"
-        },
-        "nickname": {
-          "type": "string"
-        },
-        "parentId": {
-          "type": "string"
-        },
-        "level": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "sharePercent": {
-          "type": "number",
-          "format": "float"
-        }
-      }
-    },
     "UserCreateUserDomainBody": {
       "type": "object",
       "properties": {
@@ -1164,25 +1195,8 @@
     "v1CreateUserReply": {
       "type": "object",
       "properties": {
-        "id": {
-          "type": "string"
-        },
-        "username": {
-          "type": "string"
-        },
-        "level": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "sharePercent": {
-          "type": "number",
-          "format": "float"
-        },
-        "nickname": {
-          "type": "string"
-        },
-        "parentId": {
-          "type": "string"
+        "user": {
+          "$ref": "#/definitions/v1UserInfo2"
         }
       }
     },
@@ -1266,25 +1280,8 @@
     "v1GetUserByDomainReply": {
       "type": "object",
       "properties": {
-        "id": {
-          "type": "string"
-        },
-        "username": {
-          "type": "string"
-        },
-        "level": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "sharePercent": {
-          "type": "number",
-          "format": "float"
-        },
-        "nickname": {
-          "type": "string"
-        },
-        "parentId": {
-          "type": "string"
+        "user": {
+          "$ref": "#/definitions/v1UserInfo2"
         }
       }
     },
@@ -1305,25 +1302,8 @@
     "v1GetUserReply": {
       "type": "object",
       "properties": {
-        "id": {
-          "type": "string"
-        },
-        "username": {
-          "type": "string"
-        },
-        "level": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "sharePercent": {
-          "type": "number",
-          "format": "float"
-        },
-        "nickname": {
-          "type": "string"
-        },
-        "parentId": {
-          "type": "string"
+        "user": {
+          "$ref": "#/definitions/v1UserInfo2"
         }
       }
     },
@@ -1439,6 +1419,18 @@
         }
       }
     },
+    "v1ListUserByParentIdReply": {
+      "type": "object",
+      "properties": {
+        "users": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1UserInfo2"
+          }
+        }
+      }
+    },
     "v1ListUserDomainsByUserIdReply": {
       "type": "object",
       "properties": {
@@ -1498,7 +1490,7 @@
           "type": "array",
           "items": {
             "type": "object",
-            "$ref": "#/definitions/ListUserReplyUser"
+            "$ref": "#/definitions/v1UserInfo2"
           }
         }
       }
@@ -1583,25 +1575,8 @@
     "v1UpdateUserReply": {
       "type": "object",
       "properties": {
-        "id": {
-          "type": "string"
-        },
-        "username": {
-          "type": "string"
-        },
-        "level": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "sharePercent": {
-          "type": "number",
-          "format": "float"
-        },
-        "nickname": {
-          "type": "string"
-        },
-        "parentId": {
-          "type": "string"
+        "user": {
+          "$ref": "#/definitions/v1UserInfo2"
         }
       }
     },
@@ -1651,6 +1626,35 @@
         "sharePercent": {
           "type": "number",
           "format": "float"
+        }
+      }
+    },
+    "v1UserInfo2": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "username": {
+          "type": "string"
+        },
+        "level": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "sharePercent": {
+          "type": "number",
+          "format": "float"
+        },
+        "nickname": {
+          "type": "string"
+        },
+        "parentId": {
+          "type": "string"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
         }
       }
     },

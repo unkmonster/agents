@@ -59,3 +59,14 @@ func (u *userCredentialRepo) GetByUsername(ctx context.Context, username string)
 	err := u.data.db.GetContext(ctx, &dst, query, username)
 	return &dst, err
 }
+
+func (u *userCredentialRepo) GetByUserId(ctx context.Context, userId string) (*biz.UserCredential, error) {
+	query := `
+		SELECT *
+		FROM user_credentials
+		WHERE user_id = ?;
+	`
+	dst := biz.UserCredential{}
+	err := u.data.db.GetContext(ctx, &dst, query, userId)
+	return &dst, err
+}

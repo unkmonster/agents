@@ -37,9 +37,8 @@ func wireApp(confServer *conf.Server, confData *conf.Data, logger log.Logger, re
 	walletRepo := data.NewWalletRepo(dataData)
 	walletUseCase := biz.NewWalletUseCase(walletRepo, logger)
 	walletService := service.NewWalletService(walletUseCase)
-	middleware := server.NewBasicMiddleware(logger)
-	grpcServer := server.NewGRPCServer(confServer, logger, commissionService, walletService, middleware)
-	httpServer := server.NewHTTPServer(confServer, logger, commissionService, middleware, walletService)
+	grpcServer := server.NewGRPCServer(confServer, logger, commissionService, walletService)
+	httpServer := server.NewHTTPServer(confServer, logger, commissionService, walletService)
 	registrar := server.NewRegistrar(logger, registry)
 	app := newApp(logger, grpcServer, httpServer, registrar)
 	return app, func() {

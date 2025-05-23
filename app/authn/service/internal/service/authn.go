@@ -11,10 +11,10 @@ import (
 
 type AuthnService struct {
 	pb.UnimplementedAuthnServer
-	uc *biz.AuthUserCase
+	uc *biz.AuthUseCase
 }
 
-func NewAuthnService(uc *biz.AuthUserCase) *AuthnService {
+func NewAuthnService(uc *biz.AuthUseCase) *AuthnService {
 	return &AuthnService{
 		uc: uc,
 	}
@@ -31,19 +31,7 @@ func (s *AuthnService) Login(ctx context.Context, req *pb.LoginRequest) (*pb.Aut
 }
 
 func (s *AuthnService) Register(ctx context.Context, req *pb.RegisterRequest) (*pb.AuthReply, error) {
-	if req.Username == nil {
-		return nil, errors.New(400, "MISSING_USER_NAME", "缺少用户名")
-	}
-	if req.Password == nil {
-		return nil, errors.New(400, "MISSING_PASSWORD", "缺少用户密码")
-	}
-	if req.Level == nil {
-		return nil, errors.New(400, "MISSING_LEVEL", "缺少等级")
-	}
-	// if req.ParentId == nil {
-	// 	return nil, errors.New(400, "MISSING_PARENT_ID", "缺少 parent_id")
-	// }
-	return s.uc.Register(ctx, req)
+	return s.uc.RegisterChildUser(ctx, req)
 }
 
 func (s *AuthnService) Verify(ctx context.Context, req *pb.VerifyRequest) (*pb.VerifyReply, error) {

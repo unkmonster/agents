@@ -1,10 +1,12 @@
 package main
 
 import (
+	"context"
 	"flag"
 	"os"
 
 	"agents/app/authn/service/internal/conf"
+	"agents/pkg/trace"
 
 	"github.com/go-kratos/kratos/v2"
 	"github.com/go-kratos/kratos/v2/config"
@@ -34,7 +36,7 @@ func init() {
 	flag.StringVar(&flagconf, "conf", "../../configs", "config path, eg: -conf config.yaml")
 }
 
-func newApp(logger log.Logger, gs *grpc.Server, hs *http.Server, rr registry.Registrar) *kratos.App {
+func newApp(logger log.Logger, gs *grpc.Server, hs *http.Server, rr registry.Registrar, beforeStart func(context.Context) error) *kratos.App {
 	return kratos.New(
 		kratos.ID(id),
 		kratos.Name(Name),
@@ -46,6 +48,7 @@ func newApp(logger log.Logger, gs *grpc.Server, hs *http.Server, rr registry.Reg
 			hs,
 		),
 		kratos.Registrar(rr),
+		kratos.BeforeStart(beforeStart),
 	)
 }
 
@@ -76,7 +79,11 @@ func main() {
 		panic(err)
 	}
 
-	app, cleanup, err := wireApp(bc.Server, bc.Data, logger, bc.Auth, bc.Registry, bc.Kong)
+	if err := trace.InitTracerProvider(context.Background(), Name); err != nil {
+		panic(err)
+	}
+
+	app, cleanup, err := wireApp(bc.Server, bc.Data, logger, bc.Auth, bc.Registry, bc.Kong, bc.SystemUser)
 	if err != nil {
 		panic(err)
 	}

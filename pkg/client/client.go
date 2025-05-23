@@ -4,13 +4,12 @@ import (
 	"context"
 
 	"github.com/go-kratos/kratos/v2/log"
-	"github.com/go-kratos/kratos/v2/middleware/logging"
-	"github.com/go-kratos/kratos/v2/middleware/recovery"
 	"github.com/go-kratos/kratos/v2/registry"
 	"github.com/go-kratos/kratos/v2/transport/grpc"
 
 	commv1 "agents/api/commission/service/v1"
 	userv1 "agents/api/user/service/v1"
+	"agents/pkg/middleware/basic"
 )
 
 func NewUserServiceClient(dis registry.Discovery, logger log.Logger) userv1.UserClient {
@@ -19,8 +18,7 @@ func NewUserServiceClient(dis registry.Discovery, logger log.Logger) userv1.User
 		grpc.WithEndpoint("discovery:///agents.user.service"),
 		grpc.WithDiscovery(dis),
 		grpc.WithMiddleware(
-			recovery.Recovery(),
-			logging.Client(logger),
+			basic.Client(logger),
 		),
 	)
 	if err != nil {
@@ -35,8 +33,7 @@ func NewCommissionServiceClient(dis registry.Discovery, logger log.Logger) commv
 		grpc.WithEndpoint("discovery:///agents.commission.service"),
 		grpc.WithDiscovery(dis),
 		grpc.WithMiddleware(
-			recovery.Recovery(),
-			logging.Client(logger),
+			basic.Client(logger),
 		),
 	)
 	if err != nil {

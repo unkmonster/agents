@@ -35,6 +35,9 @@ var (
 	_ = sort.Sort
 )
 
+// define the regex for a UUID once up-front
+var _authn_uuidPattern = regexp.MustCompile("^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$")
+
 // Validate checks the field values on UserInfo with the rules defined in the
 // proto definition for this message. If any rules are violated, the first
 // error encountered is returned, or nil if there are no violations.
@@ -57,14 +60,41 @@ func (m *UserInfo) validate(all bool) error {
 
 	var errors []error
 
+	// no validation rules for Id
+
+	// no validation rules for Username
+
+	// no validation rules for Level
+
 	// no validation rules for SharePercent
 
-	if m.Id != nil {
-		// no validation rules for Id
-	}
-
-	if m.Username != nil {
-		// no validation rules for Username
+	if all {
+		switch v := interface{}(m.GetCreatedAt()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, UserInfoValidationError{
+					field:  "CreatedAt",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, UserInfoValidationError{
+					field:  "CreatedAt",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetCreatedAt()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return UserInfoValidationError{
+				field:  "CreatedAt",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
 	}
 
 	if m.Nickname != nil {
@@ -73,10 +103,6 @@ func (m *UserInfo) validate(all bool) error {
 
 	if m.ParentId != nil {
 		// no validation rules for ParentId
-	}
-
-	if m.Level != nil {
-		// no validation rules for Level
 	}
 
 	if len(errors) > 0 {
@@ -673,35 +699,41 @@ func (m *RegisterRequest) validate(all bool) error {
 
 	// no validation rules for SharePercent
 
-	if m.Username != nil {
-
-		if l := utf8.RuneCountInString(m.GetUsername()); l < 3 || l > 20 {
-			err := RegisterRequestValidationError{
-				field:  "Username",
-				reason: "value length must be between 3 and 20 runes, inclusive",
-			}
-			if !all {
-				return err
-			}
-			errors = append(errors, err)
+	if l := utf8.RuneCountInString(m.GetUsername()); l < 3 || l > 20 {
+		err := RegisterRequestValidationError{
+			field:  "Username",
+			reason: "value length must be between 3 and 20 runes, inclusive",
 		}
-
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
 	}
 
-	if m.Password != nil {
-
-		if l := utf8.RuneCountInString(m.GetPassword()); l < 8 || l > 20 {
-			err := RegisterRequestValidationError{
-				field:  "Password",
-				reason: "value length must be between 8 and 20 runes, inclusive",
-			}
-			if !all {
-				return err
-			}
-			errors = append(errors, err)
+	if l := utf8.RuneCountInString(m.GetPassword()); l < 8 || l > 20 {
+		err := RegisterRequestValidationError{
+			field:  "Password",
+			reason: "value length must be between 8 and 20 runes, inclusive",
 		}
-
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
 	}
+
+	if err := m._validateUuid(m.GetParentId()); err != nil {
+		err = RegisterRequestValidationError{
+			field:  "ParentId",
+			reason: "value must be a valid UUID",
+			cause:  err,
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	// no validation rules for Level
 
 	if m.Nickname != nil {
 
@@ -718,27 +750,16 @@ func (m *RegisterRequest) validate(all bool) error {
 
 	}
 
-	if m.ParentId != nil {
-		// no validation rules for ParentId
-	}
-
-	if m.Level != nil {
-
-		if m.GetLevel() > 2 {
-			err := RegisterRequestValidationError{
-				field:  "Level",
-				reason: "value must be less than or equal to 2",
-			}
-			if !all {
-				return err
-			}
-			errors = append(errors, err)
-		}
-
-	}
-
 	if len(errors) > 0 {
 		return RegisterRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+func (m *RegisterRequest) _validateUuid(uuid string) error {
+	if matched := _authn_uuidPattern.MatchString(uuid); !matched {
+		return errors.New("invalid uuid format")
 	}
 
 	return nil

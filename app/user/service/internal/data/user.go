@@ -2,8 +2,10 @@ package data
 
 import (
 	"agents/app/user/service/internal/biz"
+	"agents/pkg/paging"
 	"context"
 
+	"github.com/Masterminds/squirrel"
 	"github.com/go-kratos/kratos/v2/log"
 )
 
@@ -19,6 +21,18 @@ func NewUserRepo(data *Data, logger log.Logger) biz.UserRepo {
 		data: data,
 		log:  log.NewHelper(logger),
 	}
+}
+
+// GetZeroUser implements biz.UserRepo.
+func (r *userRepo) GetZeroUser(ctx context.Context) (*biz.User, error) {
+	query := `
+		SELECT *
+		FROM users
+		WHERE level = 0;
+	`
+	dst := biz.User{}
+	err := r.data.db.GetContext(ctx, &dst, query)
+	return &dst, err
 }
 
 func (r *userRepo) CreateUser(ctx context.Context, user *biz.User) error {
@@ -87,4 +101,13 @@ func (r *userRepo) GetUserByDomain(ctx context.Context, domain string) (*biz.Use
 	dst := biz.User{}
 	err := r.data.db.GetContext(ctx, &dst, query, domain)
 	return &dst, err
+}
+
+func (r *userRepo) ListUserByParent(ctx context.Context, parentId string, paging *paging.Paging) ([]*biz.User, error) {
+	b := squirrel.Select("*").From("users").Where(squirrel.Eq{"parent_id": parentId})
+	query, args := paging.Make(b).MustSql()
+
+	dst := []*biz.User{}
+	err := r.data.db.SelectContext(ctx, &dst, query, args...)
+	return dst, err
 }

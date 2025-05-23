@@ -8,9 +8,11 @@ package v1
 
 import (
 	_ "github.com/envoyproxy/protoc-gen-validate/validate"
+	_ "github.com/go-kratos/kratos/v2/errors"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
@@ -23,6 +25,267 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
+type ErrorReason int32
+
+const (
+	ErrorReason_MISSING_PARENT_ID ErrorReason = 0
+	ErrorReason_USER_NOT_FOUNT    ErrorReason = 1
+	ErrorReason_USER_IS_EXISTS    ErrorReason = 2
+)
+
+// Enum value maps for ErrorReason.
+var (
+	ErrorReason_name = map[int32]string{
+		0: "MISSING_PARENT_ID",
+		1: "USER_NOT_FOUNT",
+		2: "USER_IS_EXISTS",
+	}
+	ErrorReason_value = map[string]int32{
+		"MISSING_PARENT_ID": 0,
+		"USER_NOT_FOUNT":    1,
+		"USER_IS_EXISTS":    2,
+	}
+)
+
+func (x ErrorReason) Enum() *ErrorReason {
+	p := new(ErrorReason)
+	*p = x
+	return p
+}
+
+func (x ErrorReason) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (ErrorReason) Descriptor() protoreflect.EnumDescriptor {
+	return file_api_user_service_v1_user_proto_enumTypes[0].Descriptor()
+}
+
+func (ErrorReason) Type() protoreflect.EnumType {
+	return &file_api_user_service_v1_user_proto_enumTypes[0]
+}
+
+func (x ErrorReason) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use ErrorReason.Descriptor instead.
+func (ErrorReason) EnumDescriptor() ([]byte, []int) {
+	return file_api_user_service_v1_user_proto_rawDescGZIP(), []int{0}
+}
+
+type UserInfo2 struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Username      string                 `protobuf:"bytes,2,opt,name=username,proto3" json:"username,omitempty"`
+	Level         int32                  `protobuf:"varint,3,opt,name=level,proto3" json:"level,omitempty"`
+	SharePercent  float32                `protobuf:"fixed32,4,opt,name=share_percent,json=sharePercent,proto3" json:"share_percent,omitempty"`
+	Nickname      *string                `protobuf:"bytes,5,opt,name=nickname,proto3,oneof" json:"nickname,omitempty"`
+	ParentId      *string                `protobuf:"bytes,6,opt,name=parent_id,json=parentId,proto3,oneof" json:"parent_id,omitempty"`
+	CreatedAt     *timestamppb.Timestamp `protobuf:"bytes,7,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *UserInfo2) Reset() {
+	*x = UserInfo2{}
+	mi := &file_api_user_service_v1_user_proto_msgTypes[0]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UserInfo2) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UserInfo2) ProtoMessage() {}
+
+func (x *UserInfo2) ProtoReflect() protoreflect.Message {
+	mi := &file_api_user_service_v1_user_proto_msgTypes[0]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UserInfo2.ProtoReflect.Descriptor instead.
+func (*UserInfo2) Descriptor() ([]byte, []int) {
+	return file_api_user_service_v1_user_proto_rawDescGZIP(), []int{0}
+}
+
+func (x *UserInfo2) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+func (x *UserInfo2) GetUsername() string {
+	if x != nil {
+		return x.Username
+	}
+	return ""
+}
+
+func (x *UserInfo2) GetLevel() int32 {
+	if x != nil {
+		return x.Level
+	}
+	return 0
+}
+
+func (x *UserInfo2) GetSharePercent() float32 {
+	if x != nil {
+		return x.SharePercent
+	}
+	return 0
+}
+
+func (x *UserInfo2) GetNickname() string {
+	if x != nil && x.Nickname != nil {
+		return *x.Nickname
+	}
+	return ""
+}
+
+func (x *UserInfo2) GetParentId() string {
+	if x != nil && x.ParentId != nil {
+		return *x.ParentId
+	}
+	return ""
+}
+
+func (x *UserInfo2) GetCreatedAt() *timestamppb.Timestamp {
+	if x != nil {
+		return x.CreatedAt
+	}
+	return nil
+}
+
+type ListUserByParentIdReq struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	ParentId      string                 `protobuf:"bytes,1,opt,name=parent_id,json=parentId,proto3" json:"parent_id,omitempty"`
+	OrderBy       string                 `protobuf:"bytes,3,opt,name=order_by,json=orderBy,proto3" json:"order_by,omitempty"`
+	Limit         int32                  `protobuf:"varint,5,opt,name=limit,proto3" json:"limit,omitempty"`
+	Offset        int32                  `protobuf:"varint,6,opt,name=offset,proto3" json:"offset,omitempty"`
+	Sort          string                 `protobuf:"bytes,7,opt,name=sort,proto3" json:"sort,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ListUserByParentIdReq) Reset() {
+	*x = ListUserByParentIdReq{}
+	mi := &file_api_user_service_v1_user_proto_msgTypes[1]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ListUserByParentIdReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListUserByParentIdReq) ProtoMessage() {}
+
+func (x *ListUserByParentIdReq) ProtoReflect() protoreflect.Message {
+	mi := &file_api_user_service_v1_user_proto_msgTypes[1]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListUserByParentIdReq.ProtoReflect.Descriptor instead.
+func (*ListUserByParentIdReq) Descriptor() ([]byte, []int) {
+	return file_api_user_service_v1_user_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *ListUserByParentIdReq) GetParentId() string {
+	if x != nil {
+		return x.ParentId
+	}
+	return ""
+}
+
+func (x *ListUserByParentIdReq) GetOrderBy() string {
+	if x != nil {
+		return x.OrderBy
+	}
+	return ""
+}
+
+func (x *ListUserByParentIdReq) GetLimit() int32 {
+	if x != nil {
+		return x.Limit
+	}
+	return 0
+}
+
+func (x *ListUserByParentIdReq) GetOffset() int32 {
+	if x != nil {
+		return x.Offset
+	}
+	return 0
+}
+
+func (x *ListUserByParentIdReq) GetSort() string {
+	if x != nil {
+		return x.Sort
+	}
+	return ""
+}
+
+type ListUserByParentIdReply struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Users         []*UserInfo2           `protobuf:"bytes,2,rep,name=users,proto3" json:"users,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ListUserByParentIdReply) Reset() {
+	*x = ListUserByParentIdReply{}
+	mi := &file_api_user_service_v1_user_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ListUserByParentIdReply) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListUserByParentIdReply) ProtoMessage() {}
+
+func (x *ListUserByParentIdReply) ProtoReflect() protoreflect.Message {
+	mi := &file_api_user_service_v1_user_proto_msgTypes[2]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListUserByParentIdReply.ProtoReflect.Descriptor instead.
+func (*ListUserByParentIdReply) Descriptor() ([]byte, []int) {
+	return file_api_user_service_v1_user_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *ListUserByParentIdReply) GetUsers() []*UserInfo2 {
+	if x != nil {
+		return x.Users
+	}
+	return nil
+}
+
 type GetUserByDomainRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Domain        string                 `protobuf:"bytes,1,opt,name=domain,proto3" json:"domain,omitempty"`
@@ -32,7 +295,7 @@ type GetUserByDomainRequest struct {
 
 func (x *GetUserByDomainRequest) Reset() {
 	*x = GetUserByDomainRequest{}
-	mi := &file_api_user_service_v1_user_proto_msgTypes[0]
+	mi := &file_api_user_service_v1_user_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -44,7 +307,7 @@ func (x *GetUserByDomainRequest) String() string {
 func (*GetUserByDomainRequest) ProtoMessage() {}
 
 func (x *GetUserByDomainRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_api_user_service_v1_user_proto_msgTypes[0]
+	mi := &file_api_user_service_v1_user_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -57,7 +320,7 @@ func (x *GetUserByDomainRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetUserByDomainRequest.ProtoReflect.Descriptor instead.
 func (*GetUserByDomainRequest) Descriptor() ([]byte, []int) {
-	return file_api_user_service_v1_user_proto_rawDescGZIP(), []int{0}
+	return file_api_user_service_v1_user_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *GetUserByDomainRequest) GetDomain() string {
@@ -69,19 +332,14 @@ func (x *GetUserByDomainRequest) GetDomain() string {
 
 type GetUserByDomainReply struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	Username      string                 `protobuf:"bytes,2,opt,name=username,proto3" json:"username,omitempty"`
-	Level         int32                  `protobuf:"varint,5,opt,name=level,proto3" json:"level,omitempty"`
-	SharePercent  float32                `protobuf:"fixed32,6,opt,name=share_percent,json=sharePercent,proto3" json:"share_percent,omitempty"`
-	Nickname      *string                `protobuf:"bytes,7,opt,name=nickname,proto3,oneof" json:"nickname,omitempty"`
-	ParentId      *string                `protobuf:"bytes,8,opt,name=parent_id,json=parentId,proto3,oneof" json:"parent_id,omitempty"`
+	User          *UserInfo2             `protobuf:"bytes,10,opt,name=user,proto3" json:"user,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *GetUserByDomainReply) Reset() {
 	*x = GetUserByDomainReply{}
-	mi := &file_api_user_service_v1_user_proto_msgTypes[1]
+	mi := &file_api_user_service_v1_user_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -93,7 +351,7 @@ func (x *GetUserByDomainReply) String() string {
 func (*GetUserByDomainReply) ProtoMessage() {}
 
 func (x *GetUserByDomainReply) ProtoReflect() protoreflect.Message {
-	mi := &file_api_user_service_v1_user_proto_msgTypes[1]
+	mi := &file_api_user_service_v1_user_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -106,49 +364,14 @@ func (x *GetUserByDomainReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetUserByDomainReply.ProtoReflect.Descriptor instead.
 func (*GetUserByDomainReply) Descriptor() ([]byte, []int) {
-	return file_api_user_service_v1_user_proto_rawDescGZIP(), []int{1}
+	return file_api_user_service_v1_user_proto_rawDescGZIP(), []int{4}
 }
 
-func (x *GetUserByDomainReply) GetId() string {
+func (x *GetUserByDomainReply) GetUser() *UserInfo2 {
 	if x != nil {
-		return x.Id
+		return x.User
 	}
-	return ""
-}
-
-func (x *GetUserByDomainReply) GetUsername() string {
-	if x != nil {
-		return x.Username
-	}
-	return ""
-}
-
-func (x *GetUserByDomainReply) GetLevel() int32 {
-	if x != nil {
-		return x.Level
-	}
-	return 0
-}
-
-func (x *GetUserByDomainReply) GetSharePercent() float32 {
-	if x != nil {
-		return x.SharePercent
-	}
-	return 0
-}
-
-func (x *GetUserByDomainReply) GetNickname() string {
-	if x != nil && x.Nickname != nil {
-		return *x.Nickname
-	}
-	return ""
-}
-
-func (x *GetUserByDomainReply) GetParentId() string {
-	if x != nil && x.ParentId != nil {
-		return *x.ParentId
-	}
-	return ""
+	return nil
 }
 
 type GetUserByUsernameRequest struct {
@@ -160,7 +383,7 @@ type GetUserByUsernameRequest struct {
 
 func (x *GetUserByUsernameRequest) Reset() {
 	*x = GetUserByUsernameRequest{}
-	mi := &file_api_user_service_v1_user_proto_msgTypes[2]
+	mi := &file_api_user_service_v1_user_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -172,7 +395,7 @@ func (x *GetUserByUsernameRequest) String() string {
 func (*GetUserByUsernameRequest) ProtoMessage() {}
 
 func (x *GetUserByUsernameRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_api_user_service_v1_user_proto_msgTypes[2]
+	mi := &file_api_user_service_v1_user_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -185,7 +408,7 @@ func (x *GetUserByUsernameRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetUserByUsernameRequest.ProtoReflect.Descriptor instead.
 func (*GetUserByUsernameRequest) Descriptor() ([]byte, []int) {
-	return file_api_user_service_v1_user_proto_rawDescGZIP(), []int{2}
+	return file_api_user_service_v1_user_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *GetUserByUsernameRequest) GetUsername() string {
@@ -204,7 +427,7 @@ type DeleteDomainRequest struct {
 
 func (x *DeleteDomainRequest) Reset() {
 	*x = DeleteDomainRequest{}
-	mi := &file_api_user_service_v1_user_proto_msgTypes[3]
+	mi := &file_api_user_service_v1_user_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -216,7 +439,7 @@ func (x *DeleteDomainRequest) String() string {
 func (*DeleteDomainRequest) ProtoMessage() {}
 
 func (x *DeleteDomainRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_api_user_service_v1_user_proto_msgTypes[3]
+	mi := &file_api_user_service_v1_user_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -229,7 +452,7 @@ func (x *DeleteDomainRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteDomainRequest.ProtoReflect.Descriptor instead.
 func (*DeleteDomainRequest) Descriptor() ([]byte, []int) {
-	return file_api_user_service_v1_user_proto_rawDescGZIP(), []int{3}
+	return file_api_user_service_v1_user_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *DeleteDomainRequest) GetId() string {
@@ -247,7 +470,7 @@ type DeleteDomainReply struct {
 
 func (x *DeleteDomainReply) Reset() {
 	*x = DeleteDomainReply{}
-	mi := &file_api_user_service_v1_user_proto_msgTypes[4]
+	mi := &file_api_user_service_v1_user_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -259,7 +482,7 @@ func (x *DeleteDomainReply) String() string {
 func (*DeleteDomainReply) ProtoMessage() {}
 
 func (x *DeleteDomainReply) ProtoReflect() protoreflect.Message {
-	mi := &file_api_user_service_v1_user_proto_msgTypes[4]
+	mi := &file_api_user_service_v1_user_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -272,7 +495,7 @@ func (x *DeleteDomainReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteDomainReply.ProtoReflect.Descriptor instead.
 func (*DeleteDomainReply) Descriptor() ([]byte, []int) {
-	return file_api_user_service_v1_user_proto_rawDescGZIP(), []int{4}
+	return file_api_user_service_v1_user_proto_rawDescGZIP(), []int{7}
 }
 
 type ListUserDomainsByUserIdRequest struct {
@@ -284,7 +507,7 @@ type ListUserDomainsByUserIdRequest struct {
 
 func (x *ListUserDomainsByUserIdRequest) Reset() {
 	*x = ListUserDomainsByUserIdRequest{}
-	mi := &file_api_user_service_v1_user_proto_msgTypes[5]
+	mi := &file_api_user_service_v1_user_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -296,7 +519,7 @@ func (x *ListUserDomainsByUserIdRequest) String() string {
 func (*ListUserDomainsByUserIdRequest) ProtoMessage() {}
 
 func (x *ListUserDomainsByUserIdRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_api_user_service_v1_user_proto_msgTypes[5]
+	mi := &file_api_user_service_v1_user_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -309,7 +532,7 @@ func (x *ListUserDomainsByUserIdRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListUserDomainsByUserIdRequest.ProtoReflect.Descriptor instead.
 func (*ListUserDomainsByUserIdRequest) Descriptor() ([]byte, []int) {
-	return file_api_user_service_v1_user_proto_rawDescGZIP(), []int{5}
+	return file_api_user_service_v1_user_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *ListUserDomainsByUserIdRequest) GetUserId() string {
@@ -328,7 +551,7 @@ type ListUserDomainsByUserIdReply struct {
 
 func (x *ListUserDomainsByUserIdReply) Reset() {
 	*x = ListUserDomainsByUserIdReply{}
-	mi := &file_api_user_service_v1_user_proto_msgTypes[6]
+	mi := &file_api_user_service_v1_user_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -340,7 +563,7 @@ func (x *ListUserDomainsByUserIdReply) String() string {
 func (*ListUserDomainsByUserIdReply) ProtoMessage() {}
 
 func (x *ListUserDomainsByUserIdReply) ProtoReflect() protoreflect.Message {
-	mi := &file_api_user_service_v1_user_proto_msgTypes[6]
+	mi := &file_api_user_service_v1_user_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -353,7 +576,7 @@ func (x *ListUserDomainsByUserIdReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListUserDomainsByUserIdReply.ProtoReflect.Descriptor instead.
 func (*ListUserDomainsByUserIdReply) Descriptor() ([]byte, []int) {
-	return file_api_user_service_v1_user_proto_rawDescGZIP(), []int{6}
+	return file_api_user_service_v1_user_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *ListUserDomainsByUserIdReply) GetDomains() []*ListUserDomainsByUserIdReply_Domain {
@@ -371,7 +594,7 @@ type ListUserDomainsRequest struct {
 
 func (x *ListUserDomainsRequest) Reset() {
 	*x = ListUserDomainsRequest{}
-	mi := &file_api_user_service_v1_user_proto_msgTypes[7]
+	mi := &file_api_user_service_v1_user_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -383,7 +606,7 @@ func (x *ListUserDomainsRequest) String() string {
 func (*ListUserDomainsRequest) ProtoMessage() {}
 
 func (x *ListUserDomainsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_api_user_service_v1_user_proto_msgTypes[7]
+	mi := &file_api_user_service_v1_user_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -396,7 +619,7 @@ func (x *ListUserDomainsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListUserDomainsRequest.ProtoReflect.Descriptor instead.
 func (*ListUserDomainsRequest) Descriptor() ([]byte, []int) {
-	return file_api_user_service_v1_user_proto_rawDescGZIP(), []int{7}
+	return file_api_user_service_v1_user_proto_rawDescGZIP(), []int{10}
 }
 
 type ListUserDomainsReply struct {
@@ -408,7 +631,7 @@ type ListUserDomainsReply struct {
 
 func (x *ListUserDomainsReply) Reset() {
 	*x = ListUserDomainsReply{}
-	mi := &file_api_user_service_v1_user_proto_msgTypes[8]
+	mi := &file_api_user_service_v1_user_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -420,7 +643,7 @@ func (x *ListUserDomainsReply) String() string {
 func (*ListUserDomainsReply) ProtoMessage() {}
 
 func (x *ListUserDomainsReply) ProtoReflect() protoreflect.Message {
-	mi := &file_api_user_service_v1_user_proto_msgTypes[8]
+	mi := &file_api_user_service_v1_user_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -433,7 +656,7 @@ func (x *ListUserDomainsReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListUserDomainsReply.ProtoReflect.Descriptor instead.
 func (*ListUserDomainsReply) Descriptor() ([]byte, []int) {
-	return file_api_user_service_v1_user_proto_rawDescGZIP(), []int{8}
+	return file_api_user_service_v1_user_proto_rawDescGZIP(), []int{11}
 }
 
 func (x *ListUserDomainsReply) GetDomains() []*ListUserDomainsReply_Domain {
@@ -452,7 +675,7 @@ type GetUserDomainRequest struct {
 
 func (x *GetUserDomainRequest) Reset() {
 	*x = GetUserDomainRequest{}
-	mi := &file_api_user_service_v1_user_proto_msgTypes[9]
+	mi := &file_api_user_service_v1_user_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -464,7 +687,7 @@ func (x *GetUserDomainRequest) String() string {
 func (*GetUserDomainRequest) ProtoMessage() {}
 
 func (x *GetUserDomainRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_api_user_service_v1_user_proto_msgTypes[9]
+	mi := &file_api_user_service_v1_user_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -477,7 +700,7 @@ func (x *GetUserDomainRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetUserDomainRequest.ProtoReflect.Descriptor instead.
 func (*GetUserDomainRequest) Descriptor() ([]byte, []int) {
-	return file_api_user_service_v1_user_proto_rawDescGZIP(), []int{9}
+	return file_api_user_service_v1_user_proto_rawDescGZIP(), []int{12}
 }
 
 func (x *GetUserDomainRequest) GetId() string {
@@ -498,7 +721,7 @@ type GetUserDomainReply struct {
 
 func (x *GetUserDomainReply) Reset() {
 	*x = GetUserDomainReply{}
-	mi := &file_api_user_service_v1_user_proto_msgTypes[10]
+	mi := &file_api_user_service_v1_user_proto_msgTypes[13]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -510,7 +733,7 @@ func (x *GetUserDomainReply) String() string {
 func (*GetUserDomainReply) ProtoMessage() {}
 
 func (x *GetUserDomainReply) ProtoReflect() protoreflect.Message {
-	mi := &file_api_user_service_v1_user_proto_msgTypes[10]
+	mi := &file_api_user_service_v1_user_proto_msgTypes[13]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -523,7 +746,7 @@ func (x *GetUserDomainReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetUserDomainReply.ProtoReflect.Descriptor instead.
 func (*GetUserDomainReply) Descriptor() ([]byte, []int) {
-	return file_api_user_service_v1_user_proto_rawDescGZIP(), []int{10}
+	return file_api_user_service_v1_user_proto_rawDescGZIP(), []int{13}
 }
 
 func (x *GetUserDomainReply) GetId() string {
@@ -557,7 +780,7 @@ type CreateUserDomainRequest struct {
 
 func (x *CreateUserDomainRequest) Reset() {
 	*x = CreateUserDomainRequest{}
-	mi := &file_api_user_service_v1_user_proto_msgTypes[11]
+	mi := &file_api_user_service_v1_user_proto_msgTypes[14]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -569,7 +792,7 @@ func (x *CreateUserDomainRequest) String() string {
 func (*CreateUserDomainRequest) ProtoMessage() {}
 
 func (x *CreateUserDomainRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_api_user_service_v1_user_proto_msgTypes[11]
+	mi := &file_api_user_service_v1_user_proto_msgTypes[14]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -582,7 +805,7 @@ func (x *CreateUserDomainRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateUserDomainRequest.ProtoReflect.Descriptor instead.
 func (*CreateUserDomainRequest) Descriptor() ([]byte, []int) {
-	return file_api_user_service_v1_user_proto_rawDescGZIP(), []int{11}
+	return file_api_user_service_v1_user_proto_rawDescGZIP(), []int{14}
 }
 
 func (x *CreateUserDomainRequest) GetUserId() string {
@@ -610,7 +833,7 @@ type CreateUserDomainReply struct {
 
 func (x *CreateUserDomainReply) Reset() {
 	*x = CreateUserDomainReply{}
-	mi := &file_api_user_service_v1_user_proto_msgTypes[12]
+	mi := &file_api_user_service_v1_user_proto_msgTypes[15]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -622,7 +845,7 @@ func (x *CreateUserDomainReply) String() string {
 func (*CreateUserDomainReply) ProtoMessage() {}
 
 func (x *CreateUserDomainReply) ProtoReflect() protoreflect.Message {
-	mi := &file_api_user_service_v1_user_proto_msgTypes[12]
+	mi := &file_api_user_service_v1_user_proto_msgTypes[15]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -635,7 +858,7 @@ func (x *CreateUserDomainReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateUserDomainReply.ProtoReflect.Descriptor instead.
 func (*CreateUserDomainReply) Descriptor() ([]byte, []int) {
-	return file_api_user_service_v1_user_proto_rawDescGZIP(), []int{12}
+	return file_api_user_service_v1_user_proto_rawDescGZIP(), []int{15}
 }
 
 func (x *CreateUserDomainReply) GetId() string {
@@ -672,7 +895,7 @@ type CreateUserRequest struct {
 
 func (x *CreateUserRequest) Reset() {
 	*x = CreateUserRequest{}
-	mi := &file_api_user_service_v1_user_proto_msgTypes[13]
+	mi := &file_api_user_service_v1_user_proto_msgTypes[16]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -684,7 +907,7 @@ func (x *CreateUserRequest) String() string {
 func (*CreateUserRequest) ProtoMessage() {}
 
 func (x *CreateUserRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_api_user_service_v1_user_proto_msgTypes[13]
+	mi := &file_api_user_service_v1_user_proto_msgTypes[16]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -697,7 +920,7 @@ func (x *CreateUserRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateUserRequest.ProtoReflect.Descriptor instead.
 func (*CreateUserRequest) Descriptor() ([]byte, []int) {
-	return file_api_user_service_v1_user_proto_rawDescGZIP(), []int{13}
+	return file_api_user_service_v1_user_proto_rawDescGZIP(), []int{16}
 }
 
 func (x *CreateUserRequest) GetUsername() string {
@@ -737,19 +960,14 @@ func (x *CreateUserRequest) GetSharePercent() float32 {
 
 type CreateUserReply struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	Username      string                 `protobuf:"bytes,2,opt,name=username,proto3" json:"username,omitempty"`
-	Level         int32                  `protobuf:"varint,5,opt,name=level,proto3" json:"level,omitempty"`
-	SharePercent  float32                `protobuf:"fixed32,6,opt,name=share_percent,json=sharePercent,proto3" json:"share_percent,omitempty"`
-	Nickname      *string                `protobuf:"bytes,7,opt,name=nickname,proto3,oneof" json:"nickname,omitempty"`
-	ParentId      *string                `protobuf:"bytes,8,opt,name=parent_id,json=parentId,proto3,oneof" json:"parent_id,omitempty"`
+	User          *UserInfo2             `protobuf:"bytes,10,opt,name=user,proto3" json:"user,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *CreateUserReply) Reset() {
 	*x = CreateUserReply{}
-	mi := &file_api_user_service_v1_user_proto_msgTypes[14]
+	mi := &file_api_user_service_v1_user_proto_msgTypes[17]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -761,7 +979,7 @@ func (x *CreateUserReply) String() string {
 func (*CreateUserReply) ProtoMessage() {}
 
 func (x *CreateUserReply) ProtoReflect() protoreflect.Message {
-	mi := &file_api_user_service_v1_user_proto_msgTypes[14]
+	mi := &file_api_user_service_v1_user_proto_msgTypes[17]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -774,49 +992,14 @@ func (x *CreateUserReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateUserReply.ProtoReflect.Descriptor instead.
 func (*CreateUserReply) Descriptor() ([]byte, []int) {
-	return file_api_user_service_v1_user_proto_rawDescGZIP(), []int{14}
+	return file_api_user_service_v1_user_proto_rawDescGZIP(), []int{17}
 }
 
-func (x *CreateUserReply) GetId() string {
+func (x *CreateUserReply) GetUser() *UserInfo2 {
 	if x != nil {
-		return x.Id
+		return x.User
 	}
-	return ""
-}
-
-func (x *CreateUserReply) GetUsername() string {
-	if x != nil {
-		return x.Username
-	}
-	return ""
-}
-
-func (x *CreateUserReply) GetLevel() int32 {
-	if x != nil {
-		return x.Level
-	}
-	return 0
-}
-
-func (x *CreateUserReply) GetSharePercent() float32 {
-	if x != nil {
-		return x.SharePercent
-	}
-	return 0
-}
-
-func (x *CreateUserReply) GetNickname() string {
-	if x != nil && x.Nickname != nil {
-		return *x.Nickname
-	}
-	return ""
-}
-
-func (x *CreateUserReply) GetParentId() string {
-	if x != nil && x.ParentId != nil {
-		return *x.ParentId
-	}
-	return ""
+	return nil
 }
 
 type UpdateUserRequest struct {
@@ -831,7 +1014,7 @@ type UpdateUserRequest struct {
 
 func (x *UpdateUserRequest) Reset() {
 	*x = UpdateUserRequest{}
-	mi := &file_api_user_service_v1_user_proto_msgTypes[15]
+	mi := &file_api_user_service_v1_user_proto_msgTypes[18]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -843,7 +1026,7 @@ func (x *UpdateUserRequest) String() string {
 func (*UpdateUserRequest) ProtoMessage() {}
 
 func (x *UpdateUserRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_api_user_service_v1_user_proto_msgTypes[15]
+	mi := &file_api_user_service_v1_user_proto_msgTypes[18]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -856,7 +1039,7 @@ func (x *UpdateUserRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateUserRequest.ProtoReflect.Descriptor instead.
 func (*UpdateUserRequest) Descriptor() ([]byte, []int) {
-	return file_api_user_service_v1_user_proto_rawDescGZIP(), []int{15}
+	return file_api_user_service_v1_user_proto_rawDescGZIP(), []int{18}
 }
 
 func (x *UpdateUserRequest) GetId() string {
@@ -889,19 +1072,14 @@ func (x *UpdateUserRequest) GetSharePercent() float32 {
 
 type UpdateUserReply struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	Username      string                 `protobuf:"bytes,2,opt,name=username,proto3" json:"username,omitempty"`
-	Level         int32                  `protobuf:"varint,5,opt,name=level,proto3" json:"level,omitempty"`
-	SharePercent  float32                `protobuf:"fixed32,6,opt,name=share_percent,json=sharePercent,proto3" json:"share_percent,omitempty"`
-	Nickname      *string                `protobuf:"bytes,7,opt,name=nickname,proto3,oneof" json:"nickname,omitempty"`
-	ParentId      *string                `protobuf:"bytes,8,opt,name=parent_id,json=parentId,proto3,oneof" json:"parent_id,omitempty"`
+	User          *UserInfo2             `protobuf:"bytes,10,opt,name=user,proto3" json:"user,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *UpdateUserReply) Reset() {
 	*x = UpdateUserReply{}
-	mi := &file_api_user_service_v1_user_proto_msgTypes[16]
+	mi := &file_api_user_service_v1_user_proto_msgTypes[19]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -913,7 +1091,7 @@ func (x *UpdateUserReply) String() string {
 func (*UpdateUserReply) ProtoMessage() {}
 
 func (x *UpdateUserReply) ProtoReflect() protoreflect.Message {
-	mi := &file_api_user_service_v1_user_proto_msgTypes[16]
+	mi := &file_api_user_service_v1_user_proto_msgTypes[19]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -926,49 +1104,14 @@ func (x *UpdateUserReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateUserReply.ProtoReflect.Descriptor instead.
 func (*UpdateUserReply) Descriptor() ([]byte, []int) {
-	return file_api_user_service_v1_user_proto_rawDescGZIP(), []int{16}
+	return file_api_user_service_v1_user_proto_rawDescGZIP(), []int{19}
 }
 
-func (x *UpdateUserReply) GetId() string {
+func (x *UpdateUserReply) GetUser() *UserInfo2 {
 	if x != nil {
-		return x.Id
+		return x.User
 	}
-	return ""
-}
-
-func (x *UpdateUserReply) GetUsername() string {
-	if x != nil {
-		return x.Username
-	}
-	return ""
-}
-
-func (x *UpdateUserReply) GetLevel() int32 {
-	if x != nil {
-		return x.Level
-	}
-	return 0
-}
-
-func (x *UpdateUserReply) GetSharePercent() float32 {
-	if x != nil {
-		return x.SharePercent
-	}
-	return 0
-}
-
-func (x *UpdateUserReply) GetNickname() string {
-	if x != nil && x.Nickname != nil {
-		return *x.Nickname
-	}
-	return ""
-}
-
-func (x *UpdateUserReply) GetParentId() string {
-	if x != nil && x.ParentId != nil {
-		return *x.ParentId
-	}
-	return ""
+	return nil
 }
 
 type DeleteUserRequest struct {
@@ -980,7 +1123,7 @@ type DeleteUserRequest struct {
 
 func (x *DeleteUserRequest) Reset() {
 	*x = DeleteUserRequest{}
-	mi := &file_api_user_service_v1_user_proto_msgTypes[17]
+	mi := &file_api_user_service_v1_user_proto_msgTypes[20]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -992,7 +1135,7 @@ func (x *DeleteUserRequest) String() string {
 func (*DeleteUserRequest) ProtoMessage() {}
 
 func (x *DeleteUserRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_api_user_service_v1_user_proto_msgTypes[17]
+	mi := &file_api_user_service_v1_user_proto_msgTypes[20]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1005,7 +1148,7 @@ func (x *DeleteUserRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteUserRequest.ProtoReflect.Descriptor instead.
 func (*DeleteUserRequest) Descriptor() ([]byte, []int) {
-	return file_api_user_service_v1_user_proto_rawDescGZIP(), []int{17}
+	return file_api_user_service_v1_user_proto_rawDescGZIP(), []int{20}
 }
 
 func (x *DeleteUserRequest) GetId() string {
@@ -1023,7 +1166,7 @@ type DeleteUserReply struct {
 
 func (x *DeleteUserReply) Reset() {
 	*x = DeleteUserReply{}
-	mi := &file_api_user_service_v1_user_proto_msgTypes[18]
+	mi := &file_api_user_service_v1_user_proto_msgTypes[21]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1035,7 +1178,7 @@ func (x *DeleteUserReply) String() string {
 func (*DeleteUserReply) ProtoMessage() {}
 
 func (x *DeleteUserReply) ProtoReflect() protoreflect.Message {
-	mi := &file_api_user_service_v1_user_proto_msgTypes[18]
+	mi := &file_api_user_service_v1_user_proto_msgTypes[21]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1048,7 +1191,7 @@ func (x *DeleteUserReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteUserReply.ProtoReflect.Descriptor instead.
 func (*DeleteUserReply) Descriptor() ([]byte, []int) {
-	return file_api_user_service_v1_user_proto_rawDescGZIP(), []int{18}
+	return file_api_user_service_v1_user_proto_rawDescGZIP(), []int{21}
 }
 
 type GetUserRequest struct {
@@ -1060,7 +1203,7 @@ type GetUserRequest struct {
 
 func (x *GetUserRequest) Reset() {
 	*x = GetUserRequest{}
-	mi := &file_api_user_service_v1_user_proto_msgTypes[19]
+	mi := &file_api_user_service_v1_user_proto_msgTypes[22]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1072,7 +1215,7 @@ func (x *GetUserRequest) String() string {
 func (*GetUserRequest) ProtoMessage() {}
 
 func (x *GetUserRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_api_user_service_v1_user_proto_msgTypes[19]
+	mi := &file_api_user_service_v1_user_proto_msgTypes[22]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1085,7 +1228,7 @@ func (x *GetUserRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetUserRequest.ProtoReflect.Descriptor instead.
 func (*GetUserRequest) Descriptor() ([]byte, []int) {
-	return file_api_user_service_v1_user_proto_rawDescGZIP(), []int{19}
+	return file_api_user_service_v1_user_proto_rawDescGZIP(), []int{22}
 }
 
 func (x *GetUserRequest) GetId() string {
@@ -1097,19 +1240,14 @@ func (x *GetUserRequest) GetId() string {
 
 type GetUserReply struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	Username      string                 `protobuf:"bytes,2,opt,name=username,proto3" json:"username,omitempty"`
-	Level         int32                  `protobuf:"varint,5,opt,name=level,proto3" json:"level,omitempty"`
-	SharePercent  float32                `protobuf:"fixed32,6,opt,name=share_percent,json=sharePercent,proto3" json:"share_percent,omitempty"`
-	Nickname      *string                `protobuf:"bytes,7,opt,name=nickname,proto3,oneof" json:"nickname,omitempty"`
-	ParentId      *string                `protobuf:"bytes,8,opt,name=parent_id,json=parentId,proto3,oneof" json:"parent_id,omitempty"`
+	User          *UserInfo2             `protobuf:"bytes,10,opt,name=user,proto3" json:"user,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *GetUserReply) Reset() {
 	*x = GetUserReply{}
-	mi := &file_api_user_service_v1_user_proto_msgTypes[20]
+	mi := &file_api_user_service_v1_user_proto_msgTypes[23]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1121,7 +1259,7 @@ func (x *GetUserReply) String() string {
 func (*GetUserReply) ProtoMessage() {}
 
 func (x *GetUserReply) ProtoReflect() protoreflect.Message {
-	mi := &file_api_user_service_v1_user_proto_msgTypes[20]
+	mi := &file_api_user_service_v1_user_proto_msgTypes[23]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1134,49 +1272,14 @@ func (x *GetUserReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetUserReply.ProtoReflect.Descriptor instead.
 func (*GetUserReply) Descriptor() ([]byte, []int) {
-	return file_api_user_service_v1_user_proto_rawDescGZIP(), []int{20}
+	return file_api_user_service_v1_user_proto_rawDescGZIP(), []int{23}
 }
 
-func (x *GetUserReply) GetId() string {
+func (x *GetUserReply) GetUser() *UserInfo2 {
 	if x != nil {
-		return x.Id
+		return x.User
 	}
-	return ""
-}
-
-func (x *GetUserReply) GetUsername() string {
-	if x != nil {
-		return x.Username
-	}
-	return ""
-}
-
-func (x *GetUserReply) GetLevel() int32 {
-	if x != nil {
-		return x.Level
-	}
-	return 0
-}
-
-func (x *GetUserReply) GetSharePercent() float32 {
-	if x != nil {
-		return x.SharePercent
-	}
-	return 0
-}
-
-func (x *GetUserReply) GetNickname() string {
-	if x != nil && x.Nickname != nil {
-		return *x.Nickname
-	}
-	return ""
-}
-
-func (x *GetUserReply) GetParentId() string {
-	if x != nil && x.ParentId != nil {
-		return *x.ParentId
-	}
-	return ""
+	return nil
 }
 
 type ListUserRequest struct {
@@ -1187,7 +1290,7 @@ type ListUserRequest struct {
 
 func (x *ListUserRequest) Reset() {
 	*x = ListUserRequest{}
-	mi := &file_api_user_service_v1_user_proto_msgTypes[21]
+	mi := &file_api_user_service_v1_user_proto_msgTypes[24]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1199,7 +1302,7 @@ func (x *ListUserRequest) String() string {
 func (*ListUserRequest) ProtoMessage() {}
 
 func (x *ListUserRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_api_user_service_v1_user_proto_msgTypes[21]
+	mi := &file_api_user_service_v1_user_proto_msgTypes[24]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1212,19 +1315,19 @@ func (x *ListUserRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListUserRequest.ProtoReflect.Descriptor instead.
 func (*ListUserRequest) Descriptor() ([]byte, []int) {
-	return file_api_user_service_v1_user_proto_rawDescGZIP(), []int{21}
+	return file_api_user_service_v1_user_proto_rawDescGZIP(), []int{24}
 }
 
 type ListUserReply struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Users         []*ListUserReply_User  `protobuf:"bytes,1,rep,name=users,proto3" json:"users,omitempty"`
+	Users         []*UserInfo2           `protobuf:"bytes,2,rep,name=users,proto3" json:"users,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *ListUserReply) Reset() {
 	*x = ListUserReply{}
-	mi := &file_api_user_service_v1_user_proto_msgTypes[22]
+	mi := &file_api_user_service_v1_user_proto_msgTypes[25]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1236,7 +1339,7 @@ func (x *ListUserReply) String() string {
 func (*ListUserReply) ProtoMessage() {}
 
 func (x *ListUserReply) ProtoReflect() protoreflect.Message {
-	mi := &file_api_user_service_v1_user_proto_msgTypes[22]
+	mi := &file_api_user_service_v1_user_proto_msgTypes[25]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1249,10 +1352,10 @@ func (x *ListUserReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListUserReply.ProtoReflect.Descriptor instead.
 func (*ListUserReply) Descriptor() ([]byte, []int) {
-	return file_api_user_service_v1_user_proto_rawDescGZIP(), []int{22}
+	return file_api_user_service_v1_user_proto_rawDescGZIP(), []int{25}
 }
 
-func (x *ListUserReply) GetUsers() []*ListUserReply_User {
+func (x *ListUserReply) GetUsers() []*UserInfo2 {
 	if x != nil {
 		return x.Users
 	}
@@ -1270,7 +1373,7 @@ type ListUserDomainsByUserIdReply_Domain struct {
 
 func (x *ListUserDomainsByUserIdReply_Domain) Reset() {
 	*x = ListUserDomainsByUserIdReply_Domain{}
-	mi := &file_api_user_service_v1_user_proto_msgTypes[23]
+	mi := &file_api_user_service_v1_user_proto_msgTypes[26]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1282,7 +1385,7 @@ func (x *ListUserDomainsByUserIdReply_Domain) String() string {
 func (*ListUserDomainsByUserIdReply_Domain) ProtoMessage() {}
 
 func (x *ListUserDomainsByUserIdReply_Domain) ProtoReflect() protoreflect.Message {
-	mi := &file_api_user_service_v1_user_proto_msgTypes[23]
+	mi := &file_api_user_service_v1_user_proto_msgTypes[26]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1295,7 +1398,7 @@ func (x *ListUserDomainsByUserIdReply_Domain) ProtoReflect() protoreflect.Messag
 
 // Deprecated: Use ListUserDomainsByUserIdReply_Domain.ProtoReflect.Descriptor instead.
 func (*ListUserDomainsByUserIdReply_Domain) Descriptor() ([]byte, []int) {
-	return file_api_user_service_v1_user_proto_rawDescGZIP(), []int{6, 0}
+	return file_api_user_service_v1_user_proto_rawDescGZIP(), []int{9, 0}
 }
 
 func (x *ListUserDomainsByUserIdReply_Domain) GetId() string {
@@ -1330,7 +1433,7 @@ type ListUserDomainsReply_Domain struct {
 
 func (x *ListUserDomainsReply_Domain) Reset() {
 	*x = ListUserDomainsReply_Domain{}
-	mi := &file_api_user_service_v1_user_proto_msgTypes[24]
+	mi := &file_api_user_service_v1_user_proto_msgTypes[27]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1342,7 +1445,7 @@ func (x *ListUserDomainsReply_Domain) String() string {
 func (*ListUserDomainsReply_Domain) ProtoMessage() {}
 
 func (x *ListUserDomainsReply_Domain) ProtoReflect() protoreflect.Message {
-	mi := &file_api_user_service_v1_user_proto_msgTypes[24]
+	mi := &file_api_user_service_v1_user_proto_msgTypes[27]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1355,7 +1458,7 @@ func (x *ListUserDomainsReply_Domain) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListUserDomainsReply_Domain.ProtoReflect.Descriptor instead.
 func (*ListUserDomainsReply_Domain) Descriptor() ([]byte, []int) {
-	return file_api_user_service_v1_user_proto_rawDescGZIP(), []int{8, 0}
+	return file_api_user_service_v1_user_proto_rawDescGZIP(), []int{11, 0}
 }
 
 func (x *ListUserDomainsReply_Domain) GetId() string {
@@ -1379,107 +1482,38 @@ func (x *ListUserDomainsReply_Domain) GetDomain() string {
 	return ""
 }
 
-type ListUserReply_User struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	Username      string                 `protobuf:"bytes,2,opt,name=username,proto3" json:"username,omitempty"`
-	Nickname      string                 `protobuf:"bytes,3,opt,name=nickname,proto3" json:"nickname,omitempty"`
-	ParentId      string                 `protobuf:"bytes,4,opt,name=parent_id,json=parentId,proto3" json:"parent_id,omitempty"`
-	Level         int32                  `protobuf:"varint,5,opt,name=level,proto3" json:"level,omitempty"`
-	SharePercent  float32                `protobuf:"fixed32,6,opt,name=share_percent,json=sharePercent,proto3" json:"share_percent,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *ListUserReply_User) Reset() {
-	*x = ListUserReply_User{}
-	mi := &file_api_user_service_v1_user_proto_msgTypes[25]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *ListUserReply_User) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*ListUserReply_User) ProtoMessage() {}
-
-func (x *ListUserReply_User) ProtoReflect() protoreflect.Message {
-	mi := &file_api_user_service_v1_user_proto_msgTypes[25]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use ListUserReply_User.ProtoReflect.Descriptor instead.
-func (*ListUserReply_User) Descriptor() ([]byte, []int) {
-	return file_api_user_service_v1_user_proto_rawDescGZIP(), []int{22, 0}
-}
-
-func (x *ListUserReply_User) GetId() string {
-	if x != nil {
-		return x.Id
-	}
-	return ""
-}
-
-func (x *ListUserReply_User) GetUsername() string {
-	if x != nil {
-		return x.Username
-	}
-	return ""
-}
-
-func (x *ListUserReply_User) GetNickname() string {
-	if x != nil {
-		return x.Nickname
-	}
-	return ""
-}
-
-func (x *ListUserReply_User) GetParentId() string {
-	if x != nil {
-		return x.ParentId
-	}
-	return ""
-}
-
-func (x *ListUserReply_User) GetLevel() int32 {
-	if x != nil {
-		return x.Level
-	}
-	return 0
-}
-
-func (x *ListUserReply_User) GetSharePercent() float32 {
-	if x != nil {
-		return x.SharePercent
-	}
-	return 0
-}
-
 var File_api_user_service_v1_user_proto protoreflect.FileDescriptor
 
 const file_api_user_service_v1_user_proto_rawDesc = "" +
 	"\n" +
-	"\x1eapi/user/service/v1/user.proto\x12\x13api.user.service.v1\x1a\x1cgoogle/api/annotations.proto\x1a\x17validate/validate.proto\"9\n" +
-	"\x16GetUserByDomainRequest\x12\x1f\n" +
-	"\x06domain\x18\x01 \x01(\tB\a\xfaB\x04r\x02\x10\x01R\x06domain\"\xe7\x01\n" +
-	"\x14GetUserByDomainReply\x12\x0e\n" +
+	"\x1eapi/user/service/v1/user.proto\x12\x13api.user.service.v1\x1a\x1cgoogle/api/annotations.proto\x1a\x17validate/validate.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x13errors/errors.proto\"\x8b\x02\n" +
+	"\tUserInfo2\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x1a\n" +
 	"\busername\x18\x02 \x01(\tR\busername\x12\x14\n" +
-	"\x05level\x18\x05 \x01(\x05R\x05level\x12#\n" +
-	"\rshare_percent\x18\x06 \x01(\x02R\fsharePercent\x12\x1f\n" +
-	"\bnickname\x18\a \x01(\tH\x00R\bnickname\x88\x01\x01\x12 \n" +
-	"\tparent_id\x18\b \x01(\tH\x01R\bparentId\x88\x01\x01B\v\n" +
+	"\x05level\x18\x03 \x01(\x05R\x05level\x12#\n" +
+	"\rshare_percent\x18\x04 \x01(\x02R\fsharePercent\x12\x1f\n" +
+	"\bnickname\x18\x05 \x01(\tH\x00R\bnickname\x88\x01\x01\x12 \n" +
+	"\tparent_id\x18\x06 \x01(\tH\x01R\bparentId\x88\x01\x01\x129\n" +
+	"\n" +
+	"created_at\x18\a \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAtB\v\n" +
 	"\t_nicknameB\f\n" +
 	"\n" +
-	"_parent_idJ\x04\b\x03\x10\x04J\x04\b\x04\x10\x05\"6\n" +
+	"_parent_id\"\xc4\x01\n" +
+	"\x15ListUserByParentIdReq\x12%\n" +
+	"\tparent_id\x18\x01 \x01(\tB\b\xfaB\x05r\x03\xb0\x01\x01R\bparentId\x12.\n" +
+	"\border_by\x18\x03 \x01(\tB\x13\xfaB\x10r\x0eR\x00R\n" +
+	"created_atR\aorderBy\x12\x14\n" +
+	"\x05limit\x18\x05 \x01(\x05R\x05limit\x12\x16\n" +
+	"\x06offset\x18\x06 \x01(\x05R\x06offset\x12&\n" +
+	"\x04sort\x18\a \x01(\tB\x12\xfaB\x0fr\rR\x00R\x03ascR\x04descR\x04sort\"U\n" +
+	"\x17ListUserByParentIdReply\x124\n" +
+	"\x05users\x18\x02 \x03(\v2\x1e.api.user.service.v1.UserInfo2R\x05usersJ\x04\b\x01\x10\x02\"9\n" +
+	"\x16GetUserByDomainRequest\x12\x1f\n" +
+	"\x06domain\x18\x01 \x01(\tB\a\xfaB\x04r\x02\x10\x01R\x06domain\"P\n" +
+	"\x14GetUserByDomainReply\x122\n" +
+	"\x04user\x18\n" +
+	" \x01(\v2\x1e.api.user.service.v1.UserInfo2R\x04userJ\x04\b\x01\x10\n" +
+	"\"6\n" +
 	"\x18GetUserByUsernameRequest\x12\x1a\n" +
 	"\busername\x18\x01 \x01(\tR\busername\"%\n" +
 	"\x13DeleteDomainRequest\x12\x0e\n" +
@@ -1521,17 +1555,10 @@ const file_api_user_service_v1_user_proto_rawDesc = "" +
 	"\rshare_percent\x18\a \x01(\x02R\fsharePercentB\v\n" +
 	"\t_nicknameB\f\n" +
 	"\n" +
-	"_parent_id\"\xe2\x01\n" +
-	"\x0fCreateUserReply\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\x12\x1a\n" +
-	"\busername\x18\x02 \x01(\tR\busername\x12\x14\n" +
-	"\x05level\x18\x05 \x01(\x05R\x05level\x12#\n" +
-	"\rshare_percent\x18\x06 \x01(\x02R\fsharePercent\x12\x1f\n" +
-	"\bnickname\x18\a \x01(\tH\x00R\bnickname\x88\x01\x01\x12 \n" +
-	"\tparent_id\x18\b \x01(\tH\x01R\bparentId\x88\x01\x01B\v\n" +
-	"\t_nicknameB\f\n" +
-	"\n" +
-	"_parent_idJ\x04\b\x03\x10\x04J\x04\b\x04\x10\x05\"\xcf\x01\n" +
+	"_parent_id\"K\n" +
+	"\x0fCreateUserReply\x122\n" +
+	"\x04user\x18\n" +
+	" \x01(\v2\x1e.api.user.service.v1.UserInfo2R\x04userJ\x04\b\x01\x10\t\"\xcf\x01\n" +
 	"\x11UpdateUserRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12*\n" +
 	"\bpassword\x18\x03 \x01(\tB\t\xfaB\x06r\x04\x10\b\x18\x14H\x00R\bpassword\x88\x01\x01\x12(\n" +
@@ -1539,42 +1566,25 @@ const file_api_user_service_v1_user_proto_rawDesc = "" +
 	"\rshare_percent\x18\x05 \x01(\x02H\x02R\fsharePercent\x88\x01\x01B\v\n" +
 	"\t_passwordB\v\n" +
 	"\t_nicknameB\x10\n" +
-	"\x0e_share_percent\"\xe2\x01\n" +
-	"\x0fUpdateUserReply\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\x12\x1a\n" +
-	"\busername\x18\x02 \x01(\tR\busername\x12\x14\n" +
-	"\x05level\x18\x05 \x01(\x05R\x05level\x12#\n" +
-	"\rshare_percent\x18\x06 \x01(\x02R\fsharePercent\x12\x1f\n" +
-	"\bnickname\x18\a \x01(\tH\x00R\bnickname\x88\x01\x01\x12 \n" +
-	"\tparent_id\x18\b \x01(\tH\x01R\bparentId\x88\x01\x01B\v\n" +
-	"\t_nicknameB\f\n" +
-	"\n" +
-	"_parent_idJ\x04\b\x03\x10\x04J\x04\b\x04\x10\x05\"#\n" +
+	"\x0e_share_percent\"K\n" +
+	"\x0fUpdateUserReply\x122\n" +
+	"\x04user\x18\n" +
+	" \x01(\v2\x1e.api.user.service.v1.UserInfo2R\x04userJ\x04\b\x01\x10\t\"#\n" +
 	"\x11DeleteUserRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\"\x11\n" +
 	"\x0fDeleteUserReply\" \n" +
 	"\x0eGetUserRequest\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\"\xdf\x01\n" +
-	"\fGetUserReply\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\x12\x1a\n" +
-	"\busername\x18\x02 \x01(\tR\busername\x12\x14\n" +
-	"\x05level\x18\x05 \x01(\x05R\x05level\x12#\n" +
-	"\rshare_percent\x18\x06 \x01(\x02R\fsharePercent\x12\x1f\n" +
-	"\bnickname\x18\a \x01(\tH\x00R\bnickname\x88\x01\x01\x12 \n" +
-	"\tparent_id\x18\b \x01(\tH\x01R\bparentId\x88\x01\x01B\v\n" +
-	"\t_nicknameB\f\n" +
-	"\n" +
-	"_parent_idJ\x04\b\x03\x10\x04J\x04\b\x04\x10\x05\"\x11\n" +
-	"\x0fListUserRequest\"\xf7\x01\n" +
-	"\rListUserReply\x12=\n" +
-	"\x05users\x18\x01 \x03(\v2'.api.user.service.v1.ListUserReply.UserR\x05users\x1a\xa6\x01\n" +
-	"\x04User\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\x12\x1a\n" +
-	"\busername\x18\x02 \x01(\tR\busername\x12\x1a\n" +
-	"\bnickname\x18\x03 \x01(\tR\bnickname\x12\x1b\n" +
-	"\tparent_id\x18\x04 \x01(\tR\bparentId\x12\x14\n" +
-	"\x05level\x18\x05 \x01(\x05R\x05level\x12#\n" +
-	"\rshare_percent\x18\x06 \x01(\x02R\fsharePercent2\xc4\v\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\"H\n" +
+	"\fGetUserReply\x122\n" +
+	"\x04user\x18\n" +
+	" \x01(\v2\x1e.api.user.service.v1.UserInfo2R\x04userJ\x04\b\x01\x10\t\"\x11\n" +
+	"\x0fListUserRequest\"K\n" +
+	"\rListUserReply\x124\n" +
+	"\x05users\x18\x02 \x03(\v2\x1e.api.user.service.v1.UserInfo2R\x05usersJ\x04\b\x01\x10\x02*d\n" +
+	"\vErrorReason\x12\x1b\n" +
+	"\x11MISSING_PARENT_ID\x10\x00\x1a\x04\xa8E\x90\x03\x12\x18\n" +
+	"\x0eUSER_NOT_FOUNT\x10\x01\x1a\x04\xa8E\x94\x03\x12\x18\n" +
+	"\x0eUSER_IS_EXISTS\x10\x02\x1a\x04\xa8E\x90\x03\x1a\x04\xa0E\xf4\x032\xdd\f\n" +
 	"\x04User\x12p\n" +
 	"\n" +
 	"CreateUser\x12&.api.user.service.v1.CreateUserRequest\x1a$.api.user.service.v1.CreateUserReply\"\x14\x82\xd3\xe4\x93\x02\x0e:\x01*\"\t/v1/users\x12u\n" +
@@ -1585,7 +1595,8 @@ const file_api_user_service_v1_user_proto_rawDesc = "" +
 	"\aGetUser\x12#.api.user.service.v1.GetUserRequest\x1a!.api.user.service.v1.GetUserReply\"\x16\x82\xd3\xe4\x93\x02\x10\x12\x0e/v1/users/{id}\x12g\n" +
 	"\bListUser\x12$.api.user.service.v1.ListUserRequest\x1a\".api.user.service.v1.ListUserReply\"\x11\x82\xd3\xe4\x93\x02\v\x12\t/v1/users\x12e\n" +
 	"\x11GetUserByUsername\x12-.api.user.service.v1.GetUserByUsernameRequest\x1a!.api.user.service.v1.GetUserReply\x12\x94\x01\n" +
-	"\x10CreateUserDomain\x12,.api.user.service.v1.CreateUserDomainRequest\x1a*.api.user.service.v1.CreateUserDomainReply\"&\x82\xd3\xe4\x93\x02 :\x01*\"\x1b/v1/users/{user_id}/domains\x12}\n" +
+	"\x10CreateUserDomain\x12,.api.user.service.v1.CreateUserDomainRequest\x1a*.api.user.service.v1.CreateUserDomainReply\"&\x82\xd3\xe4\x93\x02 :\x01*\"\x1b/v1/users/{user_id}/domains\x12\x96\x01\n" +
+	"\x12ListUserByParentId\x12*.api.user.service.v1.ListUserByParentIdReq\x1a,.api.user.service.v1.ListUserByParentIdReply\"&\x82\xd3\xe4\x93\x02 \x12\x1e/v1/users/{parent_id}/children\x12}\n" +
 	"\rGetUserDomain\x12).api.user.service.v1.GetUserDomainRequest\x1a'.api.user.service.v1.GetUserDomainReply\"\x18\x82\xd3\xe4\x93\x02\x12\x12\x10/v1/domains/{id}\x12~\n" +
 	"\x0fListUserDomains\x12+.api.user.service.v1.ListUserDomainsRequest\x1a).api.user.service.v1.ListUserDomainsReply\"\x13\x82\xd3\xe4\x93\x02\r\x12\v/v1/domains\x12\xa6\x01\n" +
 	"\x17ListUserDomainsByUserId\x123.api.user.service.v1.ListUserDomainsByUserIdRequest\x1a1.api.user.service.v1.ListUserDomainsByUserIdReply\"#\x82\xd3\xe4\x93\x02\x1d\x12\x1b/v1/users/{user_id}/domains\x12z\n" +
@@ -1605,68 +1616,81 @@ func file_api_user_service_v1_user_proto_rawDescGZIP() []byte {
 	return file_api_user_service_v1_user_proto_rawDescData
 }
 
-var file_api_user_service_v1_user_proto_msgTypes = make([]protoimpl.MessageInfo, 26)
+var file_api_user_service_v1_user_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
+var file_api_user_service_v1_user_proto_msgTypes = make([]protoimpl.MessageInfo, 28)
 var file_api_user_service_v1_user_proto_goTypes = []any{
-	(*GetUserByDomainRequest)(nil),              // 0: api.user.service.v1.GetUserByDomainRequest
-	(*GetUserByDomainReply)(nil),                // 1: api.user.service.v1.GetUserByDomainReply
-	(*GetUserByUsernameRequest)(nil),            // 2: api.user.service.v1.GetUserByUsernameRequest
-	(*DeleteDomainRequest)(nil),                 // 3: api.user.service.v1.DeleteDomainRequest
-	(*DeleteDomainReply)(nil),                   // 4: api.user.service.v1.DeleteDomainReply
-	(*ListUserDomainsByUserIdRequest)(nil),      // 5: api.user.service.v1.ListUserDomainsByUserIdRequest
-	(*ListUserDomainsByUserIdReply)(nil),        // 6: api.user.service.v1.ListUserDomainsByUserIdReply
-	(*ListUserDomainsRequest)(nil),              // 7: api.user.service.v1.ListUserDomainsRequest
-	(*ListUserDomainsReply)(nil),                // 8: api.user.service.v1.ListUserDomainsReply
-	(*GetUserDomainRequest)(nil),                // 9: api.user.service.v1.GetUserDomainRequest
-	(*GetUserDomainReply)(nil),                  // 10: api.user.service.v1.GetUserDomainReply
-	(*CreateUserDomainRequest)(nil),             // 11: api.user.service.v1.CreateUserDomainRequest
-	(*CreateUserDomainReply)(nil),               // 12: api.user.service.v1.CreateUserDomainReply
-	(*CreateUserRequest)(nil),                   // 13: api.user.service.v1.CreateUserRequest
-	(*CreateUserReply)(nil),                     // 14: api.user.service.v1.CreateUserReply
-	(*UpdateUserRequest)(nil),                   // 15: api.user.service.v1.UpdateUserRequest
-	(*UpdateUserReply)(nil),                     // 16: api.user.service.v1.UpdateUserReply
-	(*DeleteUserRequest)(nil),                   // 17: api.user.service.v1.DeleteUserRequest
-	(*DeleteUserReply)(nil),                     // 18: api.user.service.v1.DeleteUserReply
-	(*GetUserRequest)(nil),                      // 19: api.user.service.v1.GetUserRequest
-	(*GetUserReply)(nil),                        // 20: api.user.service.v1.GetUserReply
-	(*ListUserRequest)(nil),                     // 21: api.user.service.v1.ListUserRequest
-	(*ListUserReply)(nil),                       // 22: api.user.service.v1.ListUserReply
-	(*ListUserDomainsByUserIdReply_Domain)(nil), // 23: api.user.service.v1.ListUserDomainsByUserIdReply.Domain
-	(*ListUserDomainsReply_Domain)(nil),         // 24: api.user.service.v1.ListUserDomainsReply.Domain
-	(*ListUserReply_User)(nil),                  // 25: api.user.service.v1.ListUserReply.User
+	(ErrorReason)(0),                            // 0: api.user.service.v1.ErrorReason
+	(*UserInfo2)(nil),                           // 1: api.user.service.v1.UserInfo2
+	(*ListUserByParentIdReq)(nil),               // 2: api.user.service.v1.ListUserByParentIdReq
+	(*ListUserByParentIdReply)(nil),             // 3: api.user.service.v1.ListUserByParentIdReply
+	(*GetUserByDomainRequest)(nil),              // 4: api.user.service.v1.GetUserByDomainRequest
+	(*GetUserByDomainReply)(nil),                // 5: api.user.service.v1.GetUserByDomainReply
+	(*GetUserByUsernameRequest)(nil),            // 6: api.user.service.v1.GetUserByUsernameRequest
+	(*DeleteDomainRequest)(nil),                 // 7: api.user.service.v1.DeleteDomainRequest
+	(*DeleteDomainReply)(nil),                   // 8: api.user.service.v1.DeleteDomainReply
+	(*ListUserDomainsByUserIdRequest)(nil),      // 9: api.user.service.v1.ListUserDomainsByUserIdRequest
+	(*ListUserDomainsByUserIdReply)(nil),        // 10: api.user.service.v1.ListUserDomainsByUserIdReply
+	(*ListUserDomainsRequest)(nil),              // 11: api.user.service.v1.ListUserDomainsRequest
+	(*ListUserDomainsReply)(nil),                // 12: api.user.service.v1.ListUserDomainsReply
+	(*GetUserDomainRequest)(nil),                // 13: api.user.service.v1.GetUserDomainRequest
+	(*GetUserDomainReply)(nil),                  // 14: api.user.service.v1.GetUserDomainReply
+	(*CreateUserDomainRequest)(nil),             // 15: api.user.service.v1.CreateUserDomainRequest
+	(*CreateUserDomainReply)(nil),               // 16: api.user.service.v1.CreateUserDomainReply
+	(*CreateUserRequest)(nil),                   // 17: api.user.service.v1.CreateUserRequest
+	(*CreateUserReply)(nil),                     // 18: api.user.service.v1.CreateUserReply
+	(*UpdateUserRequest)(nil),                   // 19: api.user.service.v1.UpdateUserRequest
+	(*UpdateUserReply)(nil),                     // 20: api.user.service.v1.UpdateUserReply
+	(*DeleteUserRequest)(nil),                   // 21: api.user.service.v1.DeleteUserRequest
+	(*DeleteUserReply)(nil),                     // 22: api.user.service.v1.DeleteUserReply
+	(*GetUserRequest)(nil),                      // 23: api.user.service.v1.GetUserRequest
+	(*GetUserReply)(nil),                        // 24: api.user.service.v1.GetUserReply
+	(*ListUserRequest)(nil),                     // 25: api.user.service.v1.ListUserRequest
+	(*ListUserReply)(nil),                       // 26: api.user.service.v1.ListUserReply
+	(*ListUserDomainsByUserIdReply_Domain)(nil), // 27: api.user.service.v1.ListUserDomainsByUserIdReply.Domain
+	(*ListUserDomainsReply_Domain)(nil),         // 28: api.user.service.v1.ListUserDomainsReply.Domain
+	(*timestamppb.Timestamp)(nil),               // 29: google.protobuf.Timestamp
 }
 var file_api_user_service_v1_user_proto_depIdxs = []int32{
-	23, // 0: api.user.service.v1.ListUserDomainsByUserIdReply.domains:type_name -> api.user.service.v1.ListUserDomainsByUserIdReply.Domain
-	24, // 1: api.user.service.v1.ListUserDomainsReply.domains:type_name -> api.user.service.v1.ListUserDomainsReply.Domain
-	25, // 2: api.user.service.v1.ListUserReply.users:type_name -> api.user.service.v1.ListUserReply.User
-	13, // 3: api.user.service.v1.User.CreateUser:input_type -> api.user.service.v1.CreateUserRequest
-	15, // 4: api.user.service.v1.User.UpdateUser:input_type -> api.user.service.v1.UpdateUserRequest
-	17, // 5: api.user.service.v1.User.DeleteUser:input_type -> api.user.service.v1.DeleteUserRequest
-	19, // 6: api.user.service.v1.User.GetUser:input_type -> api.user.service.v1.GetUserRequest
-	21, // 7: api.user.service.v1.User.ListUser:input_type -> api.user.service.v1.ListUserRequest
-	2,  // 8: api.user.service.v1.User.GetUserByUsername:input_type -> api.user.service.v1.GetUserByUsernameRequest
-	11, // 9: api.user.service.v1.User.CreateUserDomain:input_type -> api.user.service.v1.CreateUserDomainRequest
-	9,  // 10: api.user.service.v1.User.GetUserDomain:input_type -> api.user.service.v1.GetUserDomainRequest
-	7,  // 11: api.user.service.v1.User.ListUserDomains:input_type -> api.user.service.v1.ListUserDomainsRequest
-	5,  // 12: api.user.service.v1.User.ListUserDomainsByUserId:input_type -> api.user.service.v1.ListUserDomainsByUserIdRequest
-	3,  // 13: api.user.service.v1.User.DeleteDomain:input_type -> api.user.service.v1.DeleteDomainRequest
-	0,  // 14: api.user.service.v1.User.GetUserByDomain:input_type -> api.user.service.v1.GetUserByDomainRequest
-	14, // 15: api.user.service.v1.User.CreateUser:output_type -> api.user.service.v1.CreateUserReply
-	16, // 16: api.user.service.v1.User.UpdateUser:output_type -> api.user.service.v1.UpdateUserReply
-	18, // 17: api.user.service.v1.User.DeleteUser:output_type -> api.user.service.v1.DeleteUserReply
-	20, // 18: api.user.service.v1.User.GetUser:output_type -> api.user.service.v1.GetUserReply
-	22, // 19: api.user.service.v1.User.ListUser:output_type -> api.user.service.v1.ListUserReply
-	20, // 20: api.user.service.v1.User.GetUserByUsername:output_type -> api.user.service.v1.GetUserReply
-	12, // 21: api.user.service.v1.User.CreateUserDomain:output_type -> api.user.service.v1.CreateUserDomainReply
-	10, // 22: api.user.service.v1.User.GetUserDomain:output_type -> api.user.service.v1.GetUserDomainReply
-	8,  // 23: api.user.service.v1.User.ListUserDomains:output_type -> api.user.service.v1.ListUserDomainsReply
-	6,  // 24: api.user.service.v1.User.ListUserDomainsByUserId:output_type -> api.user.service.v1.ListUserDomainsByUserIdReply
-	4,  // 25: api.user.service.v1.User.DeleteDomain:output_type -> api.user.service.v1.DeleteDomainReply
-	1,  // 26: api.user.service.v1.User.GetUserByDomain:output_type -> api.user.service.v1.GetUserByDomainReply
-	15, // [15:27] is the sub-list for method output_type
-	3,  // [3:15] is the sub-list for method input_type
-	3,  // [3:3] is the sub-list for extension type_name
-	3,  // [3:3] is the sub-list for extension extendee
-	0,  // [0:3] is the sub-list for field type_name
+	29, // 0: api.user.service.v1.UserInfo2.created_at:type_name -> google.protobuf.Timestamp
+	1,  // 1: api.user.service.v1.ListUserByParentIdReply.users:type_name -> api.user.service.v1.UserInfo2
+	1,  // 2: api.user.service.v1.GetUserByDomainReply.user:type_name -> api.user.service.v1.UserInfo2
+	27, // 3: api.user.service.v1.ListUserDomainsByUserIdReply.domains:type_name -> api.user.service.v1.ListUserDomainsByUserIdReply.Domain
+	28, // 4: api.user.service.v1.ListUserDomainsReply.domains:type_name -> api.user.service.v1.ListUserDomainsReply.Domain
+	1,  // 5: api.user.service.v1.CreateUserReply.user:type_name -> api.user.service.v1.UserInfo2
+	1,  // 6: api.user.service.v1.UpdateUserReply.user:type_name -> api.user.service.v1.UserInfo2
+	1,  // 7: api.user.service.v1.GetUserReply.user:type_name -> api.user.service.v1.UserInfo2
+	1,  // 8: api.user.service.v1.ListUserReply.users:type_name -> api.user.service.v1.UserInfo2
+	17, // 9: api.user.service.v1.User.CreateUser:input_type -> api.user.service.v1.CreateUserRequest
+	19, // 10: api.user.service.v1.User.UpdateUser:input_type -> api.user.service.v1.UpdateUserRequest
+	21, // 11: api.user.service.v1.User.DeleteUser:input_type -> api.user.service.v1.DeleteUserRequest
+	23, // 12: api.user.service.v1.User.GetUser:input_type -> api.user.service.v1.GetUserRequest
+	25, // 13: api.user.service.v1.User.ListUser:input_type -> api.user.service.v1.ListUserRequest
+	6,  // 14: api.user.service.v1.User.GetUserByUsername:input_type -> api.user.service.v1.GetUserByUsernameRequest
+	15, // 15: api.user.service.v1.User.CreateUserDomain:input_type -> api.user.service.v1.CreateUserDomainRequest
+	2,  // 16: api.user.service.v1.User.ListUserByParentId:input_type -> api.user.service.v1.ListUserByParentIdReq
+	13, // 17: api.user.service.v1.User.GetUserDomain:input_type -> api.user.service.v1.GetUserDomainRequest
+	11, // 18: api.user.service.v1.User.ListUserDomains:input_type -> api.user.service.v1.ListUserDomainsRequest
+	9,  // 19: api.user.service.v1.User.ListUserDomainsByUserId:input_type -> api.user.service.v1.ListUserDomainsByUserIdRequest
+	7,  // 20: api.user.service.v1.User.DeleteDomain:input_type -> api.user.service.v1.DeleteDomainRequest
+	4,  // 21: api.user.service.v1.User.GetUserByDomain:input_type -> api.user.service.v1.GetUserByDomainRequest
+	18, // 22: api.user.service.v1.User.CreateUser:output_type -> api.user.service.v1.CreateUserReply
+	20, // 23: api.user.service.v1.User.UpdateUser:output_type -> api.user.service.v1.UpdateUserReply
+	22, // 24: api.user.service.v1.User.DeleteUser:output_type -> api.user.service.v1.DeleteUserReply
+	24, // 25: api.user.service.v1.User.GetUser:output_type -> api.user.service.v1.GetUserReply
+	26, // 26: api.user.service.v1.User.ListUser:output_type -> api.user.service.v1.ListUserReply
+	24, // 27: api.user.service.v1.User.GetUserByUsername:output_type -> api.user.service.v1.GetUserReply
+	16, // 28: api.user.service.v1.User.CreateUserDomain:output_type -> api.user.service.v1.CreateUserDomainReply
+	3,  // 29: api.user.service.v1.User.ListUserByParentId:output_type -> api.user.service.v1.ListUserByParentIdReply
+	14, // 30: api.user.service.v1.User.GetUserDomain:output_type -> api.user.service.v1.GetUserDomainReply
+	12, // 31: api.user.service.v1.User.ListUserDomains:output_type -> api.user.service.v1.ListUserDomainsReply
+	10, // 32: api.user.service.v1.User.ListUserDomainsByUserId:output_type -> api.user.service.v1.ListUserDomainsByUserIdReply
+	8,  // 33: api.user.service.v1.User.DeleteDomain:output_type -> api.user.service.v1.DeleteDomainReply
+	5,  // 34: api.user.service.v1.User.GetUserByDomain:output_type -> api.user.service.v1.GetUserByDomainReply
+	22, // [22:35] is the sub-list for method output_type
+	9,  // [9:22] is the sub-list for method input_type
+	9,  // [9:9] is the sub-list for extension type_name
+	9,  // [9:9] is the sub-list for extension extendee
+	0,  // [0:9] is the sub-list for field type_name
 }
 
 func init() { file_api_user_service_v1_user_proto_init() }
@@ -1674,24 +1698,22 @@ func file_api_user_service_v1_user_proto_init() {
 	if File_api_user_service_v1_user_proto != nil {
 		return
 	}
-	file_api_user_service_v1_user_proto_msgTypes[1].OneofWrappers = []any{}
-	file_api_user_service_v1_user_proto_msgTypes[13].OneofWrappers = []any{}
-	file_api_user_service_v1_user_proto_msgTypes[14].OneofWrappers = []any{}
-	file_api_user_service_v1_user_proto_msgTypes[15].OneofWrappers = []any{}
+	file_api_user_service_v1_user_proto_msgTypes[0].OneofWrappers = []any{}
 	file_api_user_service_v1_user_proto_msgTypes[16].OneofWrappers = []any{}
-	file_api_user_service_v1_user_proto_msgTypes[20].OneofWrappers = []any{}
+	file_api_user_service_v1_user_proto_msgTypes[18].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_api_user_service_v1_user_proto_rawDesc), len(file_api_user_service_v1_user_proto_rawDesc)),
-			NumEnums:      0,
-			NumMessages:   26,
+			NumEnums:      1,
+			NumMessages:   28,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
 		GoTypes:           file_api_user_service_v1_user_proto_goTypes,
 		DependencyIndexes: file_api_user_service_v1_user_proto_depIdxs,
+		EnumInfos:         file_api_user_service_v1_user_proto_enumTypes,
 		MessageInfos:      file_api_user_service_v1_user_proto_msgTypes,
 	}.Build()
 	File_api_user_service_v1_user_proto = out.File

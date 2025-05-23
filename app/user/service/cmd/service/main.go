@@ -1,10 +1,12 @@
 package main
 
 import (
+	"context"
 	"flag"
 	"os"
 
 	"agents/app/user/service/internal/conf"
+	"agents/pkg/trace"
 
 	"github.com/go-kratos/kratos/v2"
 	"github.com/go-kratos/kratos/v2/config"
@@ -76,6 +78,7 @@ func main() {
 		panic(err)
 	}
 
+	trace.InitTracerProvider(context.Background(), Name)
 	app, cleanup, err := wireApp(bc.Server, bc.Data, logger, bc.Registry, bc.Auth)
 	if err != nil {
 		panic(err)

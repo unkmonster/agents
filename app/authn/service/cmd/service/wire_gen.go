@@ -12,6 +12,7 @@ import (
 	"agents/app/authn/service/internal/data"
 	"agents/app/authn/service/internal/server"
 	"agents/app/authn/service/internal/service"
+	"agents/pkg/client"
 	"github.com/go-kratos/kratos/v2"
 	"github.com/go-kratos/kratos/v2/log"
 )
@@ -23,10 +24,10 @@ import (
 // Injectors from wire.go:
 
 // wireApp init kratos application.
-func wireApp(confServer *conf.Server, confData *conf.Data, logger log.Logger, auth *conf.Auth, registry *conf.Registry, kong *conf.Kong) (*kratos.App, func(), error) {
+func wireApp(confServer *conf.Server, confData *conf.Data, logger log.Logger, auth *conf.Auth, registry *conf.Registry, kong *conf.Kong, systemUser *conf.SystemUser) (*kratos.App, func(), error) {
 	db := data.NewSqlxClient(confData, logger)
 	discovery := data.NewDiscovery(registry)
-	userClient := data.NewUserServiceClient(discovery)
+	userClient := client.NewUserServiceClient(discovery, logger)
 	dataData, cleanup, err := data.NewData(confData, logger, db, userClient)
 	if err != nil {
 		return nil, nil, err
@@ -34,12 +35,15 @@ func wireApp(confServer *conf.Server, confData *conf.Data, logger log.Logger, au
 	userCredentialRepo := data.NewUserCredentialRepo(dataData, logger)
 	userRepo := data.NewUserRepo(dataData, logger)
 	gatewayRepo := data.NewGatewayRepo(dataData, kong)
-	authUserCase := biz.NewAuthUserCase(userCredentialRepo, logger, userRepo, auth, gatewayRepo)
-	authnService := service.NewAuthnService(authUserCase)
-	grpcServer := server.NewGRPCServer(confServer, authnService, logger, auth)
-	httpServer := server.NewHTTPServer(confServer, logger, authnService, auth)
+	authUseCase := biz.NewAuthUserCase(userCredentialRepo, logger, userRepo, auth, gatewayRepo)
+	authnService := service.NewAuthnService(authUseCase)
+	keyfunc := server.NewJwtKeyFunc(authUseCase)
+	v := server.NewMiddlewares(logger, keyfunc)
+	grpcServer := server.NewGRPCServer(confServer, authnService, logger, v)
+	httpServer := server.NewHTTPServer(confServer, logger, authnService, v)
 	registrar := server.NewRegistrar(registry)
-	app := newApp(logger, grpcServer, httpServer, registrar)
+	v2 := server.NewBeforeStart(logger, authUseCase, systemUser)
+	app := newApp(logger, grpcServer, httpServer, registrar, v2)
 	return app, func() {
 		cleanup()
 	}, nil

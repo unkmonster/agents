@@ -5,6 +5,9 @@ import (
 
 	pb "agents/api/user/service/v1"
 	"agents/app/user/service/internal/biz"
+	"agents/pkg/paging"
+
+	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 type UserService struct {
@@ -39,12 +42,15 @@ func (s *UserService) GetUser(ctx context.Context, req *pb.GetUserRequest) (*pb.
 	}
 
 	return &pb.GetUserReply{
-		Id:           user.Id,
-		Username:     user.Username,
-		Nickname:     user.Nickname,
-		ParentId:     user.ParentId,
-		Level:        user.Level,
-		SharePercent: user.SharePercent,
+		User: &pb.UserInfo2{
+			Id:           user.Id,
+			Username:     user.Username,
+			Nickname:     user.Nickname,
+			ParentId:     user.ParentId,
+			Level:        user.Level,
+			SharePercent: user.SharePercent,
+			CreatedAt:    timestamppb.New(user.CreatedAt),
+		},
 	}, nil
 }
 
@@ -127,12 +133,15 @@ func (s *UserService) GetUserByUsername(ctx context.Context, req *pb.GetUserByUs
 	}
 
 	return &pb.GetUserReply{
-		Id:           user.Id,
-		Username:     user.Username,
-		Nickname:     user.Nickname,
-		ParentId:     user.ParentId,
-		Level:        user.Level,
-		SharePercent: user.SharePercent,
+		User: &pb.UserInfo2{
+			Id:           user.Id,
+			Username:     user.Username,
+			Nickname:     user.Nickname,
+			ParentId:     user.ParentId,
+			Level:        user.Level,
+			SharePercent: user.SharePercent,
+			CreatedAt:    timestamppb.New(user.CreatedAt),
+		},
 	}, nil
 }
 
@@ -143,11 +152,44 @@ func (s *UserService) GetUserByDomain(ctx context.Context, req *pb.GetUserByDoma
 	}
 
 	return &pb.GetUserByDomainReply{
-		Id:           user.Id,
-		Username:     user.Username,
-		Nickname:     user.Nickname,
-		ParentId:     user.ParentId,
-		Level:        user.Level,
-		SharePercent: user.SharePercent,
+		User: &pb.UserInfo2{
+			Id:           user.Id,
+			Username:     user.Username,
+			Nickname:     user.Nickname,
+			ParentId:     user.ParentId,
+			Level:        user.Level,
+			SharePercent: user.SharePercent,
+			CreatedAt:    timestamppb.New(user.CreatedAt),
+		},
 	}, nil
+}
+
+func (s *UserService) ListUserByParentId(ctx context.Context, req *pb.ListUserByParentIdReq) (*pb.ListUserByParentIdReply, error) {
+	if req.Limit == 0 {
+		req.Limit = 20
+	}
+
+	users, err := s.user.ListUserByParent(ctx, req.ParentId, &paging.Paging{
+		Offset:  int64(req.Offset),
+		Limit:   int64(req.Limit),
+		OrderBy: req.OrderBy,
+		Sort:    req.Sort,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	reply := pb.ListUserByParentIdReply{}
+	for _, user := range users {
+		reply.Users = append(reply.Users, &pb.UserInfo2{
+			Id:           user.Id,
+			Username:     user.Username,
+			Nickname:     user.Nickname,
+			ParentId:     user.ParentId,
+			Level:        user.Level,
+			SharePercent: user.SharePercent,
+			CreatedAt:    timestamppb.New(user.CreatedAt),
+		})
+	}
+	return &reply, nil
 }

@@ -26,6 +26,7 @@ const OperationUserDeleteUser = "/api.user.service.v1.User/DeleteUser"
 const OperationUserGetUser = "/api.user.service.v1.User/GetUser"
 const OperationUserGetUserDomain = "/api.user.service.v1.User/GetUserDomain"
 const OperationUserListUser = "/api.user.service.v1.User/ListUser"
+const OperationUserListUserByParentId = "/api.user.service.v1.User/ListUserByParentId"
 const OperationUserListUserDomains = "/api.user.service.v1.User/ListUserDomains"
 const OperationUserListUserDomainsByUserId = "/api.user.service.v1.User/ListUserDomainsByUserId"
 const OperationUserUpdateUser = "/api.user.service.v1.User/UpdateUser"
@@ -39,6 +40,7 @@ type UserHTTPServer interface {
 	// GetUserDomain 获取域名
 	GetUserDomain(context.Context, *GetUserDomainRequest) (*GetUserDomainReply, error)
 	ListUser(context.Context, *ListUserRequest) (*ListUserReply, error)
+	ListUserByParentId(context.Context, *ListUserByParentIdReq) (*ListUserByParentIdReply, error)
 	ListUserDomains(context.Context, *ListUserDomainsRequest) (*ListUserDomainsReply, error)
 	ListUserDomainsByUserId(context.Context, *ListUserDomainsByUserIdRequest) (*ListUserDomainsByUserIdReply, error)
 	UpdateUser(context.Context, *UpdateUserRequest) (*UpdateUserReply, error)
@@ -52,6 +54,7 @@ func RegisterUserHTTPServer(s *http.Server, srv UserHTTPServer) {
 	r.GET("/v1/users/{id}", _User_GetUser0_HTTP_Handler(srv))
 	r.GET("/v1/users", _User_ListUser0_HTTP_Handler(srv))
 	r.POST("/v1/users/{user_id}/domains", _User_CreateUserDomain0_HTTP_Handler(srv))
+	r.GET("/v1/users/{parent_id}/children", _User_ListUserByParentId0_HTTP_Handler(srv))
 	r.GET("/v1/domains/{id}", _User_GetUserDomain0_HTTP_Handler(srv))
 	r.GET("/v1/domains", _User_ListUserDomains0_HTTP_Handler(srv))
 	r.GET("/v1/users/{user_id}/domains", _User_ListUserDomainsByUserId0_HTTP_Handler(srv))
@@ -193,6 +196,28 @@ func _User_CreateUserDomain0_HTTP_Handler(srv UserHTTPServer) func(ctx http.Cont
 	}
 }
 
+func _User_ListUserByParentId0_HTTP_Handler(srv UserHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in ListUserByParentIdReq
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationUserListUserByParentId)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.ListUserByParentId(ctx, req.(*ListUserByParentIdReq))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*ListUserByParentIdReply)
+		return ctx.Result(200, reply)
+	}
+}
+
 func _User_GetUserDomain0_HTTP_Handler(srv UserHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in GetUserDomainRequest
@@ -286,6 +311,7 @@ type UserHTTPClient interface {
 	GetUser(ctx context.Context, req *GetUserRequest, opts ...http.CallOption) (rsp *GetUserReply, err error)
 	GetUserDomain(ctx context.Context, req *GetUserDomainRequest, opts ...http.CallOption) (rsp *GetUserDomainReply, err error)
 	ListUser(ctx context.Context, req *ListUserRequest, opts ...http.CallOption) (rsp *ListUserReply, err error)
+	ListUserByParentId(ctx context.Context, req *ListUserByParentIdReq, opts ...http.CallOption) (rsp *ListUserByParentIdReply, err error)
 	ListUserDomains(ctx context.Context, req *ListUserDomainsRequest, opts ...http.CallOption) (rsp *ListUserDomainsReply, err error)
 	ListUserDomainsByUserId(ctx context.Context, req *ListUserDomainsByUserIdRequest, opts ...http.CallOption) (rsp *ListUserDomainsByUserIdReply, err error)
 	UpdateUser(ctx context.Context, req *UpdateUserRequest, opts ...http.CallOption) (rsp *UpdateUserReply, err error)
@@ -382,6 +408,19 @@ func (c *UserHTTPClientImpl) ListUser(ctx context.Context, in *ListUserRequest, 
 	pattern := "/v1/users"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationUserListUser))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+func (c *UserHTTPClientImpl) ListUserByParentId(ctx context.Context, in *ListUserByParentIdReq, opts ...http.CallOption) (*ListUserByParentIdReply, error) {
+	var out ListUserByParentIdReply
+	pattern := "/v1/users/{parent_id}/children"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationUserListUserByParentId))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {

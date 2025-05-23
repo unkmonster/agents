@@ -29,12 +29,13 @@ func (u *userRepo) GetUser(ctx context.Context, userId string) (*biz.User, error
 	}
 
 	return &biz.User{
-		Id:           reply.Id,
-		Username:     reply.Username,
-		Nickname:     reply.Nickname,
-		ParentId:     reply.ParentId,
-		Level:        reply.Level,
-		SharePercent: reply.SharePercent,
+		Id:           reply.User.Id,
+		Username:     reply.User.Username,
+		Nickname:     reply.User.Nickname,
+		ParentId:     reply.User.ParentId,
+		Level:        reply.User.Level,
+		SharePercent: reply.User.SharePercent,
+		CreatedAt:    reply.User.CreatedAt.AsTime(),
 	}, nil
 }
 
@@ -49,11 +50,12 @@ func (u *userRepo) GetUserByDomain(ctx context.Context, domain string) (*biz.Use
 	}
 
 	return &biz.User{
-		Id:           reply.Id,
-		Username:     reply.Username,
-		Nickname:     reply.Nickname,
-		ParentId:     reply.ParentId,
-		Level:        reply.Level,
-		SharePercent: reply.SharePercent,
+		Id:           reply.User.Id,
+		Username:     reply.User.Username,
+		Nickname:     reply.User.Nickname,
+		ParentId:     reply.User.ParentId,
+		Level:        reply.User.Level,
+		SharePercent: reply.User.SharePercent,
+		CreatedAt:    reply.User.CreatedAt.AsTime(),
 	}, nil
 }
