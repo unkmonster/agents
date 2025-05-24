@@ -2,7 +2,10 @@ package biz
 
 import (
 	"context"
+	"crypto/rsa"
+	"crypto/x509"
 	"database/sql"
+	"encoding/pem"
 	"errors"
 	"fmt"
 	"runtime"
@@ -74,6 +77,20 @@ func NewAuthUserCase(logger log.Logger, auth *conf.Auth, credential UserCredenti
 		gateway:       gateway,
 		pool:          pool,
 	}
+}
+
+func parseRSAPrivateKeyFromPEM(pemData []byte) (*rsa.PrivateKey, error) {
+	block, _ := pem.Decode(pemData)
+	if block == nil || block.Type != "RSA PRIVATE KEY" {
+		return nil, fmt.Errorf("failed to decode PEM block containing RSA private key")
+	}
+
+	privKey, err := x509.ParsePKCS1PrivateKey(block.Bytes)
+	if err != nil {
+		return nil, err
+	}
+
+	return privKey, nil
 }
 
 // doRegisterUser 做实际注册用户需要的工作，调用用户服务创建用户，保存用户凭据，创建网关消费者...
@@ -196,29 +213,46 @@ func (uc *AuthUseCase) RegisterChildUser(ctx context.Context, req *pb.RegisterRe
 }
 
 func (uc *AuthUseCase) Login(ctx context.Context, req *pb.LoginRequest) (*pb.AuthReply, error) {
+	log := uc.log.WithContext(ctx)
+	log.Infow("msg", "start logging user", "username", *req.Username)
+
+	log.Infof("start getting user credential")
 	credential, err := uc.credential.GetByUsername(ctx, *req.Username)
 	if err != nil {
+		log.Infow("msg", "getting user credential failed", "reason", err)
 		return nil, err
 	}
 
+	log.Info("start comparing user password")
 	if err := bcrypt.CompareHashAndPassword([]byte(credential.HashedPassword), []byte(*req.Password)); err != nil {
+		log.Errorf("comparing user password failed: %v", err)
 		return nil, err
 	}
 
+	log.Infow("start getting user in user_service")
 	user, err := uc.user.GetByUsername(ctx, *req.Username)
 	if errors.Is(err, sql.ErrNoRows) {
 		err = pb.ErrorUserNotFount("user %q not fount", *req.Username)
 	}
 	if err != nil {
+		log.Errorf("getting user in user_service failed: %v", err)
 		return nil, err
+	}
+
+	log.Infow("msg", "start updating user last login time")
+	if err := uc.user.UpdateLastLoginTime(ctx, user.Id); err != nil {
+		log.Warnw("msg", "updating user last login time failed", "reason", err)
 	}
 
 	// pem -> *rsa.PrivateKey
-	pk, err := jwtv5.ParseRSAPublicKeyFromPEM([]byte(*credential.PrivateKey))
+	log.Infof("start parsing RSA public key PEM")
+	pk, err := parseRSAPrivateKeyFromPEM([]byte(*credential.PrivateKey))
 	if err != nil {
+		log.Errorf("parsing RSA public key PEM failed: %v", err)
 		return nil, err
 	}
 
+	log.Infof("start generating jwt")
 	tokenStr, err := jwt.GenerateJwt(jwt.UserClaims{
 		RegisteredClaims: jwtv5.RegisteredClaims{
 			Subject:   user.Id,
@@ -229,9 +263,11 @@ func (uc *AuthUseCase) Login(ctx context.Context, req *pb.LoginRequest) (*pb.Aut
 		Level: int(user.Level),
 	}, pk)
 	if err != nil {
+		log.Errorf("generating jwt failed: %v", err)
 		return nil, err
 	}
 
+	log.Info("login successful")
 	return &pb.AuthReply{
 		Token: &tokenStr,
 	}, nil

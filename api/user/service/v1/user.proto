@@ -54,6 +54,8 @@ service User {
 		};
 	};
 
+	rpc UpdateUserLastLoginTime(UpdateUserLastLoginTimeReq) returns (UpdateUserLastLoginTimeReply) {};
+
 	// 获取域名
 	rpc GetUserDomain(GetUserDomainRequest) returns (GetUserDomainReply) {
 		option (google.api.http) = {
@@ -79,6 +81,11 @@ service User {
 	rpc GetUserByDomain(GetUserByDomainRequest) returns (GetUserByDomainReply);
 }
 
+message UpdateUserLastLoginTimeReq{
+	string id = 1 [(validate.rules).string = {uuid: true}];
+}
+message UpdateUserLastLoginTimeReply {}
+
 message UserInfo2 {
 	string id = 1;
 	string username = 2;
@@ -87,6 +94,7 @@ message UserInfo2 {
 	optional string nickname = 5;
 	optional string parent_id = 6;
 	google.protobuf.Timestamp created_at = 7;
+	google.protobuf.Timestamp last_login_at = 8;
 }
 
 message ListUserByParentIdReq {

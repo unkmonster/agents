@@ -22,6 +22,14 @@ func NewUserRepo(data *Data, logger log.Logger) biz.UserRepo {
 	}
 }
 
+// UpdateLastLoginTime implements biz.UserRepo.
+func (u *userRepo) UpdateLastLoginTime(ctx context.Context, userId string) error {
+	_, err := u.data.uc.UpdateUserLastLoginTime(ctx, &userv1.UpdateUserLastLoginTimeReq{
+		Id: userId,
+	})
+	return err
+}
+
 // Create implements biz.UserRepo.
 func (u *userRepo) Create(ctx context.Context, user *biz.User) (*biz.User, error) {
 	reply, err := u.data.uc.CreateUser(ctx, &userv1.CreateUserRequest{

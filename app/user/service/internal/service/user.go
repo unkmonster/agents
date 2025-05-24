@@ -50,6 +50,7 @@ func (s *UserService) GetUser(ctx context.Context, req *pb.GetUserRequest) (*pb.
 			Level:        user.Level,
 			SharePercent: user.SharePercent,
 			CreatedAt:    timestamppb.New(user.CreatedAt),
+			LastLoginAt:  timestamppb.New(user.LastLoginAt.Time),
 		},
 	}, nil
 }
@@ -141,6 +142,7 @@ func (s *UserService) GetUserByUsername(ctx context.Context, req *pb.GetUserByUs
 			Level:        user.Level,
 			SharePercent: user.SharePercent,
 			CreatedAt:    timestamppb.New(user.CreatedAt),
+			LastLoginAt:  timestamppb.New(user.LastLoginAt.Time),
 		},
 	}, nil
 }
@@ -160,6 +162,7 @@ func (s *UserService) GetUserByDomain(ctx context.Context, req *pb.GetUserByDoma
 			Level:        user.Level,
 			SharePercent: user.SharePercent,
 			CreatedAt:    timestamppb.New(user.CreatedAt),
+			LastLoginAt:  timestamppb.New(user.LastLoginAt.Time),
 		},
 	}, nil
 }
@@ -189,7 +192,12 @@ func (s *UserService) ListUserByParentId(ctx context.Context, req *pb.ListUserBy
 			Level:        user.Level,
 			SharePercent: user.SharePercent,
 			CreatedAt:    timestamppb.New(user.CreatedAt),
+			LastLoginAt:  timestamppb.New(user.LastLoginAt.Time),
 		})
 	}
 	return &reply, nil
+}
+
+func (s *UserService) UpdateUserLastLoginTime(ctx context.Context, req *pb.UpdateUserLastLoginTimeReq) (*pb.UpdateUserLastLoginTimeReply, error) {
+	return nil, s.user.UpdateUserLastLoginTime(ctx, req.Id)
 }

@@ -38,6 +38,231 @@ var (
 // define the regex for a UUID once up-front
 var _user_uuidPattern = regexp.MustCompile("^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$")
 
+// Validate checks the field values on UpdateUserLastLoginTimeReq with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *UpdateUserLastLoginTimeReq) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on UpdateUserLastLoginTimeReq with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// UpdateUserLastLoginTimeReqMultiError, or nil if none found.
+func (m *UpdateUserLastLoginTimeReq) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *UpdateUserLastLoginTimeReq) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if err := m._validateUuid(m.GetId()); err != nil {
+		err = UpdateUserLastLoginTimeReqValidationError{
+			field:  "Id",
+			reason: "value must be a valid UUID",
+			cause:  err,
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if len(errors) > 0 {
+		return UpdateUserLastLoginTimeReqMultiError(errors)
+	}
+
+	return nil
+}
+
+func (m *UpdateUserLastLoginTimeReq) _validateUuid(uuid string) error {
+	if matched := _user_uuidPattern.MatchString(uuid); !matched {
+		return errors.New("invalid uuid format")
+	}
+
+	return nil
+}
+
+// UpdateUserLastLoginTimeReqMultiError is an error wrapping multiple
+// validation errors returned by UpdateUserLastLoginTimeReq.ValidateAll() if
+// the designated constraints aren't met.
+type UpdateUserLastLoginTimeReqMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m UpdateUserLastLoginTimeReqMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m UpdateUserLastLoginTimeReqMultiError) AllErrors() []error { return m }
+
+// UpdateUserLastLoginTimeReqValidationError is the validation error returned
+// by UpdateUserLastLoginTimeReq.Validate if the designated constraints aren't met.
+type UpdateUserLastLoginTimeReqValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e UpdateUserLastLoginTimeReqValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e UpdateUserLastLoginTimeReqValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e UpdateUserLastLoginTimeReqValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e UpdateUserLastLoginTimeReqValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e UpdateUserLastLoginTimeReqValidationError) ErrorName() string {
+	return "UpdateUserLastLoginTimeReqValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e UpdateUserLastLoginTimeReqValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sUpdateUserLastLoginTimeReq.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = UpdateUserLastLoginTimeReqValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = UpdateUserLastLoginTimeReqValidationError{}
+
+// Validate checks the field values on UpdateUserLastLoginTimeReply with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *UpdateUserLastLoginTimeReply) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on UpdateUserLastLoginTimeReply with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// UpdateUserLastLoginTimeReplyMultiError, or nil if none found.
+func (m *UpdateUserLastLoginTimeReply) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *UpdateUserLastLoginTimeReply) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if len(errors) > 0 {
+		return UpdateUserLastLoginTimeReplyMultiError(errors)
+	}
+
+	return nil
+}
+
+// UpdateUserLastLoginTimeReplyMultiError is an error wrapping multiple
+// validation errors returned by UpdateUserLastLoginTimeReply.ValidateAll() if
+// the designated constraints aren't met.
+type UpdateUserLastLoginTimeReplyMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m UpdateUserLastLoginTimeReplyMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m UpdateUserLastLoginTimeReplyMultiError) AllErrors() []error { return m }
+
+// UpdateUserLastLoginTimeReplyValidationError is the validation error returned
+// by UpdateUserLastLoginTimeReply.Validate if the designated constraints
+// aren't met.
+type UpdateUserLastLoginTimeReplyValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e UpdateUserLastLoginTimeReplyValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e UpdateUserLastLoginTimeReplyValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e UpdateUserLastLoginTimeReplyValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e UpdateUserLastLoginTimeReplyValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e UpdateUserLastLoginTimeReplyValidationError) ErrorName() string {
+	return "UpdateUserLastLoginTimeReplyValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e UpdateUserLastLoginTimeReplyValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sUpdateUserLastLoginTimeReply.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = UpdateUserLastLoginTimeReplyValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = UpdateUserLastLoginTimeReplyValidationError{}
+
 // Validate checks the field values on UserInfo2 with the rules defined in the
 // proto definition for this message. If any rules are violated, the first
 // error encountered is returned, or nil if there are no violations.
@@ -91,6 +316,35 @@ func (m *UserInfo2) validate(all bool) error {
 		if err := v.Validate(); err != nil {
 			return UserInfo2ValidationError{
 				field:  "CreatedAt",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	if all {
+		switch v := interface{}(m.GetLastLoginAt()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, UserInfo2ValidationError{
+					field:  "LastLoginAt",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, UserInfo2ValidationError{
+					field:  "LastLoginAt",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetLastLoginAt()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return UserInfo2ValidationError{
+				field:  "LastLoginAt",
 				reason: "embedded message failed validation",
 				cause:  err,
 			}

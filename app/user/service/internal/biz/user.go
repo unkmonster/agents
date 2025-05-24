@@ -2,6 +2,7 @@ package biz
 
 import (
 	"context"
+	"database/sql"
 	"time"
 
 	pb "agents/api/user/service/v1"
@@ -14,13 +15,14 @@ import (
 )
 
 type User struct {
-	Id           string    `db:"id"`
-	Username     string    `db:"username"`
-	Nickname     *string   `db:"nickname"`
-	ParentId     *string   `db:"parent_id"`
-	Level        int32     `db:"level"`
-	CreatedAt    time.Time `db:"created_at"`
-	SharePercent float32   `db:"share_percent"`
+	Id           string       `db:"id"`
+	Username     string       `db:"username"`
+	Nickname     *string      `db:"nickname"`
+	ParentId     *string      `db:"parent_id"`
+	Level        int32        `db:"level"`
+	CreatedAt    time.Time    `db:"created_at"`
+	SharePercent float32      `db:"share_percent"`
+	LastLoginAt  sql.NullTime `db:"last_login_at"`
 }
 
 // TODO: update, listByParentId
@@ -32,6 +34,7 @@ type UserRepo interface {
 	GetUserByDomain(ctx context.Context, domain string) (*User, error)
 	ListUserByParent(ctx context.Context, parentId string, paging *paging.Paging) ([]*User, error)
 	GetZeroUser(ctx context.Context) (*User, error)
+	UpdateUserLastLoginTime(ctx context.Context, id string) error
 }
 
 type UserUseCase struct {
@@ -101,4 +104,8 @@ func (uc *UserUseCase) GetUserByDomain(ctx context.Context, domain string) (*Use
 
 func (uc *UserUseCase) ListUserByParent(ctx context.Context, parentId string, paging *paging.Paging) ([]*User, error) {
 	return uc.repo.ListUserByParent(ctx, parentId, paging)
+}
+
+func (uc *UserUseCase) UpdateUserLastLoginTime(ctx context.Context, id string) error {
+	return uc.repo.UpdateUserLastLoginTime(ctx, id)
 }

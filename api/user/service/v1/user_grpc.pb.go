@@ -27,6 +27,7 @@ const (
 	User_GetUserByUsername_FullMethodName       = "/api.user.service.v1.User/GetUserByUsername"
 	User_CreateUserDomain_FullMethodName        = "/api.user.service.v1.User/CreateUserDomain"
 	User_ListUserByParentId_FullMethodName      = "/api.user.service.v1.User/ListUserByParentId"
+	User_UpdateUserLastLoginTime_FullMethodName = "/api.user.service.v1.User/UpdateUserLastLoginTime"
 	User_GetUserDomain_FullMethodName           = "/api.user.service.v1.User/GetUserDomain"
 	User_ListUserDomains_FullMethodName         = "/api.user.service.v1.User/ListUserDomains"
 	User_ListUserDomainsByUserId_FullMethodName = "/api.user.service.v1.User/ListUserDomainsByUserId"
@@ -46,6 +47,7 @@ type UserClient interface {
 	GetUserByUsername(ctx context.Context, in *GetUserByUsernameRequest, opts ...grpc.CallOption) (*GetUserReply, error)
 	CreateUserDomain(ctx context.Context, in *CreateUserDomainRequest, opts ...grpc.CallOption) (*CreateUserDomainReply, error)
 	ListUserByParentId(ctx context.Context, in *ListUserByParentIdReq, opts ...grpc.CallOption) (*ListUserByParentIdReply, error)
+	UpdateUserLastLoginTime(ctx context.Context, in *UpdateUserLastLoginTimeReq, opts ...grpc.CallOption) (*UpdateUserLastLoginTimeReply, error)
 	// 获取域名
 	GetUserDomain(ctx context.Context, in *GetUserDomainRequest, opts ...grpc.CallOption) (*GetUserDomainReply, error)
 	ListUserDomains(ctx context.Context, in *ListUserDomainsRequest, opts ...grpc.CallOption) (*ListUserDomainsReply, error)
@@ -142,6 +144,16 @@ func (c *userClient) ListUserByParentId(ctx context.Context, in *ListUserByParen
 	return out, nil
 }
 
+func (c *userClient) UpdateUserLastLoginTime(ctx context.Context, in *UpdateUserLastLoginTimeReq, opts ...grpc.CallOption) (*UpdateUserLastLoginTimeReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(UpdateUserLastLoginTimeReply)
+	err := c.cc.Invoke(ctx, User_UpdateUserLastLoginTime_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *userClient) GetUserDomain(ctx context.Context, in *GetUserDomainRequest, opts ...grpc.CallOption) (*GetUserDomainReply, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(GetUserDomainReply)
@@ -204,6 +216,7 @@ type UserServer interface {
 	GetUserByUsername(context.Context, *GetUserByUsernameRequest) (*GetUserReply, error)
 	CreateUserDomain(context.Context, *CreateUserDomainRequest) (*CreateUserDomainReply, error)
 	ListUserByParentId(context.Context, *ListUserByParentIdReq) (*ListUserByParentIdReply, error)
+	UpdateUserLastLoginTime(context.Context, *UpdateUserLastLoginTimeReq) (*UpdateUserLastLoginTimeReply, error)
 	// 获取域名
 	GetUserDomain(context.Context, *GetUserDomainRequest) (*GetUserDomainReply, error)
 	ListUserDomains(context.Context, *ListUserDomainsRequest) (*ListUserDomainsReply, error)
@@ -243,6 +256,9 @@ func (UnimplementedUserServer) CreateUserDomain(context.Context, *CreateUserDoma
 }
 func (UnimplementedUserServer) ListUserByParentId(context.Context, *ListUserByParentIdReq) (*ListUserByParentIdReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListUserByParentId not implemented")
+}
+func (UnimplementedUserServer) UpdateUserLastLoginTime(context.Context, *UpdateUserLastLoginTimeReq) (*UpdateUserLastLoginTimeReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateUserLastLoginTime not implemented")
 }
 func (UnimplementedUserServer) GetUserDomain(context.Context, *GetUserDomainRequest) (*GetUserDomainReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetUserDomain not implemented")
@@ -424,6 +440,24 @@ func _User_ListUserByParentId_Handler(srv interface{}, ctx context.Context, dec 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _User_UpdateUserLastLoginTime_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateUserLastLoginTimeReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).UpdateUserLastLoginTime(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_UpdateUserLastLoginTime_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).UpdateUserLastLoginTime(ctx, req.(*UpdateUserLastLoginTimeReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _User_GetUserDomain_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetUserDomainRequest)
 	if err := dec(in); err != nil {
@@ -552,6 +586,10 @@ var User_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListUserByParentId",
 			Handler:    _User_ListUserByParentId_Handler,
+		},
+		{
+			MethodName: "UpdateUserLastLoginTime",
+			Handler:    _User_UpdateUserLastLoginTime_Handler,
 		},
 		{
 			MethodName: "GetUserDomain",
