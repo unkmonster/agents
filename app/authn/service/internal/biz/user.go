@@ -19,4 +19,5 @@ type UserRepo interface {
 	Create(ctx context.Context, user *User) (*User, error)
 	GetByUsername(ctx context.Context, username string) (*User, error)
 	Delete(ctx context.Context, userId string) error
+	UpdateLastLoginTime(ctx context.Context, userId string) error
 }
