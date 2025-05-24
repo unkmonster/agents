@@ -23,6 +23,23 @@ func NewUserService(user *biz.UserUseCase, domain *biz.UserDomainUseCase) *UserS
 	}
 }
 
+func convertUser(user *biz.User) *pb.UserInfo2 {
+	ui := pb.UserInfo2{
+		Id:           user.Id,
+		Username:     user.Username,
+		Level:        user.Level,
+		SharePercent: user.SharePercent,
+		Nickname:     user.Nickname,
+		ParentId:     user.ParentId,
+		CreatedAt:    timestamppb.New(user.CreatedAt),
+	}
+
+	if user.LastLoginAt.Valid {
+		ui.LastLoginAt = timestamppb.New(user.LastLoginAt.Time)
+	}
+	return &ui
+}
+
 func (s *UserService) CreateUser(ctx context.Context, req *pb.CreateUserRequest) (*pb.CreateUserReply, error) {
 	return s.user.CreateUser(ctx, req)
 }
@@ -42,16 +59,7 @@ func (s *UserService) GetUser(ctx context.Context, req *pb.GetUserRequest) (*pb.
 	}
 
 	return &pb.GetUserReply{
-		User: &pb.UserInfo2{
-			Id:           user.Id,
-			Username:     user.Username,
-			Nickname:     user.Nickname,
-			ParentId:     user.ParentId,
-			Level:        user.Level,
-			SharePercent: user.SharePercent,
-			CreatedAt:    timestamppb.New(user.CreatedAt),
-			LastLoginAt:  timestamppb.New(user.LastLoginAt.Time),
-		},
+		User: convertUser(user),
 	}, nil
 }
 
@@ -134,16 +142,7 @@ func (s *UserService) GetUserByUsername(ctx context.Context, req *pb.GetUserByUs
 	}
 
 	return &pb.GetUserReply{
-		User: &pb.UserInfo2{
-			Id:           user.Id,
-			Username:     user.Username,
-			Nickname:     user.Nickname,
-			ParentId:     user.ParentId,
-			Level:        user.Level,
-			SharePercent: user.SharePercent,
-			CreatedAt:    timestamppb.New(user.CreatedAt),
-			LastLoginAt:  timestamppb.New(user.LastLoginAt.Time),
-		},
+		User: convertUser(user),
 	}, nil
 }
 
@@ -154,16 +153,7 @@ func (s *UserService) GetUserByDomain(ctx context.Context, req *pb.GetUserByDoma
 	}
 
 	return &pb.GetUserByDomainReply{
-		User: &pb.UserInfo2{
-			Id:           user.Id,
-			Username:     user.Username,
-			Nickname:     user.Nickname,
-			ParentId:     user.ParentId,
-			Level:        user.Level,
-			SharePercent: user.SharePercent,
-			CreatedAt:    timestamppb.New(user.CreatedAt),
-			LastLoginAt:  timestamppb.New(user.LastLoginAt.Time),
-		},
+		User: convertUser(user),
 	}, nil
 }
 
@@ -184,16 +174,7 @@ func (s *UserService) ListUserByParentId(ctx context.Context, req *pb.ListUserBy
 
 	reply := pb.ListUserByParentIdReply{}
 	for _, user := range users {
-		reply.Users = append(reply.Users, &pb.UserInfo2{
-			Id:           user.Id,
-			Username:     user.Username,
-			Nickname:     user.Nickname,
-			ParentId:     user.ParentId,
-			Level:        user.Level,
-			SharePercent: user.SharePercent,
-			CreatedAt:    timestamppb.New(user.CreatedAt),
-			LastLoginAt:  timestamppb.New(user.LastLoginAt.Time),
-		})
+		reply.Users = append(reply.Users, convertUser(user))
 	}
 	return &reply, nil
 }
