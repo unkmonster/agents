@@ -23,6 +23,17 @@ func NewUserRepo(data *Data, logger log.Logger) biz.UserRepo {
 	}
 }
 
+// UpdateUserLastLoginTime implements biz.UserRepo.
+func (r *userRepo) UpdateUserLastLoginTime(ctx context.Context, id string) error {
+	query := `
+		UPDATE users
+		SET last_login_at = NOW()
+		WHERE id = ?;
+	`
+	_, err := r.data.db.ExecContext(ctx, query, id)
+	return err
+}
+
 // GetZeroUser implements biz.UserRepo.
 func (r *userRepo) GetZeroUser(ctx context.Context) (*biz.User, error) {
 	query := `
