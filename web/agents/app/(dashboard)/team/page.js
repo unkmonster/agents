@@ -129,6 +129,10 @@ export default function Main() {
       dataIndex: "sharePercent",
     },
     {
+      title: "最后登录日期",
+      dataIndex: "lastLoginAt",
+    },
+    {
       title: "注册日期",
       dataIndex: "created_at",
     },
@@ -179,6 +183,7 @@ export default function Main() {
                 created_at: user.createdAt,
                 level: user.level,
                 sharePercent: user.sharePercent,
+                lastLoginAt: user.lastLoginAt,
               }))
             }
           />
